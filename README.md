@@ -1,2 +1,2 @@
 # euroleague-eurocup-wiki
-BLG317E Project
+A term project by the group Cyclones for the BLG317E Database Systems course given in ITU.
