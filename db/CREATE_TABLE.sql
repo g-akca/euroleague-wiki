@@ -1,8 +1,11 @@
-CREATE SCHEMA euro;
+-- This is a script for the creation of the schema and the tables.
 
+/* 1. Creating the schema and using it*/
+CREATE SCHEMA euro;
 use euro;
 
-CREATE TABLE `euro`.`euroleague_header` (
+/* 2. Creating the tables */
+CREATE TABLE `euro`.`euroleague_header` ( /* Gökçe */
 	game_id                VARCHAR(15) NOT NULL,
 	game                   VARCHAR(10) NOT NULL,
 	date                   DATE NOT NULL,
@@ -49,7 +52,7 @@ CREATE TABLE `euro`.`euroleague_header` (
   PRIMARY KEY (game_id)
 );
 
-CREATE TABLE `euro`.`euroleague_points` (
+CREATE TABLE `euro`.`euroleague_points` ( /* Gökçe */
 	game_point_id       VARCHAR(20) NOT NULL,
 	game_id             VARCHAR(15) NOT NULL,
   game                VARCHAR(10) NOT NULL,
@@ -77,7 +80,7 @@ CREATE TABLE `euro`.`euroleague_points` (
 	FOREIGN KEY (game_id) REFERENCES euroleague_header(game_id)
 );
 
-CREATE TABLE `euro`.`euroleague_teams` (
+CREATE TABLE `euro`.`euroleague_teams` ( /* Gökçe */
 	season_team_id                  VARCHAR(15) NOT NULL,
 	season_code                     VARCHAR(10) NOT NULL,
 	team_id                         VARCHAR(10) NOT NULL,
@@ -126,7 +129,7 @@ CREATE TABLE `euro`.`euroleague_teams` (
   PRIMARY KEY (season_team_id)
 );
 
-CREATE TABLE `euro`.`euroleague_play_by_play` (
+CREATE TABLE `euro`.`euroleague_play_by_play` ( /* Eren */
 	game_play_id 		VARCHAR(20) NOT NULL,
 	game_id 			VARCHAR(15) NOT NULL,
 	game				VARCHAR(10) NOT NULL,
@@ -151,7 +154,7 @@ CREATE TABLE `euro`.`euroleague_play_by_play` (
 	FOREIGN KEY (game_id) REFERENCES euroleague_header(game_id)
 );
 
-CREATE TABLE `euro`.`euroleague_comparison` (
+CREATE TABLE `euro`.`euroleague_comparison` ( /* Eren */
 	game_id						VARCHAR(15) NOT NULL,
 	game						VARCHAR(10) NOT NULL,
 	round						INTEGER NOT NULL,
@@ -202,5 +205,96 @@ CREATE TABLE `euro`.`euroleague_comparison` (
 	points_max_lead_a			VARCHAR(10),
 	points_max_lead_b			VARCHAR(10),
 	PRIMARY KEY (game_id),
+	FOREIGN KEY (game_id) REFERENCES euroleague_header(game_id)
+);
+
+CREATE TABLE `euro`.`euroleague_players`( /* Ege */
+	season_player_id		    VARCHAR(20) NOT NULL,
+	season_code                         VARCHAR(10) NOT NULL,
+	player_id                           VARCHAR(15) NOT NULL,
+	player                              VARCHAR(70) NOT NULL,
+	team_id                             VARCHAR(10) NOT NULL,
+	games_played                        NUMERIC(2) NOT NULL,
+	games_started                       NUMERIC(2) NOT NULL,
+	minutes                             NUMERIC(6,4) NOT NULL,
+	points                              INTEGER  NOT NULL,
+	two_points_made                     INTEGER  NOT NULL,
+	two_points_attempted                INTEGER  NOT NULL,
+	three_points_made                   INTEGER  NOT NULL,
+	three_points_attempted              INTEGER  NOT NULL,
+	free_throws_made                    INTEGER  NOT NULL,
+	free_throws_attempted               INTEGER  NOT NULL,
+	offensive_rebounds                  INTEGER  NOT NULL,
+	defensive_rebounds                  INTEGER  NOT NULL,
+	total_rebounds                      INTEGER  NOT NULL,
+	assists                             INTEGER  NOT NULL,
+	steals                              INTEGER  NOT NULL,
+	turnovers                           INTEGER  NOT NULL,
+	blocks_favour                       INTEGER  NOT NULL,
+	blocks_against                      INTEGER  NOT NULL,
+	fouls_committed                     INTEGER  NOT NULL,
+	fouls_received                      INTEGER  NOT NULL,
+	valuation                           INTEGER  NOT NULL,
+	plus_minus                          INTEGER  NOT NULL,
+	minutes_per_game                    NUMERIC(5,2) NOT NULL,
+	points_per_game                     NUMERIC(5,2) NOT NULL,
+	two_points_made_per_game            NUMERIC(4,2) NOT NULL,
+	two_points_attempted_per_game       NUMERIC(5,2) NOT NULL,
+	two_points_percentage               NUMERIC(5,3) NOT NULL,
+	three_points_made_per_game          NUMERIC(4,2) NOT NULL,
+	three_points_attempted_per_game     NUMERIC(4,2) NOT NULL,
+	three_points_percentage             NUMERIC(5,3) NOT NULL,
+	free_throws_made_per_game           NUMERIC(4,2) NOT NULL,
+	free_throws_attempted_per_game      NUMERIC(4,2) NOT NULL,
+	free_throws_percentage              NUMERIC(5,3) NOT NULL,
+	offensive_rebounds_per_game         NUMERIC(4,2) NOT NULL,
+	defensive_rebounds_per_game         NUMERIC(4,2) NOT NULL,
+	total_rebounds_per_game             NUMERIC(5,2) NOT NULL,
+	assists_per_game                    NUMERIC(5,2) NOT NULL,
+	steals_per_game                     NUMERIC(4,2) NOT NULL,
+	turnovers_per_game                  NUMERIC(4,2) NOT NULL,
+	blocks_favour_per_game              NUMERIC(4,2) NOT NULL,
+	blocks_against_per_game             NUMERIC(4,2) NOT NULL,
+	fouls_committed_per_game            NUMERIC(4,2) NOT NULL,
+	fouls_received_per_game             NUMERIC(4,2) NOT NULL,
+	valuation_per_game                  NUMERIC(5,2) NOT NULL,
+	plus_minus_per_game                 NUMERIC(5,2) NOT NULL,
+	PRIMARY KEY (season_player_id)
+);
+
+CREATE TABLE `euro`.`euroleague_box_score`( /* Ege */
+	game_player_id		VARCHAR(20) NOT NULL ,
+	game_id                 VARCHAR(15) NOT NULL,
+	game                    VARCHAR(10) NOT NULL,
+	round                   INTEGER  NOT NULL,
+	phase                   VARCHAR(25) NOT NULL,
+	season_code             VARCHAR(10) NOT NULL,
+	player_id               VARCHAR(15) NOT NULL,
+	is_starter              NUMERIC(3,1) NOT NULL,
+	is_playing              NUMERIC(3,1) NOT NULL,
+	team_id                 VARCHAR(10) NOT NULL,
+	dorsal                  VARCHAR(10) NOT NULL,
+	player                  VARCHAR(70) NOT NULL,
+	minutes                 VARCHAR(6), -- mm:ss
+	points                  INTEGER  NOT NULL,
+	two_points_made         INTEGER  NOT NULL,
+	two_points_attempted    INTEGER  NOT NULL,
+	three_points_made       INTEGER  NOT NULL,
+	three_points_attempted  INTEGER  NOT NULL,
+	free_throws_made        INTEGER  NOT NULL,
+	free_throws_attempted   INTEGER  NOT NULL,
+	offensive_rebounds      INTEGER  NOT NULL,
+	defensive_rebounds      INTEGER  NOT NULL,
+	total_rebounds          INTEGER  NOT NULL,
+	assists                 INTEGER  NOT NULL,
+	steals                  INTEGER  NOT NULL,
+	turnovers               INTEGER  NOT NULL,
+	blocks_favour           INTEGER  NOT NULL,
+	blocks_against          INTEGER  NOT NULL,
+	fouls_committed         INTEGER  NOT NULL,
+	fouls_received          INTEGER  NOT NULL,
+	valuation               INTEGER  NOT NULL,
+	plus_minus              INTEGER  NOT NULL,
+	PRIMARY KEY (game_player_id),
 	FOREIGN KEY (game_id) REFERENCES euroleague_header(game_id)
 );
