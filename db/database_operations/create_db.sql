@@ -1,12 +1,15 @@
-/*	Script Steps
-	This script was written and edited during a Zoom call with all members of the team Cyclones present. We are pushing this script seperately to conform with the guidelines.
-	For the respective lines, add your path to the secure file folder.
-	1. Creates the Schema, Tables and Loads the data from the dataset.
+/*  Script Steps
+    This script was written and edited during a Zoom call with all members of the team Cyclones present. We are pushing this script seperately to conform with the guidelines.
+    For the respective lines, add your path to the secure file folder.
+    1. Creates the Schema, Tables and Loads the data from the dataset.
     2. Alters some data to create players table.
     3. Output the current tables for future use.
     4. Create the Schema again, this time from the altered data.
     5. Modify some wrong data.
     6. Output the finalized tables.
+
+    Initial CSV Files: https://drive.google.com/drive/folders/1cwxjZTqi8oKMayqhWs41CYwQMZiY_XJp
+    Second Edition CSV Files: https://drive.google.com/drive/folders/1_8eVw5Yf7VwxuABZ3lNeoWhVFbj1GIlA
 */
 
 /* Create the Schema*/
