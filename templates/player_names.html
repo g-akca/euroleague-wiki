@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block title %}Euroleague Players{% endblock %}
+
+{% block content %}
+    <h1 class="title">Euroleague Players</h1>
+
+    {% if players %}
+    <table class="table is-striped is-fullwidth">
+      <thead>
+        <tr>
+          <th>Player ID</th>
+          <th>Player Name</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for player_id, player in players %}
+        <tr>
+          <td>{{ player_id }}</td>
+          <td>{{ player.player_name }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <p>No players available.</p>
+    {% endif %}
+{% endblock %}

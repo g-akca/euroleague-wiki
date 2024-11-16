@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Euroleague - {% block title %}Welcome{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+  </head>
+  <body>
+    <header>
+      <h1>Euroleague Basketball</h1>
+        <nav>
+          <ul>
+            <li><a href="{{ url_for('home_page') }}">Home</a></li>
+            <li><a href="{{ url_for('play_by_play_page') }}">Play by Play</a></li>
+            <li><a href="{{ url_for('player_names_page') }}">Player Names</a></li>
+          </ul>
+        </nav>
+    </header>
+    <main>
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+      <p>&copy; 2024 Euroleague Basketball. All rights reserved.</p>
+    </footer>
+  </body>
+</html>
