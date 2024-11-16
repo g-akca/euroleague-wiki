@@ -753,6 +753,20 @@ CREATE TABLE `euro`.`euroleague_comparison` (
 	FOREIGN KEY (game_id) REFERENCES euroleague_header(game_id)
 );
 
+CREATE TABLE `euro`.`users` (
+	user_id			INTEGER NOT NULL AUTO_INCREMENT,
+    username		VARCHAR(20) NOT NULL UNIQUE,
+    email			VARCHAR(100) NOT NULL UNIQUE CHECK(email LIKE '%@%'),
+    password		VARCHAR(25) NOT NULL,
+    role			CHAR(1) DEFAULT 'U',
+    register_time	TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id)
+);
+
+/* Create an admin account with the username "admin" and password "cyclones" */
+INSERT INTO euro.users (username, email, password, role)
+VALUES ('admin', 'admin@email.com', 'cyclones', 'A');
+
 /* Load the data from the modified csv files. */
 
 set sql_mode = '';

@@ -17,8 +17,10 @@ use euro;
 /*  
 	Creates the finalized versions of the tables.
 	Some columns were altered and dropped from the original dataset.
-	A new table "euroleague_player_names" was created,
-	containing player IDs and their respective names.
+	Two new tables "euroleague_player_names" and "users" were 
+	created, former containing player IDs and their respective names,
+	and the latter containing the registered user info for 
+	authentication and authorization.
 */
 
 CREATE TABLE `euro`.`euroleague_header` (
@@ -291,6 +293,19 @@ CREATE TABLE `euro`.`euroleague_comparison` (
 	FOREIGN KEY (game_id) REFERENCES euroleague_header(game_id)
 );
 
+CREATE TABLE `euro`.`users` (
+	user_id			INTEGER NOT NULL AUTO_INCREMENT,
+    username		VARCHAR(20) NOT NULL UNIQUE,
+    email			VARCHAR(100) NOT NULL UNIQUE CHECK(email LIKE '%@%'),
+    password		VARCHAR(25) NOT NULL,
+    role			CHAR(1) DEFAULT 'U',
+    register_time	TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id)
+);
+
+/* Creates an admin account with the username "admin" and password "cyclones" */
+INSERT INTO euro.users (username, email, password, role)
+VALUES ('admin', 'admin@email.com', 'cyclones', 'A');
 
 
 
