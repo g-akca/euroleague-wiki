@@ -1,6 +1,6 @@
 from flask import Flask
 from player import *
-import views
+import views, mysql.connector
 
 def create_app():
     app = Flask(__name__)
@@ -9,6 +9,7 @@ def create_app():
     app.add_url_rule("/", view_func=views.home_page)
     app.add_url_rule("/play_by_play", view_func=views.play_by_play_page)
     app.add_url_rule("/player_names", view_func=views.player_names_page)
+    app.add_url_rule("/teams", view_func=views.teams_page)
 
     players = PlayerCollection()
     players.add_player(Player("P001", "Bogdan Bogdanovic"))
@@ -20,6 +21,16 @@ def create_app():
     app.config["players"] = players
 
     return app
+
+def get_db_connection():
+    connection = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password="password",
+        database="euro"
+    )
+
+    return connection
 
 
 if __name__ == "__main__":

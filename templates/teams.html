@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block title %}Teams{% endblock %}
+
+{% block content %}
+<section>
+  <h2>Teams</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Season Team ID</th>
+        <th>Team</th>
+        <th>Games Played</th>
+        <th>Points</th>
+      </tr>
+    </thead>
+    {% for team in teams %}
+    <tbody>
+      <tr>
+        <td>{{ team['season_team_id'] }}</td>
+        <td>{{ team['team_id'] }}</td>
+        <td>{{ team['games_played'] }}</td>
+        <td>{{ team['points'] }}</td>
+      </tr>
+    </tbody>
+    {% endfor %}
+  </table>
+</section>
+{% endblock %}

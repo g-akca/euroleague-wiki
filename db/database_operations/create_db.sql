@@ -841,7 +841,7 @@ IGNORE 1 ROWS
 SET points_max_lead_a = NULLIF(points_max_lead_a, ''),
 	points_max_lead_b = NULLIF(points_max_lead_b, '');
 
-/* DATA CORRECTION - After creating a new table called euroleague_player_names, modify the previously wrong player_id's. */
+/* DATA CORRECTION - After creating a new table called euroleague_player_names, modify the previously wrong player_id's. Correct the different typing style of "TOP 16". */
 UPDATE euro.euroleague_box_score
 SET game_player_id = 'E2023_026_P011974'
 WHERE game_id = 'E2023_026' and player_id = 'P010754';
@@ -873,6 +873,10 @@ WHERE player_id = 'P012711';
 UPDATE euro.euroleague_play_by_play
 SET player_id = 'P011974'
 WHERE player_id = 'P010754';
+
+UPDATE euro.euroleague_header
+SET phase = 'TOP 16'
+WHERE phase = 'TOP SIXTEEN';
 
 /* Export the finalized data that will be used for the project. */
 
