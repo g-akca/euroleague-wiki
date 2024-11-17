@@ -10,13 +10,13 @@ def create_app():
     app.add_url_rule("/play_by_play", view_func=views.play_by_play_page)
     app.add_url_rule("/player_names", view_func=views.player_names_page)
     app.add_url_rule("/teams", view_func=views.teams_page)
+    app.add_url_rule("/comparison", view_func=views.comparison_page)
+    app.add_url_rule("/header", view_func=views.header_page)
+    app.add_url_rule("/box_score", view_func=views.box_score_page)
+    app.add_url_rule("/players", view_func=views.players_page)
+    app.add_url_rule("/points", view_func=views.points_page)
 
     players = PlayerCollection()
-    players.add_player(Player("P001", "Bogdan Bogdanovic"))
-    players.add_player(Player("P002", "Vasilije Micic"))
-    players.add_player(Player("P003", "Shane Larkin"))
-    players.add_player(Player("P004", "Nikola Mirotic"))
-    players.add_player(Player("P005", "Mike James"))
     
     app.config["players"] = players
 
@@ -26,10 +26,9 @@ def get_db_connection():
     connection = mysql.connector.connect(
         host="localhost",
         user="root",
-        password="password",
+        password="1234",
         database="euro"
     )
-
     return connection
 
 

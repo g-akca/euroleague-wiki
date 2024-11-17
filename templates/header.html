@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block title %}Header{% endblock %}
+
+{% block content %}
+<section>
+  <h2>Header</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Home Team</th>
+        <th>Points Scored - Home Team</th>
+        <th>Points Scored - Away Team</th>
+        <th>Away Team</th>
+      </tr>
+    </thead>
+    {% for x in header %}
+    <tbody>
+      <tr>
+        <td>{{ x['team_a'] }}</td>
+        <td>{{ x['score_a'] }}</td>
+        <td>{{ x['score_b'] }}</td>
+        <td>{{ x['team_b'] }}</td>
+      </tr>
+    </tbody>
+    {% endfor %}
+  </table>
+</section>
+{% endblock %}

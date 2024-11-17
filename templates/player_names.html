@@ -3,9 +3,22 @@
 {% block title %}Euroleague Players{% endblock %}
 
 {% block content %}
-    <h1 class="title">Euroleague Players</h1>
+  <h1 class="title">Euroleague Players</h1>
+  
+  <div class="field">
+    <label class="label">Sort By</label>
+    <div class="control">
+        <div class="select">
+            <select name="sort_by" onchange="updateSortOrder(this.value)">
+                <option value="player_id asc" {% if sort_by == 'player_id asc' %}selected{% endif %}>Player ID asc</option>
+                <option value="player_name asc" {% if sort_by == 'player_name asc' %}selected{% endif %}>Player Name asc</option>
+                <option value="player_id desc" {% if sort_by == 'player_id desc' %}selected{% endif %}>Player ID desc</option>
+                <option value="player_name desc" {% if sort_by == 'player_name desc' %}selected{% endif %}>Player Name desc</option>
+            </select>
+        </div>
+    </div>
+  </div>
 
-    {% if players %}
     <table class="table is-striped is-fullwidth">
       <thead>
         <tr>
@@ -14,15 +27,21 @@
         </tr>
       </thead>
       <tbody>
-        {% for player_id, player in players %}
+        {% for x in player_names %}
         <tr>
-          <td>{{ player_id }}</td>
-          <td>{{ player.player_name }}</td>
+          <td>{{ x['player_id'] }}</td>
+          <td>{{ x['player_name'] }}</td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
-    {% else %}
-    <p>No players available.</p>
-    {% endif %}
+    
+    <script>
+      function updateSortOrder(sortBy) {
+          const currentUrl = window.location.href; // Get the current URL
+          const url = new URL(currentUrl); // Create a URL object
+          url.searchParams.set('sort_by', sortBy); // Update or add the 'sort_by' parameter
+          window.location.replace(url.toString()); // Navigate to the updated URL
+      }
+    </script>
 {% endblock %}
