@@ -319,49 +319,49 @@ VALUES ('admin', 'admin@email.com', 'cyclones', 'A');
 
 set sql_mode = '';
 
-LOAD DATA INFILE 'D:/MySQL/Uploads/euroleague_header_final.csv'
+LOAD DATA INFILE 'D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/euroleague_header_final.csv'
 INTO TABLE euroleague_header
 FIELDS TERMINATED BY ';'
 LINES TERMINATED BY '\r'
 IGNORE 1 ROWS;
     
-LOAD DATA INFILE 'D:/MySQL/Uploads/euroleague_play_by_play_final.csv'
+LOAD DATA INFILE 'D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/euroleague_play_by_play_final.csv'
 INTO TABLE euroleague_play_by_play
 FIELDS TERMINATED BY ';'
 LINES TERMINATED BY '\r'
 IGNORE 1 ROWS;
 
-LOAD DATA INFILE 'D:/MySQL/Uploads/euroleague_points_final.csv'
+LOAD DATA INFILE 'D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/euroleague_points_final.csv'
 INTO TABLE euroleague_points
 FIELDS TERMINATED BY ';'
 LINES TERMINATED BY '\r'
 IGNORE 1 ROWS;
 
-LOAD DATA INFILE 'D:/MySQL/Uploads/euroleague_teams_final.csv'
+LOAD DATA INFILE 'D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/euroleague_teams_final.csv'
 INTO TABLE euroleague_teams
 FIELDS TERMINATED BY ';'
 LINES TERMINATED BY '\r'
 IGNORE 1 ROWS;
     
-LOAD DATA INFILE 'D:/MySQL/Uploads/euroleague_player_names_final.csv'
+LOAD DATA INFILE 'D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/euroleague_player_names_final.csv'
 INTO TABLE euroleague_player_names
 FIELDS TERMINATED BY ';'
 LINES TERMINATED BY '\r'
 IGNORE 1 ROWS;
 
-LOAD DATA INFILE 'D:/MySQL/Uploads/euroleague_players_final.csv'
+LOAD DATA INFILE 'D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/euroleague_players_final.csv'
 INTO TABLE euroleague_players
 FIELDS TERMINATED BY ';'
 LINES TERMINATED BY '\r'
 IGNORE 1 ROWS;
 
-LOAD DATA INFILE 'D:/MySQL/Uploads/euroleague_box_score_final.csv'
+LOAD DATA INFILE 'D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/euroleague_box_score_final.csv'
 INTO TABLE euroleague_box_score
 FIELDS TERMINATED BY ';'
 LINES TERMINATED BY '\r'
 IGNORE 1 ROWS;
 
-LOAD DATA INFILE 'D:/MySQL/Uploads/euroleague_comparison_final.csv'
+LOAD DATA INFILE 'D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/euroleague_comparison_final.csv'
 INTO TABLE euroleague_comparison
 FIELDS TERMINATED BY ';'
 LINES TERMINATED BY '\r'
