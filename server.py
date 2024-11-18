@@ -5,8 +5,12 @@ import views, mysql.connector
 def create_app():
     app = Flask(__name__)
     app.config.from_object("settings")
+    app.secret_key = 'super secret key'
 
     app.add_url_rule("/", view_func=views.home_page)
+    app.add_url_rule("/login", view_func=views.login, methods=['GET', 'POST'])
+    app.add_url_rule("/signup", view_func=views.signup, methods=['GET', 'POST'])
+    app.add_url_rule("/logout", view_func=views.logout)
     app.add_url_rule("/play_by_play", view_func=views.play_by_play_page)
     app.add_url_rule("/player_names", view_func=views.player_names_page)
     app.add_url_rule("/teams", view_func=views.teams_page)

@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block title %}Box Score{% endblock %}
+
+{% block content %}
+<section>
+  <h2>Box Score</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Game ID</th>
+        <th>Player ID</th>
+        <th>Points</th>
+        <th>Assists</th>
+      </tr>
+    </thead>
+    {% for bx in box_score %}
+    <tbody>
+      <tr>
+        <td>{{ bx['game_id'] }}</td>
+        <td>{{ bx['player_id'] }}</td>
+        <td>{{ bx['points'] }}</td>
+        <td>{{ bx['assists'] }}</td>
+      </tr>
+    </tbody>
+    {% endfor %}
+  </table>
+</section>
+{% endblock %}

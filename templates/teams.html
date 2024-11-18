@@ -8,7 +8,7 @@
   <table>
     <thead>
       <tr>
-        <th>Season Team ID</th>
+        <th>Season Code</th>
         <th>Team</th>
         <th>Games Played</th>
         <th>Points</th>
@@ -17,7 +17,7 @@
     {% for team in teams %}
     <tbody>
       <tr>
-        <td>{{ team['season_team_id'] }}</td>
+        <td>{{ team['season_code'] }}</td>
         <td>{{ team['team_id'] }}</td>
         <td>{{ team['games_played'] }}</td>
         <td>{{ team['points'] }}</td>
