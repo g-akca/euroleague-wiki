@@ -47,9 +47,9 @@ def signup():
 
 def logout():
     session.pop('loggedin', None)
-    session.pop('user_id', None)
     session.pop('username', None)
     session.pop('email', None)
+    session.pop('role', None)
     return render_template("login.html")
 
 def play_by_play_page():
