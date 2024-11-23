@@ -1,56 +1,8 @@
-from flask import current_app, render_template, request, session
-from server import get_db_connection
+from flask import current_app, render_template, request
+from db import get_db_connection
 
 def home_page():
     return render_template("homepage.html")
-
-def login():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        connection = get_db_connection()
-        cursor = connection.cursor(dictionary=True)
-        cursor.execute('SELECT * FROM users WHERE username = %s AND password = %s', (username, password))
-        found_user = cursor.fetchone()
-        cursor.close()
-        connection.close()
-        if found_user:
-            session['loggedin'] = True
-            session['username'] = found_user['username']
-            session['email'] = found_user['email']
-            session['role'] = found_user['role']
-            return render_template("homepage.html")
-    return render_template("login.html")
-
-def signup():
-    if request.method == 'POST':
-        username = request.form['username']
-        email = request.form['email']
-        password = request.form['password']
-        connection = get_db_connection()
-        cursor = connection.cursor(dictionary=True)
-        cursor.execute('SELECT * FROM users WHERE username = %s AND password = %s', (username, password))
-        found_user = cursor.fetchone()
-        if found_user:
-            msg = 'User already exists!' # Will add warning messages later on
-        else:
-            cursor.execute('INSERT INTO users (username, email, password) VALUES (%s, %s, %s)', (username, email, password))
-            connection.commit()
-            cursor.close()
-            connection.close()
-            session['loggedin'] = True
-            session['username'] = username
-            session['email'] = email
-            session['role'] = 'U'
-            return render_template("homepage.html")
-    return render_template("signup.html")
-
-def logout():
-    session.pop('loggedin', None)
-    session.pop('username', None)
-    session.pop('email', None)
-    session.pop('role', None)
-    return render_template("login.html")
 
 def play_by_play_page():
     connection = get_db_connection()

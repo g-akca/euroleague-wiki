@@ -1,6 +1,6 @@
 from flask import Flask
 from player import *
-import views, mysql.connector
+import views, auth
 
 def create_app():
     app = Flask(__name__)
@@ -8,9 +8,9 @@ def create_app():
     app.secret_key = 'super secret key'
 
     app.add_url_rule("/", view_func=views.home_page)
-    app.add_url_rule("/login", view_func=views.login, methods=['GET', 'POST'])
-    app.add_url_rule("/signup", view_func=views.signup, methods=['GET', 'POST'])
-    app.add_url_rule("/logout", view_func=views.logout)
+    app.add_url_rule("/login", view_func=auth.login, methods=['GET', 'POST'])
+    app.add_url_rule("/signup", view_func=auth.signup, methods=['GET', 'POST'])
+    app.add_url_rule("/logout", view_func=auth.logout)
     app.add_url_rule("/play_by_play", view_func=views.play_by_play_page)
     app.add_url_rule("/player_names", view_func=views.player_names_page)
     app.add_url_rule("/teams", view_func=views.teams_page)
@@ -25,16 +25,6 @@ def create_app():
     app.config["players"] = players
 
     return app
-
-def get_db_connection():
-    connection = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="1234",
-        database="euro"
-    )
-    return connection
-
 
 if __name__ == "__main__":
     app = create_app()

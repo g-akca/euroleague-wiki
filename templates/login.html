@@ -4,6 +4,13 @@
 
 {% block content %}
 <body>
+  {% with messages = get_flashed_messages() %}
+    {% if messages[0] == 'Logged out successfully!' %}
+    <div class="alert alert-success" role="alert">{{ messages[0] }}</div>
+    {% elif messages %}
+    <div class="alert alert-danger" role="alert">{{ messages[0] }}</div>
+    {% endif %}
+  {% endwith %}
   <h2>Login Form</h2>
   <form action="{{ url_for('login') }}" method="post">
     <div class="col-md-2 mb-2">

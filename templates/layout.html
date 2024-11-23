@@ -11,28 +11,28 @@
     <header>
       <h1>Euroleague Basketball</h1>
         <nav>
-          {% if session['loggedin'] == True %}
+          {% if session.get('loggedin') == True %}
           <div class="d-flex justify-content-end align-items-center">
             <span>Welcome back, {{ session['username'] }}!</span>
             <a href="{{ url_for('logout') }}" class="btn btn-dark ms-3">Logout</a>
           </div>
           {% else %}
-          <div class="d-flex justify-content-end">
-            <a href="{{ url_for('login') }}" class="btn btn-light me-2">Login</a>
-            <a href="{{ url_for('signup') }}" class="btn btn-dark">Signup</a>
+          <div class="d-flex justify-content-end align-items-center">
+            <a href="{{ url_for('login') }}" class="btn btn-light me-2">Log in</a>
+            <a href="{{ url_for('signup') }}" class="btn btn-dark">Sign up</a>
           </div>
           {% endif %}
-            <ul>
-              <li><a href="{{ url_for('home_page') }}">Home</a></li>
-              <li><a href="{{ url_for('play_by_play_page') }}">Play by Play</a></li>
-              <li><a href="{{ url_for('player_names_page') }}">Player Names</a></li>
-              <li><a href="{{ url_for('teams_page') }}">Teams</a></li>
-              <li><a href="{{ url_for('header_page') }}">Header</a></li>
-              <li><a href="{{ url_for('comparison_page') }}">Comparison</a></li>
-              <li><a href="{{ url_for('box_score_page') }}">Box Score</a></li>
-              <li><a href="{{ url_for('points_page') }}">Points</a></li>
-              <li><a href="{{ url_for('players_page') }}">Players</a></li>
-            </ul>
+          <ul class="nav nav-underline justify-content-center">
+            <li class="nav-item"><a class="nav-link text-black" href="{{ url_for('home_page') }}">Home</a></li>
+            <li class="nav-item"><a class="nav-link text-black" href="{{ url_for('play_by_play_page') }}">Play by Play</a></li>
+            <li class="nav-item"><a class="nav-link text-black" href="{{ url_for('player_names_page') }}">Player Names</a></li>
+            <li class="nav-item"><a class="nav-link text-black" href="{{ url_for('teams_page') }}">Teams</a></li>
+            <li class="nav-item"><a class="nav-link text-black" href="{{ url_for('header_page') }}">Header</a></li>
+            <li class="nav-item"><a class="nav-link text-black" href="{{ url_for('comparison_page') }}">Comparison</a></li>
+            <li class="nav-item"><a class="nav-link text-black" href="{{ url_for('box_score_page') }}">Box Score</a></li>
+            <li class="nav-item"><a class="nav-link text-black" href="{{ url_for('points_page') }}">Points</a></li>
+            <li class="nav-item"><a class="nav-link text-black" href="{{ url_for('players_page') }}">Players</a></li>
+          </ul>
         </nav>
     </header>
     <main>
