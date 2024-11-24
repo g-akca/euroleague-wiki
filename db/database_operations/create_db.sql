@@ -12,7 +12,7 @@
     Second Edition CSV Files: https://drive.google.com/drive/folders/1_8eVw5Yf7VwxuABZ3lNeoWhVFbj1GIlA
 */
 
-/* Create the Schema*/
+/* Create the Schema */
 CREATE SCHEMA euro;
 use euro;
 
@@ -161,7 +161,7 @@ CREATE TABLE `euro`.`euroleague_play_by_play` (
 	marker_time			VARCHAR(6), -- mm:ss
 	points_a			INTEGER,
 	points_b			INTEGER,
-    comment				VARCHAR(50),
+	comment				VARCHAR(50),
 	play_info			VARCHAR(50) NOT NULL,
 	PRIMARY KEY (game_play_id),
 	FOREIGN KEY (game_id) REFERENCES euroleague_header(game_id)
@@ -221,7 +221,7 @@ CREATE TABLE `euro`.`euroleague_comparison` (
 	FOREIGN KEY (game_id) REFERENCES euroleague_header(game_id)
 );
 
-CREATE TABLE `euro`.`euroleague_players`(
+CREATE TABLE `euro`.`euroleague_players` (
 	season_player_id		    VARCHAR(20) NOT NULL,
 	season_code                         VARCHAR(10) NOT NULL,
 	player_id                           VARCHAR(15) NOT NULL,
@@ -275,7 +275,7 @@ CREATE TABLE `euro`.`euroleague_players`(
 	PRIMARY KEY (season_player_id)
 );
 
-CREATE TABLE `euro`.`euroleague_box_score`(
+CREATE TABLE `euro`.`euroleague_box_score` (
 	game_player_id		VARCHAR(20) NOT NULL,
 	game_id                 VARCHAR(15) NOT NULL,
 	game                    VARCHAR(10) NOT NULL,
@@ -323,7 +323,7 @@ OPTIONALLY ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 ROWS
 SET coach_a = NULLIF(coach_a, ''),
-	coach_b = NULLIF(coach_b, ''),
+    coach_b = NULLIF(coach_b, ''),
     score_extra_time_1_a = NULLIF(score_extra_time_1_a, ''),
     score_extra_time_2_a = NULLIF(score_extra_time_2_a, ''),
     score_extra_time_3_a = NULLIF(score_extra_time_3_a, ''),
@@ -340,7 +340,7 @@ OPTIONALLY ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 ROWS
 SET player = NULLIF(player, ''),
-	zone = NULLIF(zone, ''),
+    zone = NULLIF(zone, ''),
     fastbreak = NULLIF(fastbreak, ''),
     second_chance = NULLIF(second_chance, ''),
     points_off_turnover = NULLIF(points_off_turnover, '');
@@ -374,13 +374,13 @@ OPTIONALLY ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 ROWS
 SET team_id = NULLIF(team_id, ''),
-	player_id = NULLIF(player_id, ''),
-	player = NULLIF(player, ''),
-	team = NULLIF(team, ''),
-	dorsal = NULLIF(dorsal, ''),
-	marker_time = NULLIF(marker_time, ''),
-	points_a = NULLIF(points_a, ''),
-	points_b = NULLIF(points_b, '');
+    player_id = NULLIF(player_id, ''),
+    player = NULLIF(player, ''),
+    team = NULLIF(team, ''),
+    dorsal = NULLIF(dorsal, ''),
+    marker_time = NULLIF(marker_time, ''),
+    points_a = NULLIF(points_a, ''),
+    points_b = NULLIF(points_b, '');
 
 LOAD DATA INFILE 'D:/MySQL/Uploads/euroleague_comparison.csv'
 INTO TABLE euroleague_comparison
@@ -389,7 +389,7 @@ OPTIONALLY ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 ROWS
 SET points_max_lead_a = NULLIF(points_max_lead_a, ''),
-	points_max_lead_b = NULLIF(points_max_lead_b, '');
+    points_max_lead_b = NULLIF(points_max_lead_b, '');
     
 /* DATA CORRECTION | there are 2 players that change player_id between seasons, we altered the data so that we can create a players table */
 
@@ -493,7 +493,7 @@ CREATE TABLE `euro`.`euroleague_header` (
 	season_code            VARCHAR(10) NOT NULL,
 	score_a                INTEGER  NOT NULL,
 	score_b                INTEGER  NOT NULL,
-    team_a                 VARCHAR(50) NOT NULL,
+	team_a                 VARCHAR(50) NOT NULL,
 	team_b                 VARCHAR(50) NOT NULL,
 	team_id_a              VARCHAR(10) NOT NULL,
 	team_id_b              VARCHAR(10) NOT NULL,
@@ -527,7 +527,7 @@ CREATE TABLE `euro`.`euroleague_header` (
 	score_extra_time_2_b   INTEGER,
 	score_extra_time_3_b   INTEGER,
 	score_extra_time_4_b   INTEGER,
-    PRIMARY KEY (game_id)
+	PRIMARY KEY (game_id)
 );
 
 CREATE TABLE `euro`.`euroleague_play_by_play` (
@@ -538,7 +538,7 @@ CREATE TABLE `euro`.`euroleague_play_by_play` (
 	team_id				VARCHAR(10),
 	player_id			VARCHAR(15),
 	play_type			VARCHAR(10) NOT NULL,
-    team				VARCHAR(50),
+	team				VARCHAR(50),
 	dorsal				INTEGER,
 	minute				INTEGER,
 	marker_time			VARCHAR(6), -- mm:ss
@@ -560,8 +560,14 @@ CREATE TABLE `euro`.`euroleague_points` (
 	points_off_turnover INTEGER,
 	points_a            INTEGER  NOT NULL,
 	points_b            INTEGER  NOT NULL,
-    PRIMARY KEY (points_primary_id),
+	PRIMARY KEY (points_primary_id),
 	FOREIGN KEY (game_point_id) REFERENCES euroleague_play_by_play(game_play_id)
+);
+
+CREATE TABLE `euro`.`euroleague_team_names` (
+	team_id                   VARCHAR(10) NOT NULL,
+	team_name                 VARCHAR(50) NOT NULL,
+	PRIMARY KEY (team_id)
 );
 
 CREATE TABLE `euro`.`euroleague_teams` (
@@ -610,17 +616,18 @@ CREATE TABLE `euro`.`euroleague_teams` (
 	fouls_committed_per_game        NUMERIC(5,2) NOT NULL,
 	fouls_received_per_game         NUMERIC(5,2) NOT NULL,
 	valuation_per_game              NUMERIC(6,2) NOT NULL,
-    PRIMARY KEY (season_team_id)
+	PRIMARY KEY (season_team_id),
+	FOREIGN KEY (team_id) REFERENCES euroleague_team_names(team_id)
 );
 
-CREATE TABLE `euro`.`euroleague_player_names`(
-	player_id                           VARCHAR(15) NOT NULL,
-	player_name                         VARCHAR(70) NOT NULL,
+CREATE TABLE `euro`.`euroleague_player_names` (
+	player_id                  VARCHAR(15) NOT NULL,
+	player_name                VARCHAR(70) NOT NULL,
 	PRIMARY KEY (player_id)
 );
 
-CREATE TABLE `euro`.`euroleague_players`(
-	season_player_id					VARCHAR(20) NOT NULL,
+CREATE TABLE `euro`.`euroleague_players` (
+	season_player_id                    VARCHAR(20) NOT NULL,
 	season_code                         VARCHAR(10) NOT NULL,
 	player_id                           VARCHAR(15) NOT NULL,
 	team_id                             VARCHAR(10) NOT NULL,
@@ -670,11 +677,11 @@ CREATE TABLE `euro`.`euroleague_players`(
 	valuation_per_game                  NUMERIC(5,2) NOT NULL,
 	plus_minus_per_game                 NUMERIC(5,2) NOT NULL,
 	PRIMARY KEY (season_player_id),
-    FOREIGN KEY (player_id) REFERENCES euroleague_player_names(player_id)
+	FOREIGN KEY (player_id) REFERENCES euroleague_player_names(player_id)
 );
 
-CREATE TABLE `euro`.`euroleague_box_score`(
-	game_player_id			VARCHAR(20) NOT NULL ,
+CREATE TABLE `euro`.`euroleague_box_score` (
+	game_player_id          VARCHAR(20) NOT NULL ,
 	game_id                 VARCHAR(15) NOT NULL,
 	player_id               VARCHAR(15) NOT NULL,
 	is_starter              NUMERIC(3,1) NOT NULL,
@@ -706,61 +713,61 @@ CREATE TABLE `euro`.`euroleague_box_score`(
 );
 
 CREATE TABLE `euro`.`euroleague_comparison` (
-	game_id						VARCHAR(15) NOT NULL,
-	fast_break_points_a			INTEGER NOT NULL,
-	fast_break_points_b			INTEGER NOT NULL,
-	turnover_points_a			INTEGER NOT NULL,
-	turnover_points_b			INTEGER NOT NULL,
+	game_id                     VARCHAR(15) NOT NULL,
+	fast_break_points_a         INTEGER NOT NULL,
+	fast_break_points_b         INTEGER NOT NULL,
+	turnover_points_a           INTEGER NOT NULL,
+	turnover_points_b           INTEGER NOT NULL,
 	second_chance_points_a	    INTEGER NOT NULL,
-	second_chance_points_b		INTEGER NOT NULL,
-	defensive_rebounds_a		INTEGER NOT NULL,
-	offensive_rebounds_b		INTEGER NOT NULL,
-	offensive_rebounds_a	    INTEGER NOT NULL,
-	defensive_rebounds_b		INTEGER NOT NULL,
-	turnovers_starters_a		INTEGER NOT NULL,
-	turnovers_bench_a			INTEGER NOT NULL,
-	turnovers_starters_b		INTEGER NOT NULL,
-	turnovers_bench_b			INTEGER NOT NULL,
-	steals_starters_a			INTEGER NOT NULL,
-	steals_bench_a				INTEGER NOT NULL,
-	steals_starters_b			INTEGER NOT NULL,
-	steals_bench_b				INTEGER NOT NULL,
-	assists_starters_a			INTEGER NOT NULL,
-	assists_bench_a				INTEGER NOT NULL,
-	assists_starters_b			INTEGER NOT NULL,
-	assists_bench_b				INTEGER NOT NULL,
-	points_starters_a			INTEGER NOT NULL,
-	points_bench_a				INTEGER NOT NULL,
-	points_starters_b			INTEGER NOT NULL,
-	points_bench_b				INTEGER NOT NULL,
-	max_a						INTEGER NOT NULL,
-	minute_prev_a				INTEGER NOT NULL,
-	prev_a						VARCHAR(10) NOT NULL,
-	minute_str_a				INTEGER NOT NULL,
-	str_a						VARCHAR(10) NOT NULL,
-	max_b						INTEGER NOT NULL,
-	minute_prev_b				INTEGER NOT NULL,
-	prev_b						VARCHAR(10) NOT NULL,
-	minute_str_b				INTEGER NOT NULL,
-	str_b						VARCHAR(10) NOT NULL,
-	max_lead_a					INTEGER NOT NULL,
-	max_lead_b					INTEGER NOT NULL,
-	minute_max_lead_a			INTEGER NOT NULL,
-	minute_max_lead_b			INTEGER NOT NULL,
-	points_max_lead_a			VARCHAR(10),
-	points_max_lead_b			VARCHAR(10),
+	second_chance_points_b      INTEGER NOT NULL,
+	defensive_rebounds_a        INTEGER NOT NULL,
+	offensive_rebounds_b        INTEGER NOT NULL,
+	offensive_rebounds_a        INTEGER NOT NULL,
+	defensive_rebounds_b        INTEGER NOT NULL,
+	turnovers_starters_a        INTEGER NOT NULL,
+	turnovers_bench_a           INTEGER NOT NULL,
+	turnovers_starters_b        INTEGER NOT NULL,
+	turnovers_bench_b           INTEGER NOT NULL,
+	steals_starters_a           INTEGER NOT NULL,
+	steals_bench_a              INTEGER NOT NULL,
+	steals_starters_b           INTEGER NOT NULL,
+	steals_bench_b              INTEGER NOT NULL,
+	assists_starters_a          INTEGER NOT NULL,
+	assists_bench_a             INTEGER NOT NULL,
+	assists_starters_b          INTEGER NOT NULL,
+	assists_bench_b             INTEGER NOT NULL,
+	points_starters_a           INTEGER NOT NULL,
+	points_bench_a              INTEGER NOT NULL,
+	points_starters_b           INTEGER NOT NULL,
+	points_bench_b              INTEGER NOT NULL,
+	max_a                       INTEGER NOT NULL,
+	minute_prev_a               INTEGER NOT NULL,
+	prev_a                      VARCHAR(10) NOT NULL,
+	minute_str_a                INTEGER NOT NULL,
+	str_a                       VARCHAR(10) NOT NULL,
+	max_b                       INTEGER NOT NULL,
+	minute_prev_b               INTEGER NOT NULL,
+	prev_b                      VARCHAR(10) NOT NULL,
+	minute_str_b                INTEGER NOT NULL,
+	str_b                       VARCHAR(10) NOT NULL,
+	max_lead_a                  INTEGER NOT NULL,
+	max_lead_b                  INTEGER NOT NULL,
+	minute_max_lead_a           INTEGER NOT NULL,
+	minute_max_lead_b           INTEGER NOT NULL,
+	points_max_lead_a           VARCHAR(10),
+	points_max_lead_b           VARCHAR(10),
 	PRIMARY KEY (game_id),
 	FOREIGN KEY (game_id) REFERENCES euroleague_header(game_id)
 );
 
 CREATE TABLE `euro`.`users` (
-	user_id			INTEGER NOT NULL AUTO_INCREMENT,
-    username		VARCHAR(20) NOT NULL UNIQUE,
-    email			VARCHAR(100) NOT NULL UNIQUE CHECK(email LIKE '%@%'),
-    password		VARCHAR(25) NOT NULL,
-    role			CHAR(1) DEFAULT 'U',
-    register_time	TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (user_id)
+	user_id         INTEGER NOT NULL AUTO_INCREMENT,
+	username        VARCHAR(20) NOT NULL UNIQUE,
+	email           VARCHAR(100) NOT NULL UNIQUE CHECK(email LIKE '%@%'),
+	password        VARCHAR(25) NOT NULL,
+	role            CHAR(1) DEFAULT 'U',
+	register_time   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	PRIMARY KEY (user_id)
 );
 
 /* Create an admin account with the username "admin" and password "cyclones" */
@@ -777,7 +784,7 @@ FIELDS TERMINATED BY ';'
 LINES TERMINATED BY '\r'
 IGNORE 1 ROWS
 SET coach_a = NULLIF(coach_a, ''),
-	coach_b = NULLIF(coach_b, ''),
+    coach_b = NULLIF(coach_b, ''),
     score_extra_time_1_a = NULLIF(score_extra_time_1_a, ''),
     score_extra_time_2_a = NULLIF(score_extra_time_2_a, ''),
     score_extra_time_3_a = NULLIF(score_extra_time_3_a, ''),
@@ -793,10 +800,10 @@ FIELDS TERMINATED BY ';'
 LINES TERMINATED BY '\r'
 IGNORE 1 ROWS
 SET team_id = NULLIF(team_id, ''),
-	player_id = NULLIF(player_id, ''),
+    player_id = NULLIF(player_id, ''),
     team = NULLIF(team, ''),
-	dorsal = NULLIF(dorsal, ''),
-	marker_time = NULLIF(marker_time, '');
+    dorsal = NULLIF(dorsal, ''),
+    marker_time = NULLIF(marker_time, '');
 
 LOAD DATA INFILE 'D:/MySQL/Uploads/euroleague_points2.csv'
 INTO TABLE euroleague_points
@@ -807,12 +814,6 @@ SET zone = NULLIF(zone, ''),
     fastbreak = NULLIF(fastbreak, ''),
     second_chance = NULLIF(second_chance, ''),
     points_off_turnover = NULLIF(points_off_turnover, '');
-
-LOAD DATA INFILE 'D:/MySQL/Uploads/euroleague_teams2.csv'
-INTO TABLE euroleague_teams
-FIELDS TERMINATED BY ';'
-LINES TERMINATED BY '\r'
-IGNORE 1 ROWS;
     
 LOAD DATA INFILE 'D:/MySQL/Uploads/euroleague_player_names2.csv'
 INTO TABLE euroleague_player_names
@@ -839,9 +840,83 @@ FIELDS TERMINATED BY ';'
 LINES TERMINATED BY '\r'
 IGNORE 1 ROWS
 SET points_max_lead_a = NULLIF(points_max_lead_a, ''),
-	points_max_lead_b = NULLIF(points_max_lead_b, '');
+    points_max_lead_b = NULLIF(points_max_lead_b, '');
 
-/* DATA CORRECTION - After creating a new table called euroleague_player_names, modify the previously wrong player_id's. Correct the different typing style of "TOP 16". */
+/* Manually insert team id and general name values into the new "euroleague_team_names" table */
+
+INSERT INTO euro.euroleague_team_names VALUES
+('ARI', 'ARIS B.C.'),
+('ASV', 'ASVEL BASKET'),
+('AVE', 'AIR AVELLINO'),
+('BAM', 'BAMBERG BASKETS'),
+('BAR', 'FC BARCELONA'),
+('BAS', 'SASKI BASKONIA'),
+('BER', 'ALBA BERLIN'),
+('BES', 'BESIKTAS J.K.'),
+('BIL', 'BILBAO BASKET'),
+('BUD', 'BUDUCNOST'),
+('CAN', 'C.B. GRAN CANARIA'),
+('CED', 'CEDEVITA JUNIOR'),
+('CHA', 'SPIROU CHARLEROI'),
+('CHL', 'ELAN CHALON'),
+('CHO', 'CHOLET BASKET'),
+('CIB', 'CIBONA'),
+('CSK', 'CSKA MOSCOW'),
+('CTU', 'PALLACANESTRO CANTU'),
+('DAR', 'DARUSSAFAKA'),
+('DYR', 'ZENIT ST PETERSBURG'),
+('GAL', 'GALATASARAY'),
+('GSS', 'STELMET ZIELONA GORA'),
+('IST', 'ANADOLU EFES'),
+('JOV', 'JOVENTUT BADALONA'),
+('KHI', 'BC KHIMKI'),
+('KLA', 'NEPTUNAS KLAIPEDA'),
+('KSK', 'KARSIYAKA BASKET'),
+('LEM', 'LE MANS'),
+('LIE', 'RYTAS VILNIUS'),
+('LJU', 'KK OLIMPIJA'),
+('LMG', 'LIMOGES CSP'),
+('MAD', 'REAL MADRID'),
+('MAL', 'BALONCESTO MALAGA'),
+('MAR', 'MAROUSSI B.C.'),
+('MCO', 'AS MONACO'),
+('MIL', 'OLIMPIA MILANO'),
+('MUN', 'FC BAYERN MUNICH'),
+('NAN', 'SLUC NANCY'),
+('NIK', 'BC BUDIVELNIK'),
+('NIO', 'PANIONIOS B.C.'),
+('NOV', 'NIZHNY NOVGOROD'),
+('NTR', 'JSF NANTERRE'),
+('OLD', 'EWE BASKETS'),
+('OLY', 'OLYMPIACOS PIRAEUS'),
+('ORL', 'ENTENTE ORLEANAISE'),
+('PAM', 'VALENCIA BASKET'),
+('PAN', 'PANATHINAIKOS B.C.'),
+('PAR', 'PARTIZAN BELGRADE'),
+('PRS', 'PARIS BASKETBALL'),
+('RED', 'CRVENA ZVEZDA'),
+('ROA', 'CHORALE ROANNE'),
+('ROM', 'VIRTUS ROMA'),
+('SAS', 'DINAMO SASSARI'),
+('SIE', 'MONTHEPASCHI SIENA'),
+('SOP', 'PROKOM TREFL SOPOT'),
+('STR', 'SIG STRASBOURG'),
+('TEL', 'MACCABI TEL AVIV'),
+('TIV', 'LOKOMOTIV KUBAN'),
+('ULK', 'FENERBAHCE'),
+('UNK', 'UNICS KAZAN'),
+('VIR', 'VIRTUS PALLACANESTRO BOLOGNA'),
+('ZAG', 'ZAGREB'),
+('ZAL', 'ZALGIRIS KAUNAS'),
+('ZGO', 'TUROW ZGORZELEC');
+
+LOAD DATA INFILE 'D:/MySQL/Uploads/euroleague_teams2.csv'
+INTO TABLE euroleague_teams
+FIELDS TERMINATED BY ';'
+LINES TERMINATED BY '\r'
+IGNORE 1 ROWS;
+
+/* DATA CORRECTION - After creating a new table called euroleague_player_names, modify the previously wrong player_id's. Correct the different typing style of "TOP 16" in header. */
 UPDATE euro.euroleague_box_score
 SET game_player_id = 'E2023_026_P011974'
 WHERE game_id = 'E2023_026' and player_id = 'P010754';
@@ -878,6 +953,18 @@ UPDATE euro.euroleague_header
 SET phase = 'TOP 16'
 WHERE phase = 'TOP SIXTEEN';
 
+/* Add team names from header to box score as well */
+
+ALTER TABLE euro.euroleague_box_score ADD COLUMN team VARCHAR(50) AFTER team_id;
+
+UPDATE euroleague_box_score, euroleague_header
+SET euroleague_box_score.team = euroleague_header.team_a
+WHERE euroleague_box_score.game_id = euroleague_header.game_id AND euroleague_box_score.team_id = euroleague_header.team_id_a;
+
+UPDATE euroleague_box_score, euroleague_header
+SET euroleague_box_score.team = euroleague_header.team_b
+WHERE euroleague_box_score.game_id = euroleague_header.game_id AND euroleague_box_score.team_id = euroleague_header.team_id_b;
+
 /* Export the finalized data that will be used for the project. */
 
 SELECT 'game_id', 'game', 'date', 'time', 'round', 'phase', 'season_code', 'score_a', 'score_b', 'team_a', 'team_b', 'team_id_a', 'team_id_b', 'coach_a', 'coach_b', 'game_time', 'remaining_partial_time', 'referee_1', 'referee_2', 'referee_3', 'stadium', 'capacity', 'w_id', 'fouls_a', 'fouls_b', 'timeouts_a', 'timeouts_b', 'score_quarter_1_a', 'score_quarter_2_a', 'score_quarter_3_a', 'score_quarter_4_a', 'score_quarter_1_b', 'score_quarter_2_b', 'score_quarter_3_b', 'score_quarter_4_b', 'score_extra_time_1_a', 'score_extra_time_2_a', 'score_extra_time_3_a', 'score_extra_time_4_a', 'score_extra_time_1_b', 'score_extra_time_2_b', 'score_extra_time_3_b', 'score_extra_time_4_b'
@@ -901,6 +988,14 @@ UNION all
 SELECT *
 FROM euroleague_points
 INTO OUTFILE 'D:/MySQL/Uploads/euroleague_points_final.csv'
+FIELDS TERMINATED BY ';'
+LINES TERMINATED BY '\r';
+
+SELECT 'team_id', 'team_name'
+UNION all
+SELECT *
+FROM euroleague_team_names
+INTO OUTFILE 'D:/MySQL/Uploads/euroleague_team_names_final.csv'
 FIELDS TERMINATED BY ';'
 LINES TERMINATED BY '\r';
 
@@ -928,7 +1023,7 @@ INTO OUTFILE 'D:/MySQL/Uploads/euroleague_players_final.csv'
 FIELDS TERMINATED BY ';'
 LINES TERMINATED BY '\r';
 
-SELECT 'game_player_id', 'game_id', 'player_id', 'is_starter', 'is_playing', 'team_id', 'dorsal', 'minutes', 'points', 'two_points_made', 'two_points_attempted', 'three_points_made', 'three_points_attempted', 'free_throws_made', 'free_throws_attempted', 'offensive_rebounds', 'defensive_rebounds', 'total_rebounds', 'assists', 'steals', 'turnovers', 'blocks_favour', 'blocks_against', 'fouls_committed', 'fouls_received', 'valuation', 'plus_minus'
+SELECT 'game_player_id', 'game_id', 'player_id', 'is_starter', 'is_playing', 'team_id', 'team', 'dorsal', 'minutes', 'points', 'two_points_made', 'two_points_attempted', 'three_points_made', 'three_points_attempted', 'free_throws_made', 'free_throws_attempted', 'offensive_rebounds', 'defensive_rebounds', 'total_rebounds', 'assists', 'steals', 'turnovers', 'blocks_favour', 'blocks_against', 'fouls_committed', 'fouls_received', 'valuation', 'plus_minus'
 UNION all
 SELECT *
 FROM euroleague_box_score
