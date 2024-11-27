@@ -2,28 +2,30 @@
 
 {% block title %}Teams{% endblock %}
 
-{% block content %}
+{% block content %} <!-- Will change how this page looks in general -->
 <section>
-  <h2>Teams</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Season Code</th>
-        <th>Team</th>
-        <th>Games Played</th>
-        <th>Points</th>
-      </tr>
-    </thead>
-    {% for team in teams %}
-    <tbody>
-      <tr>
-        <td>{{ team['season_code'] }}</td>
-        <td>{{ team['team_id'] }}</td>
-        <td>{{ team['games_played'] }}</td>
-        <td>{{ team['points'] }}</td>
-      </tr>
-    </tbody>
-    {% endfor %}
-  </table>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-6">
+        <h2>Euroleague Teams</h2>
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>Team</th>
+              <th class="col-7">Team Name</th>
+            </tr>
+          </thead>
+          <tbody class="table-group-divider">
+            {% for team in team_names %}
+            <tr>
+              <td>{{ team['team_id'] }}</a></td>
+              <td>{{ team['team_name'] }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </section>
 {% endblock %}

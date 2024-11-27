@@ -29,11 +29,11 @@ def query_returner(x, y):
 def teams_page():
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM euroleague_teams")
-    teams = cursor.fetchall()
+    cursor.execute("SELECT * FROM euroleague_team_names")
+    team_names = cursor.fetchall()
     cursor.close()
     connection.close()
-    return render_template("teams.html", teams=teams)
+    return render_template("teams.html", team_names=team_names)
 
 def header_page():
     connection = get_db_connection()

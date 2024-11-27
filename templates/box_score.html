@@ -4,26 +4,32 @@
 
 {% block content %}
 <section>
-  <h2>Box Score</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Game ID</th>
-        <th>Player ID</th>
-        <th>Points</th>
-        <th>Assists</th>
-      </tr>
-    </thead>
-    {% for bx in box_score %}
-    <tbody>
-      <tr>
-        <td>{{ bx['game_id'] }}</td>
-        <td>{{ bx['player_id'] }}</td>
-        <td>{{ bx['points'] }}</td>
-        <td>{{ bx['assists'] }}</td>
-      </tr>
-    </tbody>
-    {% endfor %}
-  </table>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-10">
+        <h2>Euroleague Box Score</h2>
+        <table class="table table-striped table-hover">
+          <thead>
+            <tr>
+              <th>Game ID</th>
+              <th>Player ID</th>
+              <th>Points</th>
+              <th>Assists</th>
+            </tr>
+          </thead>
+          <tbody class="table-group-divider">
+            {% for bx in box_score %}
+            <tr>
+              <td>{{ bx['game_id'] }}</td>
+              <td>{{ bx['player_id'] }}</td>
+              <td>{{ bx['points'] }}</td>
+              <td>{{ bx['assists'] }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </section>
 {% endblock %}

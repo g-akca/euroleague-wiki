@@ -5,6 +5,7 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        remember = request.form.get('remember')
         connection = get_db_connection()
         cursor = connection.cursor(dictionary=True)
         cursor.execute('SELECT * FROM users WHERE username = %s AND password = %s', (username, password))
@@ -17,6 +18,8 @@ def login():
             session['username'] = found_user['username']
             session['email'] = found_user['email']
             session['role'] = found_user['role']
+            if remember == 'True':
+                session.permanent = True # Set session to permanent if "Remember me" is checked
             flash("Successfully logged in!")
             return redirect(url_for("home_page"))
         else:
@@ -40,6 +43,11 @@ def signup():
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
+        password2 = request.form['password2']
+        remember = request.form.get('remember')
+        if password != password2:
+            flash("Passwords did not match, please try again!")
+            return render_template("signup.html")
         connection = get_db_connection()
         cursor = connection.cursor(dictionary=True)
         cursor.execute('SELECT * FROM users WHERE username = %s OR email = %s', (username, email))
@@ -66,6 +74,8 @@ def signup():
             session['username'] = new_account['username']
             session['email'] = new_account['email']
             session['role'] = new_account['role']
+            if remember == 'True':
+                session.permanent = True # Set session to permanent if "Remember me" is checked
             flash("Successfully signed up!")
             return redirect(url_for("home_page"))
     else:
