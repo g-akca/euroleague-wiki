@@ -49,3 +49,57 @@ footer {
     color: white;
     margin-top: 30px;
 }
+
+.navButton-list {
+    display: inline;
+    padding-left: 0;
+}
+
+.navButton-list li {
+    display: inline;
+    justify-content: center;
+    list-style-type: none;
+}
+
+.navButton-link {
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    text-decoration: none;
+    color: #333;
+}
+
+.navButton-link.is-current {
+    background-color: blue;
+    color: white;
+    font-weight: bold;
+    pointer-events: none;
+}
+
+.navButton-previous,
+.navButton-next {
+    padding: 0.5rem 0.5rem;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    text-decoration: none;
+    color: #333;
+}
+
+.navButton-previous[disabled],
+.navButton-next[disabled] {
+    color: #aaa;
+    pointer-events: none;
+    background-color: #f5f5f5;
+}
+
+.navButtonWhole {
+    text-align: center;
+}
+
+.btn-1,
+.btn-2 {
+    background-color: indigo;
+    color: white;
+    font-weight: bold;
+    pointer-events: none;
+}
