@@ -18,7 +18,7 @@
           <tbody class="table-group-divider">
             {% for team in team_names %}
             <tr>
-              <td>{{ team['team_id'] }}</a></td>
+              <td><a class="text-success" href="/team/{{ team['team_id'] }}">{{ team['team_id'] }}</a></td>
               <td>{{ team['team_name'] }}</td>
             </tr>
             {% endfor %}

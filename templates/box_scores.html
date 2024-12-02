@@ -1,16 +1,17 @@
 {% extends "layout.html" %}
 
-{% block title %}Box Score{% endblock %}
+{% block title %}Box Scores{% endblock %}
 
-{% block content %}
+{% block content %} <!-- Will change how this page looks in general -->
 <section>
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-10">
-        <h2>Euroleague Box Score</h2>
+        <h2>Euroleague Box Scores</h2>
         <table class="table table-striped table-hover">
           <thead>
             <tr>
+              <th>Box Score ID</th>
               <th>Game ID</th>
               <th>Player ID</th>
               <th>Points</th>
@@ -18,8 +19,9 @@
             </tr>
           </thead>
           <tbody class="table-group-divider">
-            {% for bx in box_score %}
+            {% for bx in box_scores %}
             <tr>
+              <td>{{ bx['game_player_id'] }}</td>
               <td>{{ bx['game_id'] }}</td>
               <td>{{ bx['player_id'] }}</td>
               <td>{{ bx['points'] }}</td>

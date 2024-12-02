@@ -48,7 +48,6 @@ def player_names_page():
 def query_returner_per_page(x, y, z, u):
     return f"SELECT * FROM {y} ORDER BY {x} LIMIT {z} OFFSET {u};"
 
-
 def teams_page():
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
@@ -57,6 +56,25 @@ def teams_page():
     cursor.close()
     connection.close()
     return render_template("teams.html", team_names=team_names)
+
+def team_details_page(team_id, season_code=None):
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM euroleague_team_names WHERE team_id = %s", (team_id, ))
+    team_name = cursor.fetchone()
+    cursor.execute("SELECT * FROM euroleague_teams WHERE team_id = %s", (team_id, ))
+    team_seasons = cursor.fetchall()
+
+    if season_code:
+        cursor.execute("SELECT * FROM euroleague_teams WHERE team_id = %s AND season_code = %s", (team_id, season_code))
+        season_data = cursor.fetchone()
+    else:
+        cursor.execute("SELECT * FROM euroleague_teams WHERE team_id = %s AND season_code = (SELECT MAX(season_code) FROM euroleague_teams WHERE team_id = %s)", (team_id, team_id))
+        season_data = cursor.fetchone()
+
+    cursor.close()
+    connection.close()
+    return render_template("team_details.html", team_name=team_name, team_seasons=team_seasons, season_data=season_data)
 
 def header_page():
     connection = get_db_connection()
@@ -76,14 +94,14 @@ def comparison_page():
     connection.close()
     return render_template("comparison.html", comparison=comparison)
 
-def box_score_page():
+def box_scores_page():
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
     cursor.execute("SELECT * FROM euroleague_box_score")
-    box_score = cursor.fetchall()
+    box_scores = cursor.fetchall()
     cursor.close()
     connection.close()
-    return render_template("box_score.html", box_score=box_score)
+    return render_template("box_scores.html", box_scores=box_scores)
 
 def players_page():
     connection = get_db_connection()

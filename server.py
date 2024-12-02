@@ -14,9 +14,11 @@ def create_app():
     app.add_url_rule("/play_by_play", view_func=views.play_by_play_page)
     app.add_url_rule("/player_names", view_func=views.player_names_page)
     app.add_url_rule("/teams", view_func=views.teams_page)
+    app.add_url_rule("/team/<string:team_id>/<string:season_code>", view_func=views.team_details_page)
+    app.add_url_rule("/team/<string:team_id>", view_func=views.team_details_page)
     app.add_url_rule("/comparison", view_func=views.comparison_page)
     app.add_url_rule("/header", view_func=views.header_page)
-    app.add_url_rule("/box_score", view_func=views.box_score_page)
+    app.add_url_rule("/box_scores", view_func=views.box_scores_page)
     app.add_url_rule("/players", view_func=views.players_page)
     app.add_url_rule("/points", view_func=views.points_page)
 
