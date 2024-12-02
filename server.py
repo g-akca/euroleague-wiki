@@ -19,6 +19,7 @@ def create_app():
     app.add_url_rule("/comparison", view_func=views.comparison_page)
     app.add_url_rule("/header", view_func=views.header_page)
     app.add_url_rule("/box_scores", view_func=views.box_scores_page)
+    app.add_url_rule("/box_score/<string:box_score_id>", view_func=views.box_score_details_page)
     app.add_url_rule("/players", view_func=views.players_page)
     app.add_url_rule("/points", view_func=views.points_page)
 

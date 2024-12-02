@@ -104,6 +104,15 @@ def box_scores_page():
     connection.close()
     return render_template("box_scores.html", box_scores=box_scores)
 
+def box_score_details_page(box_score_id):
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM euroleague_box_score WHERE game_player_id = %s", (box_score_id, ))
+    box_score = cursor.fetchone()
+    cursor.close()
+    connection.close()
+    return render_template("box_score_details.html", box_score=box_score)
+
 def players_page():
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)

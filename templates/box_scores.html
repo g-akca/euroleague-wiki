@@ -21,7 +21,7 @@
           <tbody class="table-group-divider">
             {% for bx in box_scores %}
             <tr>
-              <td>{{ bx['game_player_id'] }}</td>
+              <td><a class="text-success" href="/box_score/{{ bx['game_player_id'] }}">{{ bx['game_player_id'] }}</a></td>
               <td>{{ bx['game_id'] }}</td>
               <td>{{ bx['player_id'] }}</td>
               <td>{{ bx['points'] }}</td>
