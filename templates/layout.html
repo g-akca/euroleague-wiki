@@ -8,14 +8,27 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   </head>
+  
   <body>
     <header>
       <h1>Euroleague Basketball</h1>
         <nav>
           {% if session.get('loggedin') == True %}
           <div class="d-flex justify-content-end align-items-center">
-            <span>Welcome back, {{ session['username'] }}!</span>
-            <a href="{{ url_for('logout') }}" class="btn btn-dark ms-3">Logout</a>
+            <div class="dropdown">
+              <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                Hey there, {{ session['username'] }}!
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end w-100">
+                <li><h6 class="dropdown-header">{{ session['username'] }}</h6></li>
+                <li><a class="dropdown-item" href="#">Account Settings</a></li>
+                {% if session.get('role') == 'A' %}
+                  <li><a class="dropdown-item" href="#">Admin Panel</a></li>
+                {% endif %}
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a></li>
+              </ul>
+            </div>
           </div>
           {% else %}
           <div class="d-flex justify-content-end align-items-center">
@@ -36,6 +49,7 @@
           </ul>
         </nav>
     </header>
+    
     <main>
       {% block content %}{% endblock %}
     </main>
