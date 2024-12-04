@@ -6,6 +6,7 @@ The project aims to offer a website where people can find valuable information r
 The public dataset that will be partially used for the project: https://www.kaggle.com/datasets/babissamothrakis/euroleague-datasets
 
 ====Installation Guide====
+
 0. Requirements - Python3, MySQL, MySQL Workbench (Preferred - Not Necessary)
 1. Open your preferred IDE, download flask and mysql.connector
 -- pip install Flask, pip install mysql-connector-python
