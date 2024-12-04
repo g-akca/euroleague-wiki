@@ -1,0 +1,51 @@
+{% block content %}
+<div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="settingsModalLabel">Account Settings</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="{{ url_for('update_account') }}" method="post" id="settingsForm">
+          <label>New Username</label>
+          <input type="text" class="form-control" name="username" id="username" placeholder="Enter username" required />
+
+          <label>New Email Address</label>
+          <input type="email" class="form-control" name="email" id="email" placeholder="example@email.com" required />
+
+          <label>Current Password</label>
+          <input type="password" class="form-control" name="password" id="password" placeholder="Enter current password" pattern=".{4,20}" required />
+
+          <label>New Password (Optional, 4 to 20 characters)</label>
+          <input type="password" class="form-control" name="passwordNew" id="passwordNew" placeholder="Enter new password" pattern=".{4,20}" />
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary" form="settingsForm">Save Changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const settingsModal = document.getElementById('settingsModal');
+  if (settingsModal) {
+    settingsModal.addEventListener('show.bs.modal', (event) => {
+      const button = event.relatedTarget;
+      const username = button.getAttribute('data-bs-username');
+      const email = button.getAttribute('data-bs-email');
+
+      const usernameInput = settingsModal.querySelector('#username');
+      const emailInput = settingsModal.querySelector('#email');
+
+      usernameInput.value = username;
+      emailInput.value = email;
+    });
+  }
+</script>
+{% endblock %}

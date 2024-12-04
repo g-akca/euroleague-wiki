@@ -4,9 +4,11 @@
 
 {% block content %}
 {% with messages = get_flashed_messages() %}
-{% if messages %}
-<div class="alert alert-success" role="alert">{{ messages[0] }}</div>
-{% endif %}
+  {% if messages[0] == 'You have entered your current password wrong, please try again!' %}
+    <div class="alert alert-danger" role="alert">{{ messages[0] }}</div>
+  {% elif messages %}
+    <div class="alert alert-success" role="alert">{{ messages[0] }}</div>
+  {% endif %}
 {% endwith %}
 <section>
   <h2>Welcome to Euroleague Basketball</h2>

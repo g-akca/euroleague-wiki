@@ -1,6 +1,8 @@
 from flask import render_template, request, session, redirect, url_for, flash
 from db import get_db_connection
 
+# Might switch to Flask Login instead of sessions
+
 def login():
     if request.method == 'POST':
         username = request.form['username']
@@ -96,3 +98,34 @@ def logout():
     else:
         return redirect(url_for("home_page")) # Sends user to homepage if not logged in. Might add a restricted page warning instead
     
+def update_account():
+    user_id = session['user_id']
+    newUsername = request.form['username']
+    newEmail = request.form['email']
+    currentPw = request.form['password']
+    newPw = request.form['passwordNew']
+
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute('SELECT * FROM users WHERE user_id = %s', (user_id, ))
+    current_user = cursor.fetchone()
+    cursor.close()
+    connection.close()
+
+    if currentPw == current_user['password']:
+        connection = get_db_connection()
+        cursor = connection.cursor(dictionary=True)
+        if newPw != '':
+            cursor.execute('UPDATE users SET username = %s, email = %s, password = %s WHERE user_id = %s', (newUsername, newEmail, newPw, user_id))
+        else:
+            cursor.execute('UPDATE users SET username = %s, email = %s WHERE user_id = %s', (newUsername, newEmail, user_id))
+        connection.commit()
+        cursor.close()
+        connection.close()
+        session['username'] = newUsername
+        session['email'] = newEmail
+        flash("Account details updated successfully!")
+        return redirect(url_for("home_page"))
+    else:
+        flash("You have entered your current password wrong, please try again!")
+        return redirect(url_for("home_page"))

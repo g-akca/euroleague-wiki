@@ -11,6 +11,7 @@ def create_app():
     app.add_url_rule("/login", view_func=auth.login, methods=['GET', 'POST'])
     app.add_url_rule("/signup", view_func=auth.signup, methods=['GET', 'POST'])
     app.add_url_rule("/logout", view_func=auth.logout)
+    app.add_url_rule("/update_account", view_func=auth.update_account, methods=['POST'])
     app.add_url_rule("/play_by_play", view_func=views.play_by_play_page)
     app.add_url_rule("/player_names", view_func=views.player_names_page)
     app.add_url_rule("/teams", view_func=views.teams_page)

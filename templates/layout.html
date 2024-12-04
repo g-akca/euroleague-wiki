@@ -21,7 +21,7 @@
               </button>
               <ul class="dropdown-menu dropdown-menu-end w-100">
                 <li><h6 class="dropdown-header">{{ session['username'] }}</h6></li>
-                <li><a class="dropdown-item" href="#">Account Settings</a></li>
+                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#settingsModal" data-bs-username="{{ session['username'] }}" data-bs-email="{{ session['email'] }}"  href="#">Account Settings</a></li>
                 {% if session.get('role') == 'A' %}
                   <li><a class="dropdown-item" href="#">Admin Panel</a></li>
                 {% endif %}
@@ -49,6 +49,7 @@
           </ul>
         </nav>
     </header>
+    {% include '_settingsModal.html' %}
     
     <main>
       {% block content %}{% endblock %}
