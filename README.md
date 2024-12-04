@@ -14,7 +14,7 @@ The public dataset that will be partially used for the project: [Kaggle - Eurole
 - JavaScript
 
 ## Prerequisites
-The project makes use of Flask and Python MySQL Connector. Please be sure to install the necessary requirements by running these commands on a terminal:
+The project makes use of Flask and Python MySQL Connector. Please make sure to install the necessary requirements by running these commands on a terminal:
 ```
 pip install Flask
 pip install mysql-connector-python
@@ -35,7 +35,7 @@ SHOW VARIABLES LIKE "secure_file_priv"
 ```
 {D:/ProgramData/MySQL/MySQL Server 8.0/Uploads/} -> CTRL + F REPLACE ALL
 ```
-4. On MySQL, go to Edit -> Preferences -> SQL Editor -> MySQL Session. Increase all of the intervals, preferably to 600 seconds so that the data from CSV files load into the tables successfully without getting timed out.
+4. If you're using MySQL Workbench, go to Edit -> Preferences -> SQL Editor -> MySQL Session. Increase all of the intervals, preferably to 800 seconds so that the huge amount of data from the CSV files can load into the tables successfully without getting timed out.
 
 5. Execute the create_db_final.sql file in MySQL.
 
@@ -44,6 +44,8 @@ SHOW VARIABLES LIKE "secure_file_priv"
 git clone https://github.com/g-akca/euroleague-wiki.git
 ```
 7. Open an IDE of your choice and run server.py. (If MySQL connection cannot be established, change the password and user in db.py to match with the MySQL credentials on your system.)
+   
+8. You can browse the website now.
 
 ## Acknowledgements
 - [Bootstrap](https://getbootstrap.com/docs/5.3/getting-started/introduction/ "Bootstrap")
