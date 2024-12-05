@@ -1,6 +1,7 @@
 from flask import Flask
 from player import *
 import views, auth
+from auth import refresh_session_data
 
 def create_app():
     app = Flask(__name__)
@@ -23,10 +24,15 @@ def create_app():
     app.add_url_rule("/box_score/<string:box_score_id>", view_func=views.box_score_details_page)
     app.add_url_rule("/players", view_func=views.players_page)
     app.add_url_rule("/points", view_func=views.points_page)
+    app.add_url_rule("/settings/get_teams", view_func=views.get_teams)
 
     players = PlayerCollection()
     
     app.config["players"] = players
+
+    @app.before_request
+    def refresh_before_request():
+        refresh_session_data()
 
     return app
 

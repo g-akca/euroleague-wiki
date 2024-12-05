@@ -767,7 +767,9 @@ CREATE TABLE `euro`.`users` (
 	password        VARCHAR(25) NOT NULL,
 	role            CHAR(1) DEFAULT 'U',
 	register_time   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	PRIMARY KEY (user_id)
+	team_supported  VARCHAR(10),
+	PRIMARY KEY (user_id),
+	FOREIGN KEY (team_supported) REFERENCES euroleague_team_names(team_id)
 );
 
 /* Create an admin account with the username "admin" and password "cyclones" */

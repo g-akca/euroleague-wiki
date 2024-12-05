@@ -8,17 +8,32 @@
       </div>
       <div class="modal-body">
         <form action="{{ url_for('update_account') }}" method="post" id="settingsForm">
-          <label>New Username</label>
-          <input type="text" class="form-control" name="username" id="username" placeholder="Enter username" required />
+          <div class="mb-2">
+              <label>New Username</label>
+              <input type="text" class="form-control" name="username" id="username" value="{{ session['username'] }}" placeholder="Enter username" required />
+          </div>
 
-          <label>New Email Address</label>
-          <input type="email" class="form-control" name="email" id="email" placeholder="example@email.com" required />
+          <div class="mb-2">
+              <label>New Email Address</label>
+              <input type="email" class="form-control" name="email" id="email" value="{{ session['email'] }}" placeholder="example@email.com" required />
+          </div>
 
-          <label>Current Password</label>
-          <input type="password" class="form-control" name="password" id="password" placeholder="Enter current password" pattern=".{4,20}" required />
+          <div class="mb-2">
+              <label>Current Password</label>
+              <input type="password" class="form-control" name="password" id="password" placeholder="Enter current password" required />
+          </div>
 
-          <label>New Password (Optional, 4 to 20 characters)</label>
-          <input type="password" class="form-control" name="passwordNew" id="passwordNew" placeholder="Enter new password" pattern=".{4,20}" />
+          <div class="mb-2">
+              <label>New Password (Optional, 4 to 20 characters)</label>
+              <input type="password" class="form-control" name="passwordNew" id="passwordNew" placeholder="Enter new password" pattern=".{4,20}" />
+          </div>
+
+          <div>
+              <label>Do you support a team? (Optional)</label>
+              <select id="team_supported" name="team_supported" class="form-select">
+                <option value="" selected>Select a Team</option>
+              </select>
+          </div>
         </form>
       </div>
 
@@ -36,16 +51,32 @@
   const settingsModal = document.getElementById('settingsModal');
   if (settingsModal) {
     settingsModal.addEventListener('show.bs.modal', (event) => {
-      const button = event.relatedTarget;
-      const username = button.getAttribute('data-bs-username');
-      const email = button.getAttribute('data-bs-email');
-
-      const usernameInput = settingsModal.querySelector('#username');
-      const emailInput = settingsModal.querySelector('#email');
-
-      usernameInput.value = username;
-      emailInput.value = email;
+      fetchTeams(event);
     });
   }
+  
+  function fetchTeams(event) {
+      fetch('/settings/get_teams')
+        .then(response => response.json())
+        .then(data => {
+          const teamInput = settingsModal.querySelector('#team_supported');
+          const button = event.relatedTarget;
+          const team_supported = button.getAttribute('data-bs-team');
+          
+          data.forEach(team => {
+            const option = document.createElement('option');
+            option.value = team.team_id;
+            option.textContent = team.team_name;
+            teamInput.appendChild(option);
+          });
+
+          if (team_supported == "None") {
+            teamInput = "Select a Team";
+            teamInput.value = "";
+          }
+          
+          teamInput.value = team_supported;
+        })
+    }
 </script>
 {% endblock %}

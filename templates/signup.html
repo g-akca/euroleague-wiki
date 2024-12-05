@@ -29,9 +29,18 @@
             <label>Password (4 to 25 characters):</label>
             <input type="password" id="password" name="password" pattern=".{4,25}" class="form-control" placeholder="Enter password" required>
         </div>
-        <div class="mb-2">
+        <div class="mb-3">
             <label>Confirm Password:</label>
             <input type="password" id="password2" name="password2" pattern=".{4,25}" class="form-control" placeholder="Enter password again" required>
+        </div>
+        <div class="mb-2">
+            <label>Do you support a team? (Optional)</label>
+            <select id="team_supported" name="team_supported" class="form-select">
+              <option value="" selected>Select a Team</option>
+              {% for team in team_names %}
+                <option value="{{ team['team_id'] }}">{{ team['team_name'] }}</option>
+              {% endfor %}
+            </select>
         </div>
         <div class="form-check mb-3">
             <input class="form-check-input" type="checkbox" value="True" id="remember" name="remember" />
