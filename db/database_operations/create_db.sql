@@ -764,7 +764,7 @@ CREATE TABLE `euro`.`users` (
 	user_id         INTEGER NOT NULL AUTO_INCREMENT,
 	username        VARCHAR(20) NOT NULL UNIQUE,
 	email           VARCHAR(100) NOT NULL UNIQUE CHECK(email LIKE '%@%'),
-	password        VARCHAR(25) NOT NULL,
+	hashed_password VARCHAR(255) NOT NULL,
 	role            CHAR(1) DEFAULT 'U',
 	register_time   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	team_supported  VARCHAR(10),
@@ -772,9 +772,9 @@ CREATE TABLE `euro`.`users` (
 	FOREIGN KEY (team_supported) REFERENCES euroleague_team_names(team_id)
 );
 
-/* Create an admin account with the username "admin" and password "cyclones" */
-INSERT INTO euro.users (username, email, password, role)
-VALUES ('admin', 'admin@email.com', 'cyclones', 'A');
+/* Creates an admin account with the username "admin" and password "cyclones" */
+INSERT INTO euro.users (username, email, hashed_password, role)
+VALUES ('admin', 'admin@email.com', '$2b$12$sh64u1n.0lkkRwmJmInWWunNZaRgCp3gsW.ckdMPx1vc2CTVNoJiS', 'A');
 
 /* Load the data from the modified csv files. */
 

@@ -1,5 +1,6 @@
 from flask import render_template, request, session, redirect, url_for, flash
 from db import get_db_connection
+import bcrypt
 
 # Might switch to Flask Login instead of sessions
 
@@ -25,14 +26,18 @@ def login():
         username = request.form['username']
         password = request.form['password']
         remember = request.form.get('remember')
+
         connection = get_db_connection()
         cursor = connection.cursor(dictionary=True)
-        cursor.execute('SELECT * FROM users WHERE username = %s AND password = %s', (username, password))
+        cursor.execute('SELECT * FROM users WHERE username = %s', (username, ))
         found_user = cursor.fetchone()
+        cursor.close()
+        connection.close()
 
-        if found_user:
-            cursor.close()
-            connection.close()
+        if not found_user:
+            flash("This username does not exist!")
+            return render_template("login.html")
+        elif bcrypt.checkpw(password.encode('UTF-8'), found_user['hashed_password'].encode('UTF-8')):
             session['loggedin'] = True
             session['user_id'] = found_user['user_id']
 
@@ -42,17 +47,10 @@ def login():
             flash("Successfully logged in!")
             return redirect(url_for("home_page"))
         else:
-            cursor.execute('SELECT * FROM users WHERE username = %s', (username, ))
-            found_username = cursor.fetchone()
-            cursor.close()
-            connection.close()
-
-            if found_username:
-                flash("Incorrect password!")
-            else:
-                flash("This username does not exist!")
-
+            flash("Incorrect password!")
             return render_template("login.html")
+        
+    # GET request
     else:
         if session.get('loggedin') == True:
             return redirect(url_for("home_page")) # Sends user to homepage if already logged in. Might add a restricted page warning instead
@@ -66,9 +64,10 @@ def signup():
         password = request.form['password']
         password2 = request.form['password2']
         team_supported = request.form['team_supported']
+        remember = request.form.get('remember')
+
         if team_supported == "":
             team_supported = None
-        remember = request.form.get('remember')
 
         if password != password2:
             flash("Passwords did not match, please try again!")
@@ -92,7 +91,9 @@ def signup():
 
             return render_template("signup.html")
         else:
-            cursor.execute('INSERT INTO users (username, email, password, team_supported) VALUES (%s, %s, %s, %s)', (username, email, password, team_supported))
+            hashed_pw = bcrypt.hashpw(password.encode('UTF-8'), bcrypt.gensalt())
+
+            cursor.execute('INSERT INTO users (username, email, hashed_password, team_supported) VALUES (%s, %s, %s, %s)', (username, email, hashed_pw, team_supported))
             connection.commit()
             cursor.execute('SELECT * FROM users WHERE username = %s AND email = %s', (username, email))
             new_account = cursor.fetchone()
@@ -111,7 +112,14 @@ def signup():
         if session.get('loggedin') == True:
             return redirect(url_for("home_page")) # Sends user to homepage if already logged in. Might add a restricted page warning instead
         else:
-            return render_template("signup.html")
+            connection = get_db_connection()
+            cursor = connection.cursor(dictionary=True)
+            cursor.execute("SELECT * FROM euroleague_team_names ORDER BY team_name ASC")
+            team_names = cursor.fetchall()
+            cursor.close()
+            connection.close()
+
+            return render_template("signup.html", team_names=team_names)
 
 def logout():
     if session.get('loggedin') == True:
@@ -128,6 +136,7 @@ def update_account():
     currentPw = request.form['password']
     newPw = request.form['passwordNew']
     team_supported = request.form['team_supported']
+
     if team_supported == "":
         team_supported = None
 
@@ -138,18 +147,20 @@ def update_account():
     cursor.close()
     connection.close()
 
-    if currentPw == current_user['password']:
+    if bcrypt.checkpw(currentPw.encode('UTF-8'), current_user['hashed_password'].encode('UTF-8')):
         connection = get_db_connection()
         cursor = connection.cursor(dictionary=True)
 
         if newPw != '':
-            cursor.execute('UPDATE users SET username = %s, email = %s, password = %s, team_supported = %s WHERE user_id = %s', (newUsername, newEmail, newPw, team_supported, user_id))
+            hashed_newPw = bcrypt.hashpw(newPw.encode('UTF-8'), bcrypt.gensalt())
+            cursor.execute('UPDATE users SET username = %s, email = %s, hashed_password = %s, team_supported = %s WHERE user_id = %s', (newUsername, newEmail, hashed_newPw, team_supported, user_id))
         else:
             cursor.execute('UPDATE users SET username = %s, email = %s, team_supported = %s WHERE user_id = %s', (newUsername, newEmail, team_supported, user_id))
 
         connection.commit()
         cursor.close()
         connection.close()
+
         flash("Account details updated successfully!")
         return redirect(url_for("home_page"))
     else:
