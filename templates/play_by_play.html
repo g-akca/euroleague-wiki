@@ -3,37 +3,23 @@
 {% block title %}Play by Play{% endblock %}
 
 {% block content %}
-<section>
-  <h2>Play by Play</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Time</th>
-        <th>Team</th>
-        <th>Player</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>10:32</td>
-        <td>Real Madrid</td>
-        <td>Player A</td>
-        <td>3-Point Shot</td>
-      </tr>
-      <tr>
-        <td>09:45</td>
-        <td>Olympiacos</td>
-        <td>Player B</td>
-        <td>Dunk</td>
-      </tr>
-      <tr>
-        <td>08:12</td>
-        <td>Real Madrid</td>
-        <td>Player C</td>
-        <td>Foul</td>
-      </tr>
-    </tbody>
-  </table>
-</section>
+<h1 class="title">Euroleague Plays</h1>
+
+<table class="table is-striped is-fullwidth">
+
+
+  <tbody class="table-group-divider">
+    {% for play_by_play in data %}
+    <tr>
+      <td>{{ play_by_play['date'] }}</td>
+      <td>{{ play_by_play['play_time'] }}</td>
+      <td>{{ play_by_play['game'] }}</td>
+      <td>{{ play_by_play['team'] }}</td>
+      <td>{{ play_by_play['player_name'] }}</td>
+      <td>{{ play_by_play['quarter_description'] }}</td>
+      <td>{{ play_by_play['play_type'] }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 {% endblock %}

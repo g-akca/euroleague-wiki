@@ -1,5 +1,7 @@
-from flask import render_template, request, jsonify
+from flask import render_template, request, jsonify, flash
 from db import get_db_connection
+from mysql.connector import Error
+import queries
 
 def get_teams():
     connection = get_db_connection()
@@ -15,12 +17,23 @@ def home_page():
 
 def play_by_play_page():
     connection = get_db_connection()
-    cursor = connection.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM euroleague_play_by_play")
-    pbp = cursor.fetchall()
-    cursor.close()
-    connection.close()
-    return render_template("play_by_play.html", pbp=pbp)
+    if connection is None:
+        flash("Couldn't connect to the database.", "danger")
+        return render_template("play_by_play.html", data=[])
+    try: 
+        cursor = connection.cursor(dictionary=True)
+        query = queries.play_by_play_query
+        cursor.execute(query)
+        data = cursor.fetchall()
+
+    except Error as e: 
+        flash(f"Query failed: {e}", "danger")
+        data = []
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+    return render_template("play_by_play.html", data=data)
 
 def player_names_page():
     connection = get_db_connection()

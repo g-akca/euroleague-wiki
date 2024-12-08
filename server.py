@@ -26,10 +26,6 @@ def create_app():
     app.add_url_rule("/points", view_func=views.points_page)
     app.add_url_rule("/settings/get_teams", view_func=views.get_teams)
 
-    players = PlayerCollection()
-    
-    app.config["players"] = players
-
     @app.before_request
     def refresh_before_request():
         refresh_session_data()
