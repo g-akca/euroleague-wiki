@@ -7,17 +7,22 @@ The project aims to offer a website where people can find valuable information r
 The public dataset that will be partially used for the project: [Kaggle - Euroleague Datasets](https://www.kaggle.com/datasets/babissamothrakis/euroleague-datasets "Kaggle - Euroleague Datasets")
 
 ## Tech Stack
-- MySQL
-- Python
-- Flask
-- Bootstrap
-- JavaScript
+### Backend
+- **Programming Language:** Python
+- **Framework:** Flask
+- **Database:** MySQL
+- **External Libraries:** Bcrypt (Password encryption)
+### Frontend
+- **Markup Language:** HTML
+- **Styling:** CSS, Bootstrap
+- **Scripting:** JavaScript
 
 ## Prerequisites
-The project makes use of Flask and Python MySQL Connector. Please make sure to install the necessary requirements by running these commands on a terminal:
+The project makes use of Flask, Python MySQL Connector and Bcrypt. Please make sure to install the necessary requirements by running these commands on a terminal:
 ```
 pip install Flask
 pip install mysql-connector-python
+pip install bcrypt
 ```
 You should also have Python3, MySQL and preferably MySQL Workbench installed on your system.
 

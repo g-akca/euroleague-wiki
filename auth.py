@@ -1,5 +1,6 @@
 from flask import render_template, request, session, redirect, url_for, flash
 from db import get_db_connection
+from markupsafe import Markup
 import bcrypt
 
 # Might switch to Flask Login instead of sessions
@@ -35,7 +36,8 @@ def login():
         connection.close()
 
         if not found_user:
-            flash("This username does not exist!")
+            message = Markup(f"This username does not exist! <a href='{ url_for('signup') }' class='alert-link'>Try signing up?</a>")
+            flash(message, "danger")
             return render_template("login.html")
         elif bcrypt.checkpw(password.encode('UTF-8'), found_user['hashed_password'].encode('UTF-8')):
             session['loggedin'] = True
@@ -44,10 +46,10 @@ def login():
             if remember == 'True':
                 session.permanent = True # Set session to permanent if "Remember me" is checked
 
-            flash("Successfully logged in!")
+            flash("Welcome back to Euroleague Wiki!", "success")
             return redirect(url_for("home_page"))
         else:
-            flash("Incorrect password!")
+            flash("Incorrect password!", "danger")
             return render_template("login.html")
         
     # GET request
@@ -70,7 +72,7 @@ def signup():
             team_supported = None
 
         if password != password2:
-            flash("Passwords did not match, please try again!")
+            flash("Passwords did not match, please try again!", "danger")
             return render_template("signup.html")
         
         connection = get_db_connection()
@@ -85,9 +87,11 @@ def signup():
             connection.close()
 
             if found_username:
-                flash("This username is already in use!")
+                message = Markup(f"This username is already in use! <a href='{ url_for('login') }' class='alert-link'>Try logging in?</a>")
+                flash(message, "danger")
             else:
-                flash("This email address is already in use!")
+                message = Markup(f"This email address is already in use! <a href='{ url_for('login') }' class='alert-link'>Try logging in?</a>")
+                flash(message, "danger")
 
             return render_template("signup.html")
         else:
@@ -106,7 +110,7 @@ def signup():
             if remember == 'True':
                 session.permanent = True # Set session to permanent if "Remember me" is checked
 
-            flash("Successfully signed up!")
+            flash("Successfully signed up!", "success")
             return redirect(url_for("home_page"))
     else:
         if session.get('loggedin') == True:
@@ -124,7 +128,7 @@ def signup():
 def logout():
     if session.get('loggedin') == True:
         session.clear()
-        flash("Logged out successfully!")
+        flash("Logged out successfully!", "success")
         return redirect("login")
     else:
         return redirect(url_for("home_page")) # Sends user to homepage if not logged in. Might add a restricted page warning instead
@@ -161,8 +165,8 @@ def update_account():
         cursor.close()
         connection.close()
 
-        flash("Account details updated successfully!")
+        flash("Account details updated successfully!", "success")
         return redirect(url_for("home_page"))
     else:
-        flash("You have entered your current password wrong, please try again!")
+        flash("You have entered your current password wrong, please try again!", "danger")
         return redirect(url_for("home_page"))
