@@ -103,3 +103,43 @@ footer {
     font-weight: bold;
     pointer-events: none;
 }
+
+/* Admin Panel Sidemenu */
+.panel-sidemenu {
+    width: 200px;
+    background-color: #273542;
+    padding: 12px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+}
+
+.panel-sidemenu h4 {
+    color: white;
+    padding: 3px;
+}
+
+.panel-sidemenu ul {
+    list-style: none;
+    padding: 0;
+}
+
+.panel-sidemenu ul li {
+    margin: 4px 0;
+}
+
+.panel-sidemenu ul li a {
+    text-decoration: none;
+    color: white;
+    padding: 7px 12px;
+    display: block;
+    transition: background-color 0.3s ease;
+    border-radius: 4px;
+}
+
+.panel-sidemenu ul li a:hover {
+    background-color: #34495e;
+}
+
+.panel-sidemenu ul li span {
+    color: rgb(185, 178, 178);
+}

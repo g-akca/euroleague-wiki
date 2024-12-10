@@ -12,6 +12,19 @@ def get_teams():
     connection.close()
     return jsonify(team_names)
 
+def get_counts():
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("SELECT COUNT(user_id) AS users_count FROM users")
+    users_count = cursor.fetchone()
+    users_count_value = users_count['users_count']
+    cursor.execute("SELECT COUNT(game_play_id) AS plays_count FROM euroleague_play_by_play")
+    plays_count = cursor.fetchone()
+    plays_count_value = plays_count['plays_count']
+    cursor.close()
+    connection.close()
+    return jsonify({"counts": [users_count_value, plays_count_value]})
+
 def home_page():
     return render_template("homepage.html")
 
@@ -152,3 +165,12 @@ def points_page():
     cursor.close()
     connection.close()
     return render_template("points.html", points=points)
+
+def panel_users_page():
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM users")
+    users = cursor.fetchall()
+    cursor.close()
+    connection.close()
+    return render_template("panel_users.html", users=users)

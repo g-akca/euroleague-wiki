@@ -23,7 +23,7 @@
                 <li><h6 class="dropdown-header">{{ session['username'] }}</h6></li>
                 <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#settingsModal" data-bs-team="{{ session['team_supported'] }}" href="#">Account Settings</a></li>
                 {% if session.get('role') == 'A' %}
-                  <li><a class="dropdown-item" href="#">Admin Panel</a></li>
+                  <li><a class="dropdown-item" href="/panel">Admin Panel</a></li>
                 {% endif %}
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a></li>

@@ -25,6 +25,9 @@ def create_app():
     app.add_url_rule("/players", view_func=views.players_page)
     app.add_url_rule("/points", view_func=views.points_page)
     app.add_url_rule("/settings/get_teams", view_func=views.get_teams)
+    app.add_url_rule("/panel", view_func=views.panel_users_page)
+    app.add_url_rule("/panel/users", view_func=views.panel_users_page)
+    app.add_url_rule("/panel/get_counts", view_func=views.get_counts)
 
     @app.before_request
     def refresh_before_request():
