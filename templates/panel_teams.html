@@ -1,0 +1,30 @@
+{% extends "layout.html" %} 
+
+{% block title %}Admin Panel - Teams{% endblock %}
+
+{% block content %}
+<div class="container-fluid d-flex flex-row">
+  <div>
+    {% include '_panelSidemenu.html' %}
+  </div>
+  <div class="content flex-grow-1">
+    <h2>Teams</h2>
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th>Team ID</th>
+          <th>Team Name</th>
+        </tr>
+      </thead>
+      <tbody class="table-group-divider">
+        {% for team in team_names %}
+        <tr>
+          <td>{{ team['team_id'] }}</td>
+          <td>{{ team['team_name'] }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -15,15 +15,36 @@ def get_teams():
 def get_counts():
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
+
     cursor.execute("SELECT COUNT(user_id) AS users_count FROM users")
     users_count = cursor.fetchone()
-    users_count_value = users_count['users_count']
+    cursor.execute("SELECT COUNT(team_id) AS teams_count FROM euroleague_team_names")
+    teams_count = cursor.fetchone()
+    cursor.execute("SELECT COUNT(player_id) AS players_count FROM euroleague_player_names")
+    players_count = cursor.fetchone()
+    cursor.execute("SELECT COUNT(game_id) AS matches_count FROM euroleague_header")
+    matches_count = cursor.fetchone()
+    cursor.execute("SELECT COUNT(game_id) AS comparisons_count FROM euroleague_comparison")
+    comparisons_count = cursor.fetchone()
+    cursor.execute("SELECT COUNT(game_player_id) AS box_scores_count FROM euroleague_box_score")
+    box_scores_count = cursor.fetchone()
     cursor.execute("SELECT COUNT(game_play_id) AS plays_count FROM euroleague_play_by_play")
     plays_count = cursor.fetchone()
-    plays_count_value = plays_count['plays_count']
+    cursor.execute("SELECT COUNT(primary_point_id) AS points_count FROM euroleague_points")
+    points_count = cursor.fetchone()
+
     cursor.close()
     connection.close()
-    return jsonify({"counts": [users_count_value, plays_count_value]})
+    return jsonify({
+        "counts": [ users_count['users_count'],
+                    teams_count['teams_count'],
+                    players_count['players_count'],
+                    matches_count['matches_count'],
+                    comparisons_count['comparisons_count'],
+                    box_scores_count['box_scores_count'],
+                    points_count['points_count'],
+                    plays_count['plays_count']
+                    ]})
 
 def home_page():
     return render_template("homepage.html")
@@ -48,7 +69,7 @@ def play_by_play_page():
             connection.close()
     return render_template("play_by_play.html", data=data)
 
-def player_names_page():
+def players_page():
     connection = get_db_connection()
     sort_by = request.args.get('sort_by', 'player_id asc') #default sort'u ayarlayabiliyoruz
     page_limit = 30
@@ -72,7 +93,7 @@ def player_names_page():
     connection.close()
     
     return render_template(
-        "player_names.html", 
+        "players.html", 
         player_names=player_names, 
         sort_by=sort_by, 
         page_num=page_num,
@@ -121,14 +142,14 @@ def header_page():
     connection.close()
     return render_template("header.html", header=header)
 
-def comparison_page():
+def comparisons_page():
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
     cursor.execute("SELECT * FROM euroleague_comparison")
-    comparison = cursor.fetchall()
+    comparisons = cursor.fetchall()
     cursor.close()
     connection.close()
-    return render_template("comparison.html", comparison=comparison)
+    return render_template("comparisons.html", comparisons=comparisons)
 
 def box_scores_page():
     connection = get_db_connection()
@@ -148,15 +169,6 @@ def box_score_details_page(box_score_id):
     connection.close()
     return render_template("box_score_details.html", box_score=box_score)
 
-def players_page():
-    connection = get_db_connection()
-    cursor = connection.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM euroleague_players")
-    players = cursor.fetchall()
-    cursor.close()
-    connection.close()
-    return render_template("players.html", players=players)
-
 def points_page():
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
@@ -169,8 +181,17 @@ def points_page():
 def panel_users_page():
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM users")
+    cursor.execute("SELECT *, CASE WHEN role = 'U' THEN 'User' WHEN role = 'A' THEN 'Admin' ELSE 'Unknown' END AS role_detailed FROM users")
     users = cursor.fetchall()
     cursor.close()
     connection.close()
     return render_template("panel_users.html", users=users)
+
+def panel_teams_page():
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM euroleague_team_names")
+    team_names = cursor.fetchall()
+    cursor.close()
+    connection.close()
+    return render_template("panel_teams.html", team_names=team_names)

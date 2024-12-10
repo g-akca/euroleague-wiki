@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+
+{% block title %}Euroleague Players{% endblock %}
+
+{% block content %}
+<h1 class="title">Euroleague Players</h1>
+
+<form method="get" action="" class="mb-4">
+  <div class="search">
+    <input class="input" type="text" name="search" placeholder="Search players..."
+      value="{{ request.args.get('search', '') }}">
+    <button type="submit" class="button is-link">Search</button>
+  </div>
+</form>
+
+<table class="table is-striped is-fullwidth">
+  <thead>
+    <tr>
+      <th>
+        <a href="?sort_by=player_id {{ 'desc' if sort_by == 'player_id asc' else 'asc' }}&page_num=1">
+          Player ID
+          {% if 'player_id' in sort_by %}
+          <span>{{ '▲' if 'asc' in sort_by else '▼' }}</span>
+          {% endif %}
+        </a>
+      </th>
+      <th>
+        <a href="?sort_by=player_name {{ 'desc' if sort_by == 'player_name asc' else 'asc' }}&page_num=1">
+          Player Name
+          {% if 'player_name' in sort_by %}
+          <span>{{ '▲' if 'asc' in sort_by else '▼' }}</span>
+          {% endif %}
+        </a>
+      </th>
+    </tr>
+  </thead>
+
+  <tbody class="table-group-divider">
+    {% for x in player_names %}
+    <tr>
+      <td>{{ x['player_id'] }}</td>
+      <td>{{ x['player_name'] }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<div class="navButtonWhole">
+  {% if page_num > 1 %}
+  <a class="navButton-previous" href="?sort_by={{ sort_by }}&page={{ page_num - 1 }}">Previous</a>
+  {% else %}
+  <a class="navButton-previous" disabled>Previous</a>
+  {% endif %}
+
+  <ul class="navButton-list">
+    {% for p in range(page_num, end_page + 1) %}
+    <li>
+      <a href="?sort_by={{ sort_by }}&page={{ p }}" class="navButton-link {% if p == page_num %}is-current{% endif %}">
+        {{ p }}
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+
+  {% if page_count > page_num %} <a class="navButton-next" href="?sort_by={{ sort_by }}&page={{ page_num + 1 }}">
+    Next</a>
+  {% else %}
+  <a class="navButton-next" disabled>Next</a>
+  {% endif %}
+</div>
+{% endblock %}
