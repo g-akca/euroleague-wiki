@@ -30,7 +30,7 @@ pip install bcrypt
 ```
 # WINDOWS
 py -m venv .venv
-source .venv/bin/activate
+.venv\Scripts\activate
 pip install Flask
 pip install mysql-connector-python
 pip install bcrypt
