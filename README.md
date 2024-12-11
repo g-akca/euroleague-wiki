@@ -20,6 +20,17 @@ The public dataset that will be partially used for the project: [Kaggle - Eurole
 ## Prerequisites
 The project makes use of Flask, Python MySQL Connector and Bcrypt. Please make sure to install the necessary requirements by running these commands on a terminal:
 ```
+# UNIX
+python3 -m venv .venv
+source .venv/bin/activate
+pip install Flask
+pip install mysql-connector-python
+pip install bcrypt
+```
+```
+# WINDOWS
+py -m venv .venv
+source .venv/bin/activate
 pip install Flask
 pip install mysql-connector-python
 pip install bcrypt
@@ -49,7 +60,9 @@ SHOW VARIABLES LIKE "secure_file_priv"
 git clone https://github.com/g-akca/euroleague-wiki.git
 ```
 7. Open an IDE of your choice and run server.py. (If MySQL connection cannot be established, change the password and user in db.py to match with the MySQL credentials on your system.)
-   
+```
+.venv/bin/python3 server.py
+```
 8. You can browse the website now.
 
 ## Acknowledgements
