@@ -1,9 +1,18 @@
 from flask import render_template, request, session, redirect, url_for, flash
 from db import get_db_connection
 from markupsafe import Markup
+from functools import wraps
 import bcrypt
 
-# Might switch to Flask Login instead of sessions
+def admin_required(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        if session['role'] == "A":
+            return f(*args, **kwargs)
+        else:
+            flash("You need to be an admin in order to view this page.", "danger")
+            return redirect(url_for('home_page'))
+    return wrap
 
 def refresh_session_data():
     if session.get('loggedin') == True:

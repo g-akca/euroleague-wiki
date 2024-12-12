@@ -1,5 +1,5 @@
 from flask import Flask
-import views, auth
+import views, auth, panel
 from auth import refresh_session_data
 
 def create_app():
@@ -29,10 +29,13 @@ def create_app():
     app.add_url_rule("/plays", view_func=views.play_by_play_page)
 
     # Admin Panel related
-    app.add_url_rule("/panel", view_func=views.panel_users_page)
-    app.add_url_rule("/panel/get_counts", view_func=views.get_counts)
-    app.add_url_rule("/panel/users", view_func=views.panel_users_page)
-    app.add_url_rule("/panel/teams", view_func=views.panel_teams_page)
+    app.add_url_rule("/panel", view_func=panel.panel_users_page)
+    app.add_url_rule("/panel/get_counts", view_func=panel.get_counts)
+    app.add_url_rule("/panel/users", view_func=panel.panel_users_page)
+    app.add_url_rule("/panel/users/add", view_func=panel.panel_users_add, methods=['POST'])
+    app.add_url_rule("/panel/users/update", view_func=panel.panel_users_update, methods=['POST'])
+    app.add_url_rule("/panel/users/delete", view_func=panel.panel_users_delete, methods=['POST'])
+    app.add_url_rule("/panel/teams", view_func=panel.panel_teams_page)
 
     @app.before_request
     def refresh_before_request():

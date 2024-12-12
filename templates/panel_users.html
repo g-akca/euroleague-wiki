@@ -8,7 +8,20 @@
     {% include '_panelSidemenu.html' %}
   </div>
   <div class="content flex-grow-1">
-    <h2>Users</h2>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    <div class="d-flex justify-content-between align-items-center">
+      <h2>Users</h2>
+      <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addUserModal">Add New User</button>
+    </div>
     <table class="table table-striped table-hover">
       <thead>
         <tr>
@@ -17,6 +30,8 @@
           <th>Role</th>
           <th>Registered Time</th>
           <th>Supported Team</th>
+          <th class="col-1"></th>
+          <th class="col-1"></th>
         </tr>
       </thead>
       <tbody class="table-group-divider">
@@ -27,10 +42,200 @@
           <td>{{ user['role_detailed'] }}</td>
           <td>{{ user['register_time'] }}</td>
           <td>{{ user['team_supported'] }}</td>
+          <!-- Trying to find an efficient way for this and the scripts for the larger models -->
+          <td><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateUserModal" 
+            data-userid="{{ user['user_id'] }}"
+            data-username="{{ user['username'] }}" 
+            data-email="{{ user['email'] }}" 
+            data-team="{{ user['team_supported'] }}" 
+            data-role="{{ user['role'] }}">Update</button></td>
+          <td><button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteUserModal" 
+            data-userid="{{ user['user_id'] }}" 
+            data-username="{{ user['username'] }}">Delete</button></td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
 </div>
+
+<!-- Add User Modal -->
+<div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Add New User</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/panel/users/add" method="post" id="addUserForm">
+          <div class="mb-2">
+              <label>Username</label>
+              <input type="text" class="form-control" name="username" id="addUser_username" placeholder="Enter username" required />
+          </div>
+
+          <div class="mb-2">
+              <label>Email Address</label>
+              <input type="email" class="form-control" name="email" id="addUser_email" placeholder="example@email.com" required />
+          </div>
+
+          <div class="mb-2">
+              <label>Password (4 to 20 characters)</label>
+              <input type="password" class="form-control" name="password" id="addUser_password" placeholder="Enter password" required />
+          </div>
+
+          <div class="mb-2">
+              <label>Supported Team (Optional)</label>
+              <select name="team_supported" id="addUser_team_supported" class="form-select">
+                <option value="" selected>Select a Team</option>
+                {% for team in team_names %}
+                  <option value="{{ team['team_id'] }}">{{ team['team_name'] }}</option>
+                {% endfor %}
+              </select>
+          </div>
+
+          <label>Role</label>
+          <div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="role" id="role_user" value="U" checked>
+              <label class="form-check-label" for="role_user">User</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="role" id="role_admin" value="A">
+              <label class="form-check-label" for="role_admin">Admin</label>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-success" form="addUserForm">Create User</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Update User Modal -->
+<div class="modal fade" id="updateUserModal" tabindex="-1" aria-labelledby="updateUserModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Update User</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/panel/users/update" method="post" id="updateUserForm">
+          <input type="hidden" class="form-control" name="user_id" id="updateUser_user_id" />
+          <div class="mb-2">
+              <label>Username</label>
+              <input type="text" class="form-control" name="username" id="updateUser_username" placeholder="Enter username" required />
+          </div>
+
+          <div class="mb-2">
+              <label>Email Address</label>
+              <input type="email" class="form-control" name="email" id="updateUser_email" placeholder="example@email.com" required />
+          </div>
+
+          <div class="mb-2">
+              <label>New Password (Optional, 4 to 20 characters)</label>
+              <input type="password" class="form-control" name="password" id="updateUser_password" value="" placeholder="Enter new password" />
+          </div>
+
+          <div class="mb-2">
+              <label>Supported Team (Optional)</label>
+              <select name="team_supported" id="updateUser_team_supported" class="form-select">
+                <option value="" selected>Select a Team</option>
+                {% for team in team_names %}
+                  <option value="{{ team['team_id'] }}">{{ team['team_name'] }}</option>
+                {% endfor %}
+              </select>
+          </div>
+
+          <label>Role</label>
+          <div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="role" id="role_user" value="U" checked>
+              <label class="form-check-label" for="role_user">User</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="role" id="role_admin" value="A">
+              <label class="form-check-label" for="role_admin">Admin</label>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary" form="updateUserForm">Update User</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete User Modal -->
+<div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Delete User</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/panel/users/delete" method="post" id="deleteUserForm">
+          <input type="hidden" class="form-control" name="user_id" id="deleteUser_user_id" />
+        </form>
+        <div class="mt-1 mb-1" id="message"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-danger" form="deleteUserForm">Delete User</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const deleteUserModal = document.getElementById('deleteUserModal');
+  if (deleteUserModal) {
+    deleteUserModal.addEventListener('show.bs.modal', (event) => {
+      const deleteButton = event.relatedTarget;
+      const user_id = deleteButton.getAttribute('data-userid');
+      const username = deleteButton.getAttribute('data-username');
+
+      const message = deleteUserModal.querySelector('#message');
+      message.innerHTML = 'The user <strong>' + username + '</strong> with the user ID <strong>' + user_id + '</strong> will be deleted. Are you sure?';
+
+      const userIdInput = deleteUserModal.querySelector('#deleteUser_user_id');
+      userIdInput.value = user_id;
+    });
+  }
+
+  const updateUserModal = document.getElementById('updateUserModal');
+  if (updateUserModal) {
+    updateUserModal.addEventListener('show.bs.modal', (event) => {
+      const updateButton = event.relatedTarget;
+      const user_id = updateButton.getAttribute('data-userid');
+      const username = updateButton.getAttribute('data-username');
+      const email = updateButton.getAttribute('data-email');
+      const team_supported = updateButton.getAttribute('data-team');
+      const role = updateButton.getAttribute('data-role');
+
+      updateUserModal.querySelector('#updateUser_user_id').value = user_id;
+      updateUserModal.querySelector('#updateUser_username').value = username;
+      updateUserModal.querySelector('#updateUser_email').value = email;
+      if (team_supported != "None") {
+        updateUserModal.querySelector('#updateUser_team_supported').value = team_supported;
+      }
+      if (role == 'A') {
+        updateUserModal.querySelector('#role_admin').checked = true;
+      }
+      else {
+        updateUserModal.querySelector('#role_user').checked = true;
+      }
+    });
+  }
+
+</script>
 {% endblock %}

@@ -18,7 +18,7 @@ The public dataset that will be partially used for the project: [Kaggle - Eurole
 - **Scripting:** JavaScript
 
 ## Prerequisites
-The project makes use of Flask, Python MySQL Connector and Bcrypt. Please make sure to create a virtual environment and install the necessary requirements by running these commands on a terminal:
+The project makes use of Flask, Python MySQL Connector and Bcrypt. Please make sure to create a virtual environment and install the necessary requirements by running these commands on a terminal after Step 7 in the [Installation Guide](#installation-guide) section:
 ```
 # UNIX
 python3 -m venv .venv
@@ -34,16 +34,14 @@ pip install -r requirements.txt
 You should also have Python3, MySQL and preferably MySQL Workbench installed on your system.
 
 ## Installation Guide
-After installing the prerequisites, go through these steps one by one:
+For the full installation, go through these steps one by one:
 
 1. Open MySQL and run the following command in order to find your MySQL secure file directory.
 ```
 SHOW VARIABLES LIKE "secure_file_priv"
 ```
 
-2. Download all the .csv files from the Drive link below and copy them into the directory you have found in the first step.
-   
-- [Euroleague Wiki - Google Drive](https://drive.google.com/drive/folders/1zTKZ5-p6dJxQMiqAzx1hXLQBIRJp8dwe?usp=drive_link "Euroleague Wiki - Google Drive")
+2. Download all the related .csv files from [Euroleague Wiki - Google Drive](https://drive.google.com/drive/folders/1zTKZ5-p6dJxQMiqAzx1hXLQBIRJp8dwe?usp=drive_link "Euroleague Wiki - Google Drive") and copy them into the directory you have found in the first step.
 
 3. From the /db/database_final folder on github, download the create_db_final.sql file, and in the "load data infile" parts, change the default directory given to your secure file directory.
 ```
@@ -54,18 +52,12 @@ SHOW VARIABLES LIKE "secure_file_priv"
 
 5. Execute the create_db_final.sql file in MySQL.
 
-6. Create a new MySQL user and grant permissions by using the following command in MySQL.
-```
-CREATE USER 'BLG317E'@'localhost' IDENTIFIED BY 'Password12345*';
-GRANT CREATE, ALTER, DROP, INSERT, UPDATE, DELETE, SELECT, REFERENCES, RELOAD on *.* TO 'BLG317E'@'localhost' WITH GRANT OPTION;
-```
-
-7. Go to a local directory of your preference and clone the github project by running the following command.
+6. Go to a local directory of your preference and clone the github project by running the following command.
 ```
 git clone https://github.com/g-akca/euroleague-wiki.git
 ```
 
-8. Open an IDE of your choice and run server.py.
+7. Create a virtual environment and install the project dependencies by using the commands in the [Prerequisites](#prerequisites) section. After that, run server.py with the commands below.
 ```
 # UNIX
 .venv/bin/python3 server.py
@@ -75,7 +67,7 @@ git clone https://github.com/g-akca/euroleague-wiki.git
 .venv\Scripts\python server.py
 ```
 
-9. You can browse the website now.
+8. You can browse the website now.
 
 ## Acknowledgements
 - [Bootstrap](https://getbootstrap.com/docs/5.3/getting-started/introduction/ "Bootstrap")

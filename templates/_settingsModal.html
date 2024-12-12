@@ -30,9 +30,7 @@
 
           <div>
               <label>Do you support a team? (Optional)</label>
-              <select id="team_supported" name="team_supported" class="form-select">
-                <option value="" selected>Select a Team</option>
-              </select>
+              <select name="team_supported" id="team_supported" class="form-select"></select>
           </div>
         </form>
       </div>
@@ -62,6 +60,8 @@
           const teamInput = settingsModal.querySelector('#team_supported');
           const button = event.relatedTarget;
           const team_supported = button.getAttribute('data-bs-team');
+
+          teamInput.innerHTML = '<option value="" selected>Select a Team</option>';
           
           data.forEach(team => {
             const option = document.createElement('option');
@@ -70,11 +70,9 @@
             teamInput.appendChild(option);
           });
 
-          if (team_supported == "None") {
-            teamInput = "Select a Team";
+          if (team_supported != "None") {
+            teamInput.value = team_supported;
           }
-          
-          teamInput.value = team_supported;
         })
     }
 </script>
