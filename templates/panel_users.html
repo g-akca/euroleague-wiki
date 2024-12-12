@@ -228,6 +228,10 @@
       if (team_supported != "None") {
         updateUserModal.querySelector('#updateUser_team_supported').value = team_supported;
       }
+      else {
+        updateUserModal.querySelector('#updateUser_team_supported').value = "";
+      }
+      
       if (role == 'A') {
         updateUserModal.querySelector('#role_admin').checked = true;
       }
