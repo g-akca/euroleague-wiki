@@ -3,38 +3,161 @@
 {% block title %}Admin Panel - Teams{% endblock %}
 
 {% block content %}
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    {% for category, message in messages %}
-      <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
-        {{ message }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
-    {% endfor %}
-  {% endif %}
-{% endwith %}
 <div class="container-fluid d-flex flex-row">
   <div>
     {% include '_panelSidemenu.html' %}
   </div>
   <div class="content flex-grow-1">
-    <h2>Teams</h2>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    <div class="d-flex justify-content-between align-items-center">
+      <h2>Teams</h2>
+      <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addTeamModal">Add New Team</button>
+    </div>
     <table class="table table-striped table-hover">
       <thead>
         <tr>
           <th>Team ID</th>
           <th>Team Name</th>
+          <th class="col-1"></th>
+          <th class="col-1"></th>
         </tr>
       </thead>
       <tbody class="table-group-divider">
         {% for team in team_names %}
         <tr>
-          <td>{{ team['team_id'] }}</td>
+          <td><a class="text-success" href="/panel/teams/{{ team['team_id'] }}">{{ team['team_id'] }}</a></td>
           <td>{{ team['team_name'] }}</td>
+          <td><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateTeamModal" data-teamid="{{ team['team_id'] }}" data-team-name="{{ team['team_name'] }}">Update</button></td>
+          <td><button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteTeamModal" data-teamid="{{ team['team_id'] }}" data-team-name="{{ team['team_name'] }}">Delete</button></td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
 </div>
+
+<!-- Add Team Modal -->
+<div class="modal fade" id="addTeamModal" tabindex="-1" aria-labelledby="addTeamModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Add New Team</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/panel/teams/add" method="post" id="addTeamForm">
+          <div class="mb-2">
+              <label>Team ID</label>
+              <input type="text" class="form-control" name="team_id" id="addTeam_team_id" placeholder="Enter team ID" required />
+          </div>
+
+          <div class="mb-2">
+            <label>Team Name</label>
+            <input type="text" class="form-control" name="team_name" id="addTeam_team_name" placeholder="Enter team name" required />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-success" form="addTeamForm">Create Team</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Update Team Modal -->
+<div class="modal fade" id="updateTeamModal" tabindex="-1" aria-labelledby="updateTeamModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Update Team</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/panel/teams/update" method="post" id="updateTeamForm">
+          <input type="hidden" class="form-control" name="old_team_id" id="updateTeam_old_team_id" />
+          <div class="mb-2">
+            <label>Team ID</label>
+            <input type="text" class="form-control" name="team_id" id="updateTeam_team_id" placeholder="Enter team ID" required />
+          </div>
+
+          <div class="mb-2">
+            <label>Team Name</label>
+            <input type="text" class="form-control" name="team_name" id="updateTeam_team_name" placeholder="Enter team name" required />
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary" form="updateTeamForm">Update Team</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Team Modal -->
+<div class="modal fade" id="deleteTeamModal" tabindex="-1" aria-labelledby="deleteTeamModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Delete Team</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/panel/teams/delete" method="post" id="deleteTeamForm">
+          <input type="hidden" class="form-control" name="team_id" id="deleteTeam_team_id" />
+        </form>
+        <div class="mt-1 mb-1" id="message"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-danger" form="deleteTeamForm">Delete Team</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const deleteTeamModal = document.getElementById('deleteTeamModal');
+  if (deleteTeamModal) {
+    deleteTeamModal.addEventListener('show.bs.modal', (event) => {
+      const deleteButton = event.relatedTarget;
+      const team_id = deleteButton.getAttribute('data-teamid');
+      const team_name = deleteButton.getAttribute('data-team-name');
+
+      const message = deleteTeamModal.querySelector('#message');
+      message.innerHTML = 'The team <strong>' + team_name + '</strong> with the team ID <strong>' + team_id + '</strong> will be deleted. Are you sure?';
+
+      const teamIdInput = deleteTeamModal.querySelector('#deleteTeam_team_id');
+      teamIdInput.value = team_id;
+    });
+  }
+
+  const updateTeamModal = document.getElementById('updateTeamModal');
+  if (updateTeamModal) {
+    updateTeamModal.addEventListener('show.bs.modal', (event) => {
+      const updateButton = event.relatedTarget;
+      const team_id = updateButton.getAttribute('data-teamid');
+      const team_name = updateButton.getAttribute('data-team-name');
+
+      const teamOldIdInput = updateTeamModal.querySelector('#updateTeam_old_team_id');
+      teamOldIdInput.value = team_id;
+      const teamIdInput = updateTeamModal.querySelector('#updateTeam_team_id');
+      teamIdInput.value = team_id;
+      const teamNameInput = updateTeamModal.querySelector('#updateTeam_team_name');
+      teamNameInput.value = team_name;
+    });
+  }
+</script>
 {% endblock %}

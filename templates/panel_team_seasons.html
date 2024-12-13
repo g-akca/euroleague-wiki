@@ -1,0 +1,637 @@
+{% extends "layout.html" %} 
+
+{% block title %}Admin Panel - {{team_id}} Seasons{% endblock %}
+
+{% block content %}
+<div class="container-fluid d-flex flex-row">
+  <div>
+    {% include '_panelSidemenu.html' %}
+  </div>
+  <div class="content flex-grow-1">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    <div class="d-flex justify-content-between align-items-center">
+      <h2><a class="text-success" href="/panel/teams">Teams</a> / {{ team_id }} ({{ season_count['season_count'] }})</h2>
+      <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addTeamSeasonModal">Add New Season</button>
+    </div>
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th>Season Team ID</th>
+          <th>Season Code</th>
+          <th>Team ID</th>
+          <th>Team Name</th>
+          <th>Games Played</th>
+          <th>Points Scored</th>
+          <th class="col-1"></th>
+          <th class="col-1"></th>
+        </tr>
+      </thead>
+      <tbody class="table-group-divider">
+        {% for ts in team_seasons %}
+        <tr>
+          <td>{{ ts['season_team_id'] }}</td>
+          <td>{{ ts['season_code'] }}</td>
+          <td>{{ ts['team_id'] }}</td>
+          <td>{{ ts['team_name'] }}</td>
+          <td>{{ ts['games_played'] }}</td>
+          <td>{{ ts['points'] }}</td>
+          <td><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateTeamSeasonModal" {{ ts['data_attributes'] }}>Update</button></td>
+          <td><button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteTeamSeasonModal" data-season-team-id="{{ ts['season_team_id'] }}">Delete</button></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Add Team Season Modal -->
+<div class="modal fade" id="addTeamSeasonModal" tabindex="-1" aria-labelledby="addTeamSeasonModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Add New Season For {{ team_id }}</h3>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/panel/teams/{{ team_id }}/add" method="post" id="addTeamSeasonForm">
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Season Code</label>
+              <input type="text" class="form-control" name="season_code" id="addTeamSeason_season_code" placeholder="Enter season code" required />
+            </div>
+            <div class="col-6">
+              <label>Team ID</label>
+              <input type="text" class="form-control" name="team_id" id="addTeamSeason_team_id" value="{{ team_id }}" disabled required />
+              <input type="hidden" name="team_id" value="{{ team_id }}" />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Games Played</label>
+              <input type="number" class="form-control" name="games_played" id="addTeamSeason_games_played" placeholder="Enter games played" required />
+            </div>
+            <div class="col-6">
+              <label>Minutes</label>
+              <input type="number" step="0.1" class="form-control" name="minutes" id="addTeamSeason_minutes" placeholder="Enter total minutes" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Points</label>
+              <input type="number" class="form-control" name="points" id="addTeamSeason_points" placeholder="Enter total points" required />
+            </div>
+            <div class="col-6">
+              <label>Two Points Made</label>
+              <input type="number" class="form-control" name="two_points_made" id="addTeamSeason_two_points_made" placeholder="Enter two-point shots made" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Two Points Attempted</label>
+              <input type="number" class="form-control" name="two_points_attempted" id="addTeamSeason_two_points_attempted" placeholder="Enter two-point shots attempted" required />
+            </div>
+            <div class="col-6">
+              <label>Three Points Made</label>
+              <input type="number" class="form-control" name="three_points_made" id="addTeamSeason_three_points_made" placeholder="Enter three-point shots made" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Three Points Attempted</label>
+              <input type="number" class="form-control" name="three_points_attempted" id="addTeamSeason_three_points_attempted" placeholder="Enter three-point shots attempted" required />
+            </div>
+            <div class="col-6">
+              <label>Free Throws Made</label>
+              <input type="number" class="form-control" name="free_throws_made" id="addTeamSeason_free_throws_made" placeholder="Enter free throws made" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Free Throws Attempted</label>
+              <input type="number" class="form-control" name="free_throws_attempted" id="addTeamSeason_free_throws_attempted" placeholder="Enter free throws attempted" required />
+            </div>
+            <div class="col-6">
+              <label>Offensive Rebounds</label>
+              <input type="number" class="form-control" name="offensive_rebounds" id="addTeamSeason_offensive_rebounds" placeholder="Enter offensive rebounds" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Defensive Rebounds</label>
+              <input type="number" class="form-control" name="defensive_rebounds" id="addTeamSeason_defensive_rebounds" placeholder="Enter defensive rebounds" required />
+            </div>
+            <div class="col-6">
+              <label>Total Rebounds</label>
+              <input type="number" class="form-control" name="total_rebounds" id="addTeamSeason_total_rebounds" placeholder="Enter total rebounds" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Assists</label>
+              <input type="number" class="form-control" name="assists" id="addTeamSeason_assists" placeholder="Enter assists" required />
+            </div>
+            <div class="col-6">
+              <label>Steals</label>
+              <input type="number" class="form-control" name="steals" id="addTeamSeason_steals" placeholder="Enter steals" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Turnovers</label>
+              <input type="number" class="form-control" name="turnovers" id="addTeamSeason_turnovers" placeholder="Enter turnovers" required />
+            </div>
+            <div class="col-6">
+              <label>Blocks Favour</label>
+              <input type="number" class="form-control" name="blocks_favour" id="addTeamSeason_blocks_favour" placeholder="Enter blocks in favour" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Blocks Against</label>
+              <input type="number" class="form-control" name="blocks_against" id="addTeamSeason_blocks_against" placeholder="Enter blocks against" required />
+            </div>
+            <div class="col-6">
+              <label>Fouls Committed</label>
+              <input type="number" class="form-control" name="fouls_committed" id="addTeamSeason_fouls_committed" placeholder="Enter fouls committed" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Fouls Received</label>
+              <input type="number" class="form-control" name="fouls_received" id="addTeamSeason_fouls_received" placeholder="Enter fouls received" required />
+            </div>
+            <div class="col-6">
+              <label>Valuation</label>
+              <input type="number" class="form-control" name="valuation" id="addTeamSeason_valuation" placeholder="Enter valuation" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Minutes Per Game</label>
+              <input type="number" step="0.01" class="form-control" name="minutes_per_game" id="addTeamSeason_minutes_per_game" placeholder="Enter minutes per game" required />
+            </div>
+            <div class="col-6">
+              <label>Points Per Game</label>
+              <input type="number" step="0.01" class="form-control" name="points_per_game" id="addTeamSeason_points_per_game" placeholder="Enter points per game" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Two Points Made Per Game</label>
+              <input type="number" step="0.01" class="form-control" name="two_points_made_per_game" id="addTeamSeason_two_points_made_per_game" placeholder="Enter two points made per game" required />
+            </div>
+            <div class="col-6">
+              <label>Two Points Attempted Per Game</label>
+              <input type="number" step="0.01" class="form-control" name="two_points_attempted_per_game" id="addTeamSeason_two_points_attempted_per_game" placeholder="Enter two points attempted per game" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Two Points Percentage</label>
+              <input type="number" step="0.001" class="form-control" name="two_points_percentage" id="addTeamSeason_two_points_percentage" placeholder="Enter two points percentage" required />
+            </div>
+            <div class="col-6">
+              <label>Three Points Made Per Game</label>
+              <input type="number" step="0.01" class="form-control" name="three_points_made_per_game" id="addTeamSeason_three_points_made_per_game" placeholder="Enter three points made per game" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Three Points Attempted Per Game</label>
+              <input type="number" step="0.01" class="form-control" name="three_points_attempted_per_game" id="addTeamSeason_three_points_attempted_per_game" placeholder="Enter three points attempted per game" required />
+            </div>
+            <div class="col-6">
+              <label>Three Points Percentage</label>
+              <input type="number" step="0.001" class="form-control" name="three_points_percentage" id="addTeamSeason_three_points_percentage" placeholder="Enter three points percentage" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Free Throws Made Per Game</label>
+              <input type="number" step="0.01" class="form-control" name="free_throws_made_per_game" id="addTeamSeason_free_throws_made_per_game" placeholder="Enter free throws made per game" required />
+            </div>
+            <div class="col-6">
+              <label>Free Throws Attempted Per Game</label>
+              <input type="number" step="0.01" class="form-control" name="free_throws_attempted_per_game" id="addTeamSeason_free_throws_attempted_per_game" placeholder="Enter free throws attempted per game" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Free Throws Percentage</label>
+              <input type="number" step="0.001" class="form-control" name="free_throws_percentage" id="addTeamSeason_free_throws_percentage" placeholder="Enter free throws percentage" required />
+            </div>
+            <div class="col-6">
+              <label>Offensive Rebounds Per Game</label>
+              <input type="number" step="0.01" class="form-control" name="offensive_rebounds_per_game" id="addTeamSeason_offensive_rebounds_per_game" placeholder="Enter offensive rebounds per game" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Defensive Rebounds Per Game</label>
+              <input type="number" step="0.01" class="form-control" name="defensive_rebounds_per_game" id="addTeamSeason_defensive_rebounds_per_game" placeholder="Enter defensive rebounds per game" required />
+            </div>
+            <div class="col-6">
+              <label>Total Rebounds Per Game</label>
+              <input type="number" step="0.01" class="form-control" name="total_rebounds_per_game" id="addTeamSeason_total_rebounds_per_game" placeholder="Enter total rebounds per game" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Assists Per Game</label>
+              <input type="number" step="0.01" class="form-control" name="assists_per_game" id="addTeamSeason_assists_per_game" placeholder="Enter assists per game" required />
+            </div>
+            <div class="col-6">
+              <label>Steals Per Game</label>
+              <input type="number" step="0.01" class="form-control" name="steals_per_game" id="addTeamSeason_steals_per_game" placeholder="Enter steals per game" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Turnovers Per Game</label>
+              <input type="number" step="0.01" class="form-control" name="turnovers_per_game" id="addTeamSeason_turnovers_per_game" placeholder="Enter turnovers per game" required />
+            </div>
+            <div class="col-6">
+              <label>Blocks Favour Per Game</label>
+              <input type="number" step="0.01" class="form-control" name="blocks_favour_per_game" id="addTeamSeason_blocks_favour_per_game" placeholder="Enter blocks favour per game" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Blocks Against Per Game</label>
+              <input type="number" step="0.01" class="form-control" name="blocks_against_per_game" id="addTeamSeason_blocks_against_per_game" placeholder="Enter blocks against per game" required />
+            </div>
+            <div class="col-6">
+              <label>Fouls Committed Per Game</label>
+              <input type="number" step="0.01" class="form-control" name="fouls_committed_per_game" id="addTeamSeason_fouls_committed_per_game" placeholder="Enter fouls committed per game" required />
+            </div>
+          </div>
+          
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Fouls Received Per Game</label>
+              <input type="number" step="0.01" class="form-control" name="fouls_received_per_game" id="addTeamSeason_fouls_received_per_game" placeholder="Enter fouls received per game" required />
+            </div>
+            <div class="col-6">
+              <label>Valuation Per Game</label>
+              <input type="number" step="0.01" class="form-control" name="valuation_per_game" id="addTeamSeason_valuation_per_game" placeholder="Enter valuation per game" required />
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-success" form="addTeamSeasonForm">Create Team Season</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Update Team Season Modal -->
+<div class="modal fade" id="updateTeamSeasonModal" tabindex="-1" aria-labelledby="updateTeamSeasonModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Update Team Season</h3>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/panel/teams/{{ team_id }}/update" method="post" id="updateTeamSeasonForm">
+          <input type="hidden" class="form-control" name="season_team_id" id="updateTeamSeason_season_team_id" />
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Season Code</label>
+              <input type="text" class="form-control" name="season_code" id="updateTeamSeason_season_code" placeholder="Enter season code" required />
+            </div>
+            <div class="col-6">
+              <label>Team ID</label>
+              <input type="text" class="form-control" name="team_id" id="updateTeamSeason_team_id" value="{{ team_id }}" disabled required />
+              <input type="hidden" name="team_id" value="{{ team_id }}" />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Games Played</label>
+              <input type="number" class="form-control" name="games_played" id="updateTeamSeason_games_played" placeholder="Enter games played" required />
+            </div>
+            <div class="col-6">
+              <label>Minutes</label>
+              <input type="number" step="0.1" class="form-control" name="minutes" id="updateTeamSeason_minutes" placeholder="Enter total minutes" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Points</label>
+              <input type="number" class="form-control" name="points" id="updateTeamSeason_points" placeholder="Enter total points" required />
+            </div>
+            <div class="col-6">
+              <label>Two Points Made</label>
+              <input type="number" class="form-control" name="two_points_made" id="updateTeamSeason_two_points_made" placeholder="Enter two-point shots made" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Two Points Attempted</label>
+              <input type="number" class="form-control" name="two_points_attempted" id="updateTeamSeason_two_points_attempted" placeholder="Enter two-point shots attempted" required />
+            </div>
+            <div class="col-6">
+              <label>Three Points Made</label>
+              <input type="number" class="form-control" name="three_points_made" id="updateTeamSeason_three_points_made" placeholder="Enter three-point shots made" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Three Points Attempted</label>
+              <input type="number" class="form-control" name="three_points_attempted" id="updateTeamSeason_three_points_attempted" placeholder="Enter three-point shots attempted" required />
+            </div>
+            <div class="col-6">
+              <label>Free Throws Made</label>
+              <input type="number" class="form-control" name="free_throws_made" id="updateTeamSeason_free_throws_made" placeholder="Enter free throws made" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Free Throws Attempted</label>
+              <input type="number" class="form-control" name="free_throws_attempted" id="updateTeamSeason_free_throws_attempted" placeholder="Enter free throws attempted" required />
+            </div>
+            <div class="col-6">
+              <label>Offensive Rebounds</label>
+              <input type="number" class="form-control" name="offensive_rebounds" id="updateTeamSeason_offensive_rebounds" placeholder="Enter offensive rebounds" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Defensive Rebounds</label>
+              <input type="number" class="form-control" name="defensive_rebounds" id="updateTeamSeason_defensive_rebounds" placeholder="Enter defensive rebounds" required />
+            </div>
+            <div class="col-6">
+              <label>Total Rebounds</label>
+              <input type="number" class="form-control" name="total_rebounds" id="updateTeamSeason_total_rebounds" placeholder="Enter total rebounds" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Assists</label>
+              <input type="number" class="form-control" name="assists" id="updateTeamSeason_assists" placeholder="Enter assists" required />
+            </div>
+            <div class="col-6">
+              <label>Steals</label>
+              <input type="number" class="form-control" name="steals" id="updateTeamSeason_steals" placeholder="Enter steals" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Turnovers</label>
+              <input type="number" class="form-control" name="turnovers" id="updateTeamSeason_turnovers" placeholder="Enter turnovers" required />
+            </div>
+            <div class="col-6">
+              <label>Blocks Favour</label>
+              <input type="number" class="form-control" name="blocks_favour" id="updateTeamSeason_blocks_favour" placeholder="Enter blocks in favour" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Blocks Against</label>
+              <input type="number" class="form-control" name="blocks_against" id="updateTeamSeason_blocks_against" placeholder="Enter blocks against" required />
+            </div>
+            <div class="col-6">
+              <label>Fouls Committed</label>
+              <input type="number" class="form-control" name="fouls_committed" id="updateTeamSeason_fouls_committed" placeholder="Enter fouls committed" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Fouls Received</label>
+              <input type="number" class="form-control" name="fouls_received" id="updateTeamSeason_fouls_received" placeholder="Enter fouls received" required />
+            </div>
+            <div class="col-6">
+              <label>Valuation</label>
+              <input type="number" class="form-control" name="valuation" id="updateTeamSeason_valuation" placeholder="Enter valuation" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Minutes Per Game</label>
+              <input type="number" step="0.01" class="form-control" name="minutes_per_game" id="updateTeamSeason_minutes_per_game" placeholder="Enter minutes per game" required />
+            </div>
+            <div class="col-6">
+              <label>Points Per Game</label>
+              <input type="number" step="0.01" class="form-control" name="points_per_game" id="updateTeamSeason_points_per_game" placeholder="Enter points per game" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Two Points Made Per Game</label>
+              <input type="number" step="0.01" class="form-control" name="two_points_made_per_game" id="updateTeamSeason_two_points_made_per_game" placeholder="Enter two points made per game" required />
+            </div>
+            <div class="col-6">
+              <label>Two Points Attempted Per Game</label>
+              <input type="number" step="0.01" class="form-control" name="two_points_attempted_per_game" id="updateTeamSeason_two_points_attempted_per_game" placeholder="Enter two points attempted per game" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Two Points Percentage</label>
+              <input type="number" step="0.001" class="form-control" name="two_points_percentage" id="updateTeamSeason_two_points_percentage" placeholder="Enter two points percentage" required />
+            </div>
+            <div class="col-6">
+              <label>Three Points Made Per Game</label>
+              <input type="number" step="0.01" class="form-control" name="three_points_made_per_game" id="updateTeamSeason_three_points_made_per_game" placeholder="Enter three points made per game" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Three Points Attempted Per Game</label>
+              <input type="number" step="0.01" class="form-control" name="three_points_attempted_per_game" id="updateTeamSeason_three_points_attempted_per_game" placeholder="Enter three points attempted per game" required />
+            </div>
+            <div class="col-6">
+              <label>Three Points Percentage</label>
+              <input type="number" step="0.001" class="form-control" name="three_points_percentage" id="updateTeamSeason_three_points_percentage" placeholder="Enter three points percentage" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Free Throws Made Per Game</label>
+              <input type="number" step="0.01" class="form-control" name="free_throws_made_per_game" id="updateTeamSeason_free_throws_made_per_game" placeholder="Enter free throws made per game" required />
+            </div>
+            <div class="col-6">
+              <label>Free Throws Attempted Per Game</label>
+              <input type="number" step="0.01" class="form-control" name="free_throws_attempted_per_game" id="updateTeamSeason_free_throws_attempted_per_game" placeholder="Enter free throws attempted per game" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Free Throws Percentage</label>
+              <input type="number" step="0.001" class="form-control" name="free_throws_percentage" id="updateTeamSeason_free_throws_percentage" placeholder="Enter free throws percentage" required />
+            </div>
+            <div class="col-6">
+              <label>Offensive Rebounds Per Game</label>
+              <input type="number" step="0.01" class="form-control" name="offensive_rebounds_per_game" id="updateTeamSeason_offensive_rebounds_per_game" placeholder="Enter offensive rebounds per game" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Defensive Rebounds Per Game</label>
+              <input type="number" step="0.01" class="form-control" name="defensive_rebounds_per_game" id="updateTeamSeason_defensive_rebounds_per_game" placeholder="Enter defensive rebounds per game" required />
+            </div>
+            <div class="col-6">
+              <label>Total Rebounds Per Game</label>
+              <input type="number" step="0.01" class="form-control" name="total_rebounds_per_game" id="updateTeamSeason_total_rebounds_per_game" placeholder="Enter total rebounds per game" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Assists Per Game</label>
+              <input type="number" step="0.01" class="form-control" name="assists_per_game" id="updateTeamSeason_assists_per_game" placeholder="Enter assists per game" required />
+            </div>
+            <div class="col-6">
+              <label>Steals Per Game</label>
+              <input type="number" step="0.01" class="form-control" name="steals_per_game" id="updateTeamSeason_steals_per_game" placeholder="Enter steals per game" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Turnovers Per Game</label>
+              <input type="number" step="0.01" class="form-control" name="turnovers_per_game" id="updateTeamSeason_turnovers_per_game" placeholder="Enter turnovers per game" required />
+            </div>
+            <div class="col-6">
+              <label>Blocks Favour Per Game</label>
+              <input type="number" step="0.01" class="form-control" name="blocks_favour_per_game" id="updateTeamSeason_blocks_favour_per_game" placeholder="Enter blocks in favour per game" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Blocks Against Per Game</label>
+              <input type="number" step="0.01" class="form-control" name="blocks_against_per_game" id="updateTeamSeason_blocks_against_per_game" placeholder="Enter blocks against per game" required />
+            </div>
+            <div class="col-6">
+              <label>Fouls Committed Per Game</label>
+              <input type="number" step="0.01" class="form-control" name="fouls_committed_per_game" id="updateTeamSeason_fouls_committed_per_game" placeholder="Enter fouls committed per game" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Fouls Received Per Game</label>
+              <input type="number" step="0.01" class="form-control" name="fouls_received_per_game" id="updateTeamSeason_fouls_received_per_game" placeholder="Enter fouls received per game" required />
+            </div>
+            <div class="col-6">
+              <label>Valuation Per Game</label>
+              <input type="number" step="0.01" class="form-control" name="valuation_per_game" id="updateTeamSeason_valuation_per_game" placeholder="Enter valuation per game" required />
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary" form="updateTeamSeasonForm">Update Team Season</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Team Season Modal -->
+<div class="modal fade" id="deleteTeamSeasonModal" tabindex="-1" aria-labelledby="deleteTeamSeasonModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Delete Team Season</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/panel/teams/{{ team_id }}/delete" method="post" id="deleteTeamSeasonForm">
+          <input type="hidden" class="form-control" name="season_team_id" id="deleteTeamSeason_season_team_id" />
+        </form>
+        <div class="mt-1 mb-1" id="message"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-danger" form="deleteTeamSeasonForm">Delete Team Season</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const deleteTeamSeasonModal = document.getElementById('deleteTeamSeasonModal');
+  if (deleteTeamSeasonModal) {
+    deleteTeamSeasonModal.addEventListener('show.bs.modal', (event) => {
+      const deleteButton = event.relatedTarget;
+      const season_team_id = deleteButton.getAttribute('data-season-team-id');
+
+      const message = deleteTeamSeasonModal.querySelector('#message');
+      message.innerHTML = 'The team season with the ID <strong>' + season_team_id + '</strong> will be deleted. Are you sure?';
+
+      const seasonTeamIdInput = deleteTeamSeasonModal.querySelector('#deleteTeamSeason_season_team_id');
+      seasonTeamIdInput.value = season_team_id;
+    });
+  }
+
+  const updateTeamSeasonModal = document.getElementById('updateTeamSeasonModal');
+  if (updateTeamSeasonModal) {
+    updateTeamSeasonModal.addEventListener('show.bs.modal', (event) => {
+      const updateButton = event.relatedTarget;
+      const data = updateButton.dataset;
+
+      const modalFields = updateTeamSeasonModal.querySelectorAll('[id^="updateTeamSeason_"]');
+      modalFields.forEach(field => {
+        const fieldName = field.name || field.id.replace('updateTeamSeason_', '');
+        if (data[fieldName] !== undefined) {
+          var value = data[fieldName];
+          field.value = value;
+        }
+      });
+    });
+  }
+</script>
+{% endblock %}

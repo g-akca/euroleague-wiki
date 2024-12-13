@@ -1,6 +1,6 @@
 /*  Script Steps
-    This script was written and edited during a Zoom call with all members of the team Cyclones present. We are pushing this script seperately to conform with the guidelines.
-    For the respective lines, add your path to the secure file folder.
+    This script was written and edited during a Zoom call with all members of the team Cyclones present. We are pushing this script separately to conform with the guidelines.
+    For the "load data inline" lines, change the path to your mysql secure file folder.
     1. Creates the Schema, Tables and Loads the data from the dataset.
     2. Alters some data to create players table.
     3. Output the current tables for future use.
@@ -430,7 +430,7 @@ INTO OUTFILE 'D:/MySQL/Uploads/euroleague_play_by_play2.csv'
 FIELDS TERMINATED BY ';'
 LINES TERMINATED BY '\r';
 
-SELECT 'points_primary_id', 'game_point_id', 'action', 'points', 'coord_x', 'coord_y', 'zone', 'fastbreak', 'second_chance', 'points_off_turnover', 'points_a', 'points_b'
+SELECT 'primary_point_id', 'game_point_id', 'action', 'points', 'coord_x', 'coord_y', 'zone', 'fastbreak', 'second_chance', 'points_off_turnover', 'points_a', 'points_b'
 UNION all
 SELECT NULL, game_point_id, action, points, coord_x, coord_y, IFNULL(zone, ''), IFNULL(fastbreak, ''), IFNULL(second_chance, ''), IFNULL(points_off_turnover, ''), points_a, points_b
 FROM euroleague_points
@@ -548,7 +548,7 @@ CREATE TABLE `euro`.`euroleague_play_by_play` (
 );
 
 CREATE TABLE `euro`.`euroleague_points` (
-	points_primary_id 	INTEGER NOT NULL AUTO_INCREMENT,
+	primary_point_id 	INTEGER NOT NULL AUTO_INCREMENT,
 	game_point_id       VARCHAR(20) NOT NULL,
 	action              VARCHAR(30) NOT NULL,
 	points              INTEGER  NOT NULL,
