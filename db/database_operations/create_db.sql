@@ -410,6 +410,7 @@ SET player_id = 'PLRU'
 WHERE season_player_id = 'E2023_PLRU_RED';   
 
 ALTER TABLE euroleague_play_by_play DROP COLUMN `comment`;
+ALTER TABLE euroleague_play_by_play DROP COLUMN `team`;
     
 /* export the tables with the corrected player ids, the results of the exports will be used for finalized tables. (Some initial tables have unnnecessary data) */
 
@@ -421,9 +422,9 @@ INTO OUTFILE 'D:/MySQL/Uploads/euroleague_header2.csv'
 FIELDS TERMINATED BY ';'
 LINES TERMINATED BY '\r';
 
-SELECT 'game_play_id', 'game_id', 'quarter', 'number_of_play', 'team_id', 'player_id', 'play_type', 'team', 'dorsal', 'minute', 'marker_time', 'play_info'
+SELECT 'game_play_id', 'game_id', 'quarter', 'number_of_play', 'team_id', 'player_id', 'play_type', 'dorsal', 'minute', 'marker_time', 'play_info'
 UNION all
-SELECT game_play_id, game_id, quarter, number_of_play, IFNULL(team_id, ''), IFNULL(player_id, ''), play_type, IFNULL(team, ''), IFNULL(dorsal, ''), minute, IFNULL(marker_time, ''), play_info
+SELECT game_play_id, game_id, quarter, number_of_play, IFNULL(team_id, ''), IFNULL(player_id, ''), play_type, IFNULL(dorsal, ''), minute, IFNULL(marker_time, ''), play_info
 FROM euroleague_play_by_play
 INTO OUTFILE 'D:/MySQL/Uploads/euroleague_play_by_play2.csv'
 FIELDS TERMINATED BY ';'
@@ -538,7 +539,6 @@ CREATE TABLE `euro`.`euroleague_play_by_play` (
 	team_id				VARCHAR(10),
 	player_id			VARCHAR(15),
 	play_type			VARCHAR(10) NOT NULL,
-	team				VARCHAR(50),
 	dorsal				INTEGER,
 	minute				INTEGER,
 	marker_time			VARCHAR(6), -- mm:ss
@@ -803,7 +803,6 @@ LINES TERMINATED BY '\r'
 IGNORE 1 ROWS
 SET team_id = NULLIF(team_id, ''),
     player_id = NULLIF(player_id, ''),
-    team = NULLIF(team, ''),
     dorsal = NULLIF(dorsal, ''),
     marker_time = NULLIF(marker_time, '');
 
@@ -955,18 +954,6 @@ UPDATE euro.euroleague_header
 SET phase = 'TOP 16'
 WHERE phase = 'TOP SIXTEEN';
 
-/* Add team names from header to box score as well */
-
-ALTER TABLE euro.euroleague_box_score ADD COLUMN team VARCHAR(50) AFTER team_id;
-
-UPDATE euroleague_box_score, euroleague_header
-SET euroleague_box_score.team = euroleague_header.team_a
-WHERE euroleague_box_score.game_id = euroleague_header.game_id AND euroleague_box_score.team_id = euroleague_header.team_id_a;
-
-UPDATE euroleague_box_score, euroleague_header
-SET euroleague_box_score.team = euroleague_header.team_b
-WHERE euroleague_box_score.game_id = euroleague_header.game_id AND euroleague_box_score.team_id = euroleague_header.team_id_b;
-
 /* Export the finalized data that will be used for the project. */
 
 SELECT 'game_id', 'game', 'date', 'time', 'round', 'phase', 'season_code', 'score_a', 'score_b', 'team_a', 'team_b', 'team_id_a', 'team_id_b', 'coach_a', 'coach_b', 'game_time', 'remaining_partial_time', 'referee_1', 'referee_2', 'referee_3', 'stadium', 'capacity', 'w_id', 'fouls_a', 'fouls_b', 'timeouts_a', 'timeouts_b', 'score_quarter_1_a', 'score_quarter_2_a', 'score_quarter_3_a', 'score_quarter_4_a', 'score_quarter_1_b', 'score_quarter_2_b', 'score_quarter_3_b', 'score_quarter_4_b', 'score_extra_time_1_a', 'score_extra_time_2_a', 'score_extra_time_3_a', 'score_extra_time_4_a', 'score_extra_time_1_b', 'score_extra_time_2_b', 'score_extra_time_3_b', 'score_extra_time_4_b'
@@ -977,7 +964,7 @@ INTO OUTFILE 'D:/MySQL/Uploads/euroleague_header_final.csv'
 FIELDS TERMINATED BY ';'
 LINES TERMINATED BY '\r';
 
-SELECT 'game_play_id', 'game_id', 'quarter', 'number_of_play', 'team_id', 'player_id', 'play_type', 'team', 'dorsal', 'minute', 'marker_time', 'play_info'
+SELECT 'game_play_id', 'game_id', 'quarter', 'number_of_play', 'team_id', 'player_id', 'play_type', 'dorsal', 'minute', 'marker_time', 'play_info'
 UNION all
 SELECT *
 FROM euroleague_play_by_play
@@ -1025,7 +1012,7 @@ INTO OUTFILE 'D:/MySQL/Uploads/euroleague_players_final.csv'
 FIELDS TERMINATED BY ';'
 LINES TERMINATED BY '\r';
 
-SELECT 'game_player_id', 'game_id', 'player_id', 'is_starter', 'is_playing', 'team_id', 'team', 'dorsal', 'minutes', 'points', 'two_points_made', 'two_points_attempted', 'three_points_made', 'three_points_attempted', 'free_throws_made', 'free_throws_attempted', 'offensive_rebounds', 'defensive_rebounds', 'total_rebounds', 'assists', 'steals', 'turnovers', 'blocks_favour', 'blocks_against', 'fouls_committed', 'fouls_received', 'valuation', 'plus_minus'
+SELECT 'game_player_id', 'game_id', 'player_id', 'is_starter', 'is_playing', 'team_id', 'dorsal', 'minutes', 'points', 'two_points_made', 'two_points_attempted', 'three_points_made', 'three_points_attempted', 'free_throws_made', 'free_throws_attempted', 'offensive_rebounds', 'defensive_rebounds', 'total_rebounds', 'assists', 'steals', 'turnovers', 'blocks_favour', 'blocks_against', 'fouls_committed', 'fouls_received', 'valuation', 'plus_minus'
 UNION all
 SELECT *
 FROM euroleague_box_score

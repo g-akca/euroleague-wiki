@@ -150,7 +150,7 @@ def panel_teams_page():
 def panel_box_scores_page():
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
-    cursor.execute("SELECT *, euroleague_box_score.player_id AS player_id FROM euroleague_box_score LEFT JOIN euroleague_player_names ON euroleague_box_score.player_id = euroleague_player_names.player_id ORDER BY game_id, team_id ASC LIMIT 100")
+    cursor.execute("SELECT *, euroleague_box_score.player_id AS player_id, euroleague_box_score.team_id AS team_id FROM euroleague_box_score LEFT JOIN euroleague_player_names ON euroleague_box_score.player_id = euroleague_player_names.player_id LEFT JOIN euroleague_team_names ON euroleague_box_score.team_id = euroleague_team_names.team_id ORDER BY game_id, euroleague_box_score.team_id ASC LIMIT 100")
     box_scores = cursor.fetchall()
 
     for bx in box_scores:
@@ -183,8 +183,8 @@ def panel_box_scores_add():
     
     cursor.execute("DESCRIBE euroleague_box_score")
     columns = [column['Field'] for column in cursor.fetchall()]
-    filtered_data['game_player_id'] = game_player_id
     filtered_data = {key: form_data[key] for key in form_data if key in columns}
+    filtered_data['game_player_id'] = game_player_id
     value_placeholders = ', '.join([f'%({key})s' for key in filtered_data])
     columns_str = ', '.join(filtered_data.keys())
     sql = f"""INSERT INTO euroleague_box_score ({columns_str}) VALUES ({value_placeholders})"""
@@ -216,8 +216,8 @@ def panel_box_scores_update():
 
     cursor.execute("DESCRIBE euroleague_box_score")
     columns = [column['Field'] for column in cursor.fetchall()]
-    filtered_data['game_player_id'] = new_game_player_id
     filtered_data = {key: form_data[key] for key in form_data if key in columns}
+    filtered_data['game_player_id'] = game_player_id
     set_str = ', '.join([f"{key} = %({key})s" for key in filtered_data])
     sql = f"""UPDATE euroleague_box_score SET {set_str} WHERE game_player_id = %(game_player_id)s"""
     cursor.execute(sql, filtered_data)

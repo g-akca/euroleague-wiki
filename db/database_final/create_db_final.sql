@@ -77,7 +77,6 @@ CREATE TABLE `euro`.`euroleague_play_by_play` (
 	team_id				VARCHAR(10),
 	player_id			VARCHAR(15),
 	play_type			VARCHAR(10) NOT NULL,
-	team				VARCHAR(50),
 	dorsal				INTEGER,
 	minute				INTEGER,
 	marker_time			VARCHAR(6), -- mm:ss
@@ -226,7 +225,6 @@ CREATE TABLE `euro`.`euroleague_box_score` (
 	is_starter              NUMERIC(3,1) NOT NULL,
 	is_playing              NUMERIC(3,1) NOT NULL,
 	team_id                 VARCHAR(10) NOT NULL,
-	team                    VARCHAR(50) NOT NULL,
 	dorsal                  VARCHAR(10) NOT NULL,
 	minutes                 VARCHAR(6), -- mm:ss
 	points                  INTEGER  NOT NULL,
