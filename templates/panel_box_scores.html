@@ -436,7 +436,7 @@
   const addBoxScoreModal = document.getElementById('addBoxScoreModal');
   if (addBoxScoreModal) {
     document.getElementById('addBoxScore_game_id').addEventListener('change', (event) => {
-      fillTeamDropdownByGame(event.target.value, 'addBoxScore_team_id');
+      fillTeamDropdownByGame(event.target.value, 'addBoxScore_team_id', 'addBoxScore_player_id');
     });
 
     document.getElementById('addBoxScore_team_id').addEventListener('change', (event) => {
@@ -460,26 +460,28 @@
         }
       });
 
-      fillTeamDropdownByGame(data.game_id, 'updateBoxScore_team_id', data.team_id);
+      fillTeamDropdownByGame(data.game_id, 'updateBoxScore_team_id', 'updateBoxScore_player_id', data.team_id);
       fillPlayerDropdownByTeamSeason(data.game_id, data.team_id, 'updateBoxScore_player_id', data.player_id);
+    });
 
-      document.getElementById('updateBoxScore_game_id').addEventListener('change', (event) => {
-        fillTeamDropdownByGame(event.target.value, 'updateBoxScore_team_id');
-      });
+    document.getElementById('updateBoxScore_game_id').addEventListener('change', (event) => {
+      fillTeamDropdownByGame(event.target.value, 'updateBoxScore_team_id', 'updateBoxScore_player_id');
+    });
 
-      document.getElementById('updateBoxScore_team_id').addEventListener('change', (event) => {
-        const game_id = document.getElementById('updateBoxScore_game_id').value;
-        fillPlayerDropdownByTeamSeason(game_id, event.target.value, 'updateBoxScore_player_id');
-      });
+    document.getElementById('updateBoxScore_team_id').addEventListener('change', (event) => {
+      const game_id = document.getElementById('updateBoxScore_game_id').value;
+      fillPlayerDropdownByTeamSeason(game_id, event.target.value, 'updateBoxScore_player_id');
     });
   }
 
-  function fillTeamDropdownByGame(game_id, teamElement, team_id = null) {
+  function fillTeamDropdownByGame(game_id, teamElement, playerElement, team_id = null) {
     fetch(`/panel/get_teams_by_match/${game_id}`)
       .then(response => response.json())
       .then(data => {
         const teamSelect = document.getElementById(teamElement);
         teamSelect.innerHTML = '<option disabled selected>Select a Team</option>';
+        const playerSelect = document.getElementById(playerElement);
+        playerSelect.innerHTML = '<option disabled selected>Select a Player</option>';
 
         var option = document.createElement('option');
         option.value = data.team.team_id_a;
