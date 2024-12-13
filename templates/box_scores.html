@@ -13,9 +13,9 @@
             <tr>
               <th>Box Score ID</th>
               <th>Game ID</th>
-              <th>Player ID</th>
-              <th>Points</th>
-              <th>Assists</th>
+              <th>Player</th>
+              <th>Team</th>
+              <th>Points Scored</th>
             </tr>
           </thead>
           <tbody class="table-group-divider">
@@ -23,9 +23,9 @@
             <tr>
               <td><a class="text-success" href="/box_score/{{ bx['game_player_id'] }}">{{ bx['game_player_id'] }}</a></td>
               <td>{{ bx['game_id'] }}</td>
-              <td>{{ bx['player_id'] }}</td>
+              <td>{{ bx['player_name'] }}</td>
+              <td>{{ bx['team'] }}</td>
               <td>{{ bx['points'] }}</td>
-              <td>{{ bx['assists'] }}</td>
             </tr>
             {% endfor %}
           </tbody>

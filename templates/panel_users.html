@@ -42,16 +42,8 @@
           <td>{{ user['role_detailed'] }}</td>
           <td>{{ user['register_time'] }}</td>
           <td>{{ user['team_supported'] }}</td>
-          <!-- Trying to find an efficient way for this and the scripts for the larger models -->
-          <td><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateUserModal" 
-            data-userid="{{ user['user_id'] }}"
-            data-username="{{ user['username'] }}" 
-            data-email="{{ user['email'] }}" 
-            data-team="{{ user['team_supported'] }}" 
-            data-role="{{ user['role'] }}">Update</button></td>
-          <td><button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteUserModal" 
-            data-userid="{{ user['user_id'] }}" 
-            data-username="{{ user['username'] }}">Delete</button></td>
+          <td><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateUserModal" {{ user['data_attributes'] }}>Update</button></td>
+          <td><button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteUserModal" data-userid="{{ user['user_id'] }}" data-username="{{ user['username'] }}">Delete</button></td>
         </tr>
         {% endfor %}
       </tbody>
@@ -61,7 +53,7 @@
 
 <!-- Add User Modal -->
 <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
         <h3 class="modal-title">Add New User</h1>
@@ -117,7 +109,7 @@
 
 <!-- Update User Modal -->
 <div class="modal fade" id="updateUserModal" tabindex="-1" aria-labelledby="updateUserModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
         <h3 class="modal-title">Update User</h1>
@@ -174,7 +166,7 @@
 
 <!-- Delete User Modal -->
 <div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
         <h3 class="modal-title">Delete User</h1>
@@ -216,27 +208,29 @@
   if (updateUserModal) {
     updateUserModal.addEventListener('show.bs.modal', (event) => {
       const updateButton = event.relatedTarget;
-      const user_id = updateButton.getAttribute('data-userid');
-      const username = updateButton.getAttribute('data-username');
-      const email = updateButton.getAttribute('data-email');
-      const team_supported = updateButton.getAttribute('data-team');
-      const role = updateButton.getAttribute('data-role');
+      const data = updateButton.dataset;
 
-      updateUserModal.querySelector('#updateUser_user_id').value = user_id;
-      updateUserModal.querySelector('#updateUser_username').value = username;
-      updateUserModal.querySelector('#updateUser_email').value = email;
-      if (team_supported != "None") {
-        updateUserModal.querySelector('#updateUser_team_supported').value = team_supported;
-      }
-      else {
-        updateUserModal.querySelector('#updateUser_team_supported').value = "";
-      }
+      const modalFields = updateUserModal.querySelectorAll('[id^="updateUser_"]');
+      modalFields.forEach(field => {
+        const fieldName = field.name || field.id.replace('updateUser_', '');
+        if (data[fieldName] !== undefined) {
+          var value = data[fieldName];
+          field.value = value;
+        }
+      });
       
-      if (role == 'A') {
+      if (data.role == 'A') {
         updateUserModal.querySelector('#role_admin').checked = true;
       }
       else {
         updateUserModal.querySelector('#role_user').checked = true;
+      }
+
+      if (data.team_supported != "None") {
+        updateUserModal.querySelector('#updateUser_team_supported').value = data.team_supported;
+      }
+      else {
+        updateUserModal.querySelector('#updateUser_team_supported').value = "";
       }
     });
   }

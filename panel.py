@@ -39,11 +39,35 @@ def get_counts():
                     ]})
 
 @admin_required
+def get_teams_by_match(game_id):
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("SELECT team_id_a, team_id_b, team_a, team_b FROM euroleague_header WHERE game_id = %s", (game_id, ))
+    team = cursor.fetchone()
+    cursor.close()
+    connection.close()
+    return jsonify({'team': team})
+
+@admin_required
+def get_players_by_team_season(team_id, season_code):
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("SELECT euroleague_player_names.player_id, euroleague_player_names.player_name FROM euroleague_players LEFT JOIN euroleague_player_names ON euroleague_players.player_id = euroleague_player_names.player_id WHERE team_id = %s AND season_code = %s ORDER BY euroleague_player_names.player_name ASC", (team_id, season_code))
+    players = cursor.fetchall()
+    cursor.close()
+    connection.close()
+    return jsonify({'players': players})
+
+@admin_required
 def panel_users_page():
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
     cursor.execute("SELECT *, CASE WHEN role = 'U' THEN 'User' WHEN role = 'A' THEN 'Admin' ELSE 'Unknown' END AS role_detailed FROM users")
     users = cursor.fetchall()
+
+    for user in users:
+        user['data_attributes'] = ' '.join([f'data-{key}={value}' for key, value in user.items()])
+
     cursor.execute("SELECT * FROM euroleague_team_names ORDER BY team_name ASC")
     team_names = cursor.fetchall()
     cursor.close()
@@ -91,10 +115,10 @@ def panel_users_update():
         cursor.execute("UPDATE users SET username = %s, email = %s, hashed_password = %s, role = %s, team_supported = %s WHERE user_id = %s", (username, email, hashed_pw, role, team_supported, user_id))
     else:
         cursor.execute("UPDATE users SET username = %s, email = %s, role = %s, team_supported = %s WHERE user_id = %s", (username, email, role, team_supported, user_id))
+
     connection.commit()
     cursor.close()
     connection.close()
-
     flash("User updated successfully!", "success")
     return redirect(url_for('panel_users_page'))
 
@@ -121,3 +145,99 @@ def panel_teams_page():
     cursor.close()
     connection.close()
     return render_template("panel_teams.html", team_names=team_names)
+
+@admin_required
+def panel_box_scores_page():
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("SELECT *, euroleague_box_score.player_id AS player_id FROM euroleague_box_score LEFT JOIN euroleague_player_names ON euroleague_box_score.player_id = euroleague_player_names.player_id ORDER BY game_id, team_id ASC LIMIT 100")
+    box_scores = cursor.fetchall()
+
+    for bx in box_scores:
+        bx['data_attributes'] = ' '.join([f'data-{key}={value}' for key, value in bx.items()])
+
+    cursor.execute("SELECT * FROM euroleague_header")
+    matches = cursor.fetchall()
+    cursor.execute("SELECT * FROM euroleague_player_names ORDER BY player_name ASC")
+    player_names = cursor.fetchall()
+    cursor.close()
+    connection.close()
+    return render_template("panel_box_scores.html", box_scores=box_scores, matches=matches, player_names=player_names)
+
+@admin_required
+def panel_box_scores_add():
+    form_data = request.form.to_dict()
+    game_id = request.form['game_id']
+    player_id = request.form['player_id']
+    game_player_id = f"{game_id}_{player_id}"
+
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM euroleague_box_score WHERE game_player_id = %s", (game_player_id, ))
+    bx_existing = cursor.fetchone()
+    if bx_existing:
+        flash("This box score already exists!", "danger")
+        cursor.close()
+        connection.close()
+        return redirect(url_for('panel_box_scores_page'))
+    
+    cursor.execute("DESCRIBE euroleague_box_score")
+    columns = [column['Field'] for column in cursor.fetchall()]
+    filtered_data['game_player_id'] = game_player_id
+    filtered_data = {key: form_data[key] for key in form_data if key in columns}
+    value_placeholders = ', '.join([f'%({key})s' for key in filtered_data])
+    columns_str = ', '.join(filtered_data.keys())
+    sql = f"""INSERT INTO euroleague_box_score ({columns_str}) VALUES ({value_placeholders})"""
+    cursor.execute(sql, filtered_data)
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+    flash("Box score added successfully!", "success")
+    return redirect(url_for('panel_box_scores_page'))
+
+@admin_required
+def panel_box_scores_update():
+    form_data = request.form.to_dict()
+    game_id = request.form['game_id']
+    player_id = request.form['player_id']
+    game_player_id = request.form['game_player_id']
+    new_game_player_id = f"{game_id}_{player_id}"
+
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM euroleague_box_score WHERE game_player_id = %s", (new_game_player_id, ))
+    bx_existing = cursor.fetchone()
+    if bx_existing and game_player_id != new_game_player_id:
+        flash("The box score for that player in that game already exists!", "danger")
+        cursor.close()
+        connection.close()
+        return redirect(url_for('panel_box_scores_page'))
+
+    cursor.execute("DESCRIBE euroleague_box_score")
+    columns = [column['Field'] for column in cursor.fetchall()]
+    filtered_data['game_player_id'] = new_game_player_id
+    filtered_data = {key: form_data[key] for key in form_data if key in columns}
+    set_str = ', '.join([f"{key} = %({key})s" for key in filtered_data])
+    sql = f"""UPDATE euroleague_box_score SET {set_str} WHERE game_player_id = %(game_player_id)s"""
+    cursor.execute(sql, filtered_data)
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+    flash("Box score updated successfully!", "success")
+    return redirect(url_for('panel_box_scores_page'))
+
+@admin_required
+def panel_box_scores_delete():
+    game_player_id = request.form['game_player_id']
+
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("DELETE FROM euroleague_box_score WHERE game_player_id = %s", (game_player_id, ))
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+    flash("Box score deleted successfully!", "success")
+    return redirect(url_for('panel_box_scores_page'))

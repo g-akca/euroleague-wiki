@@ -120,7 +120,7 @@ def comparisons_page():
 def box_scores_page():
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM euroleague_box_score")
+    cursor.execute("SELECT * FROM euroleague_box_score LEFT JOIN euroleague_player_names ON euroleague_box_score.player_id = euroleague_player_names.player_id ORDER BY game_id, team_id ASC LIMIT 100")
     box_scores = cursor.fetchall()
     cursor.close()
     connection.close()

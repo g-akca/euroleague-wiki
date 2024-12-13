@@ -31,11 +31,17 @@ def create_app():
     # Admin Panel related
     app.add_url_rule("/panel", view_func=panel.panel_users_page)
     app.add_url_rule("/panel/get_counts", view_func=panel.get_counts)
+    app.add_url_rule("/panel/get_teams_by_match/<string:game_id>", view_func=panel.get_teams_by_match)
+    app.add_url_rule("/panel/get_players_by_team_season/<string:team_id>/<string:season_code>", view_func=panel.get_players_by_team_season)
     app.add_url_rule("/panel/users", view_func=panel.panel_users_page)
     app.add_url_rule("/panel/users/add", view_func=panel.panel_users_add, methods=['POST'])
     app.add_url_rule("/panel/users/update", view_func=panel.panel_users_update, methods=['POST'])
     app.add_url_rule("/panel/users/delete", view_func=panel.panel_users_delete, methods=['POST'])
     app.add_url_rule("/panel/teams", view_func=panel.panel_teams_page)
+    app.add_url_rule("/panel/box_scores", view_func=panel.panel_box_scores_page)
+    app.add_url_rule("/panel/box_scores/add", view_func=panel.panel_box_scores_add, methods=['POST'])
+    app.add_url_rule("/panel/box_scores/update", view_func=panel.panel_box_scores_update, methods=['POST'])
+    app.add_url_rule("/panel/box_scores/delete", view_func=panel.panel_box_scores_delete, methods=['POST'])
 
     @app.before_request
     def refresh_before_request():

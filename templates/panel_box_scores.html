@@ -1,0 +1,522 @@
+{% extends "layout.html" %} 
+
+{% block title %}Admin Panel - Box Scores{% endblock %}
+
+{% block content %}
+<div class="container-fluid d-flex flex-row">
+  <div>
+    {% include '_panelSidemenu.html' %}
+  </div>
+  <div class="content flex-grow-1">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    <div class="d-flex justify-content-between align-items-center">
+      <h2>Box Scores</h2>
+      <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addBoxScoreModal">Add New Box Score</button>
+    </div>
+    <table class="table table-striped table-hover">
+      <thead>
+        <tr>
+          <th>Box Score ID</th>
+          <th>Game ID</th>
+          <th>Player</th>
+          <th>Team</th>
+          <th>Points Scored</th>
+          <th class="col-1"></th>
+          <th class="col-1"></th>
+        </tr>
+      </thead>
+      <tbody class="table-group-divider">
+        {% for bx in box_scores %}
+        <tr>
+          <td>{{ bx['game_player_id'] }}</td>
+          <td>{{ bx['game_id'] }}</td>
+          <td>{{ bx['player_name'] }}</td>
+          <td>{{ bx['team'] }}</td>
+          <td>{{ bx['points'] }}</td>
+          <td><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateBoxScoreModal" {{ bx['data_attributes'] }}>Update</button></td>
+          <td><button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteBoxScoreModal" data-game-player-id="{{ bx['game_player_id'] }}">Delete</button></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Add Box Score Modal -->
+<div class="modal fade" id="addBoxScoreModal" tabindex="-1" aria-labelledby="addBoxScoreModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Add New Box Score</h3>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/panel/box_scores/add" method="post" id="addBoxScoreForm">
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Game ID</label>
+              <select name="game_id" id="addBoxScore_game_id" class="form-select">
+                <option disabled selected>Select a Match</option>
+                {% for match in matches %}
+                  <option value="{{ match['game_id'] }}">{{ match['game_id'] }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-6">
+              <label>Team</label>
+              <select name="team_id" id="addBoxScore_team_id" class="form-select">
+                <option disabled selected>Select a Team</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Player</label>
+              <select name="player_id" id="addBoxScore_player_id" class="form-select">
+                <option disabled selected>Select a Player</option>
+              </select>
+            </div>
+            <div class="col-6">
+              <label>Is Starter</label>
+              <input type="number" class="form-control" name="is_starter" id="addBoxScore_is_starter" placeholder="Enter 1 for Starter, 0 for Not" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Is Playing</label>
+              <input type="number" class="form-control" name="is_playing" id="addBoxScore_is_playing" placeholder="Enter 1 for Playing, 0 for Not" required />
+            </div>
+            <div class="col-6">
+              <label>Dorsal</label>
+              <input type="text" class="form-control" name="dorsal" id="addBoxScore_dorsal" placeholder="Enter player dorsal" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Minutes</label>
+              <input type="text" class="form-control" name="minutes" id="addBoxScore_minutes" placeholder="Enter minutes played (mm:ss)" />
+            </div>
+            <div class="col-6">
+              <label>Points</label>
+              <input type="number" class="form-control" name="points" id="addBoxScore_points" placeholder="Enter total points" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Two Points Made</label>
+              <input type="number" class="form-control" name="two_points_made" id="addBoxScore_two_points_made" placeholder="Enter two-point shots made" required />
+            </div>
+            <div class="col-6">
+              <label>Two Points Attempted</label>
+              <input type="number" class="form-control" name="two_points_attempted" id="addBoxScore_two_points_attempted" placeholder="Enter two-point shots attempted" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Three Points Made</label>
+              <input type="number" class="form-control" name="three_points_made" id="addBoxScore_three_points_made" placeholder="Enter three-point shots made" required />
+            </div>
+            <div class="col-6">
+              <label>Three Points Attempted</label>
+              <input type="number" class="form-control" name="three_points_attempted" id="addBoxScore_three_points_attempted" placeholder="Enter three-point shots attempted" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Free Throws Made</label>
+              <input type="number" class="form-control" name="free_throws_made" id="addBoxScore_free_throws_made" placeholder="Enter free throws made" required />
+            </div>
+            <div class="col-6">
+              <label>Free Throws Attempted</label>
+              <input type="number" class="form-control" name="free_throws_attempted" id="addBoxScore_free_throws_attempted" placeholder="Enter free throws attempted" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Offensive Rebounds</label>
+              <input type="number" class="form-control" name="offensive_rebounds" id="addBoxScore_offensive_rebounds" placeholder="Enter offensive rebounds" required />
+            </div>
+            <div class="col-6">
+              <label>Defensive Rebounds</label>
+              <input type="number" class="form-control" name="defensive_rebounds" id="addBoxScore_defensive_rebounds" placeholder="Enter defensive rebounds" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Total Rebounds</label>
+              <input type="number" class="form-control" name="total_rebounds" id="addBoxScore_total_rebounds" placeholder="Enter total rebounds" required />
+            </div>
+            <div class="col-6">
+              <label>Assists</label>
+              <input type="number" class="form-control" name="assists" id="addBoxScore_assists" placeholder="Enter assists" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Steals</label>
+              <input type="number" class="form-control" name="steals" id="addBoxScore_steals" placeholder="Enter steals" required />
+            </div>
+            <div class="col-6">
+              <label>Turnovers</label>
+              <input type="number" class="form-control" name="turnovers" id="addBoxScore_turnovers" placeholder="Enter turnovers" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Blocks Favour</label>
+              <input type="number" class="form-control" name="blocks_favour" id="addBoxScore_blocks_favour" placeholder="Enter blocks in favour" required />
+            </div>
+            <div class="col-6">
+              <label>Blocks Against</label>
+              <input type="number" class="form-control" name="blocks_against" id="addBoxScore_blocks_against" placeholder="Enter blocks against" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Fouls Committed</label>
+              <input type="number" class="form-control" name="fouls_committed" id="addBoxScore_fouls_committed" placeholder="Enter fouls committed" required />
+            </div>
+            <div class="col-6">
+              <label>Fouls Received</label>
+              <input type="number" class="form-control" name="fouls_received" id="addBoxScore_fouls_received" placeholder="Enter fouls received" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Valuation</label>
+              <input type="number" class="form-control" name="valuation" id="addBoxScore_valuation" placeholder="Enter valuation" required />
+            </div>
+            <div class="col-6">
+              <label>Plus Minus</label>
+              <input type="number" class="form-control" name="plus_minus" id="addBoxScore_plus_minus" placeholder="Enter plus-minus value" required />
+            </div>
+          </div>
+        </form>      
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-success" form="addBoxScoreForm">Create Box Score</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Update Box Score Modal -->
+<div class="modal fade" id="updateBoxScoreModal" tabindex="-1" aria-labelledby="updateBoxScoreModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Update Box Score</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/panel/box_scores/update" method="post" id="updateBoxScoreForm">
+          <input type="hidden" class="form-control" name="game_player_id" id="updateBoxScore_game_player_id" />
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Game ID</label>
+              <select name="game_id" id="updateBoxScore_game_id" class="form-select">
+                <option disabled selected>Select a Match</option>
+                {% for match in matches %}
+                  <option value="{{ match['game_id'] }}">{{ match['game_id'] }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="col-6">
+              <label>Team</label>
+              <select name="team_id" id="updateBoxScore_team_id" class="form-select">
+                <option disabled selected>Select a Team</option>
+              </select>
+            </div>
+          </div>
+        
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Player</label>
+              <select name="player_id" id="updateBoxScore_player_id" class="form-select">
+                <option disabled selected>Select a Player</option>
+              </select>
+            </div>
+            <div class="col-6">
+              <label>Is Starter</label>
+              <input type="number" class="form-control" name="is_starter" id="updateBoxScore_is_starter" placeholder="Enter 1 for Starter, 0 for Not" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Is Playing</label>
+              <input type="number" class="form-control" name="is_playing" id="updateBoxScore_is_playing" placeholder="Enter 1 for Playing, 0 for Not" required />
+            </div>
+            <div class="col-6">
+              <label>Dorsal</label>
+              <input type="text" class="form-control" name="dorsal" id="updateBoxScore_dorsal" placeholder="Enter player dorsal" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Minutes</label>
+              <input type="text" class="form-control" name="minutes" id="updateBoxScore_minutes" placeholder="Enter minutes played (mm:ss)" />
+            </div>
+            <div class="col-6">
+              <label>Points</label>
+              <input type="number" class="form-control" name="points" id="updateBoxScore_points" placeholder="Enter total points" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Two Points Made</label>
+              <input type="number" class="form-control" name="two_points_made" id="updateBoxScore_two_points_made" placeholder="Enter two-point shots made" required />
+            </div>
+            <div class="col-6">
+              <label>Two Points Attempted</label>
+              <input type="number" class="form-control" name="two_points_attempted" id="updateBoxScore_two_points_attempted" placeholder="Enter two-point shots attempted" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Three Points Made</label>
+              <input type="number" class="form-control" name="three_points_made" id="updateBoxScore_three_points_made" placeholder="Enter three-point shots made" required />
+            </div>
+            <div class="col-6">
+              <label>Three Points Attempted</label>
+              <input type="number" class="form-control" name="three_points_attempted" id="updateBoxScore_three_points_attempted" placeholder="Enter three-point shots attempted" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Free Throws Made</label>
+              <input type="number" class="form-control" name="free_throws_made" id="updateBoxScore_free_throws_made" placeholder="Enter free throws made" required />
+            </div>
+            <div class="col-6">
+              <label>Free Throws Attempted</label>
+              <input type="number" class="form-control" name="free_throws_attempted" id="updateBoxScore_free_throws_attempted" placeholder="Enter free throws attempted" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Offensive Rebounds</label>
+              <input type="number" class="form-control" name="offensive_rebounds" id="updateBoxScore_offensive_rebounds" placeholder="Enter offensive rebounds" required />
+            </div>
+            <div class="col-6">
+              <label>Defensive Rebounds</label>
+              <input type="number" class="form-control" name="defensive_rebounds" id="updateBoxScore_defensive_rebounds" placeholder="Enter defensive rebounds" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Total Rebounds</label>
+              <input type="number" class="form-control" name="total_rebounds" id="updateBoxScore_total_rebounds" placeholder="Enter total rebounds" required />
+            </div>
+            <div class="col-6">
+              <label>Assists</label>
+              <input type="number" class="form-control" name="assists" id="updateBoxScore_assists" placeholder="Enter assists" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Steals</label>
+              <input type="number" class="form-control" name="steals" id="updateBoxScore_steals" placeholder="Enter steals" required />
+            </div>
+            <div class="col-6">
+              <label>Turnovers</label>
+              <input type="number" class="form-control" name="turnovers" id="updateBoxScore_turnovers" placeholder="Enter turnovers" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Blocks Favour</label>
+              <input type="number" class="form-control" name="blocks_favour" id="updateBoxScore_blocks_favour" placeholder="Enter blocks in favour" required />
+            </div>
+            <div class="col-6">
+              <label>Blocks Against</label>
+              <input type="number" class="form-control" name="blocks_against" id="updateBoxScore_blocks_against" placeholder="Enter blocks against" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Fouls Committed</label>
+              <input type="number" class="form-control" name="fouls_committed" id="updateBoxScore_fouls_committed" placeholder="Enter fouls committed" required />
+            </div>
+            <div class="col-6">
+              <label>Fouls Received</label>
+              <input type="number" class="form-control" name="fouls_received" id="updateBoxScore_fouls_received" placeholder="Enter fouls received" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Valuation</label>
+              <input type="number" class="form-control" name="valuation" id="updateBoxScore_valuation" placeholder="Enter valuation" required />
+            </div>
+            <div class="col-6">
+              <label>Plus Minus</label>
+              <input type="number" class="form-control" name="plus_minus" id="updateBoxScore_plus_minus" placeholder="Enter plus-minus value" required />
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary" form="updateBoxScoreForm">Update Box Score</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Box Score Modal -->
+<div class="modal fade" id="deleteBoxScoreModal" tabindex="-1" aria-labelledby="deleteBoxScoreModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Delete Box Score</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/panel/box_scores/delete" method="post" id="deleteBoxScoreForm">
+          <input type="hidden" class="form-control" name="game_player_id" id="deleteBoxScore_game_player_id" />
+        </form>
+        <div class="mt-1 mb-1" id="message"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-danger" form="deleteBoxScoreForm">Delete Box Score</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const deleteBoxScoreModal = document.getElementById('deleteBoxScoreModal');
+  if (deleteBoxScoreModal) {
+    deleteBoxScoreModal.addEventListener('show.bs.modal', (event) => {
+      const deleteButton = event.relatedTarget;
+      const box_score_id = deleteButton.getAttribute('data-game-player-id');
+
+      const message = deleteBoxScoreModal.querySelector('#message');
+      message.innerHTML = 'The box score with the ID <strong>' + box_score_id + '</strong> will be deleted. Are you sure?';
+
+      const boxScoreIdInput = deleteBoxScoreModal.querySelector('#deleteBoxScore_game_player_id');
+      boxScoreIdInput.value = box_score_id;
+    });
+  }
+
+  const addBoxScoreModal = document.getElementById('addBoxScoreModal');
+  if (addBoxScoreModal) {
+    document.getElementById('addBoxScore_game_id').addEventListener('change', (event) => {
+      fillTeamDropdownByGame(event.target.value, 'addBoxScore_team_id');
+    });
+
+    document.getElementById('addBoxScore_team_id').addEventListener('change', (event) => {
+      const game_id = document.getElementById('addBoxScore_game_id').value;
+      fillPlayerDropdownByTeamSeason(game_id, event.target.value, 'addBoxScore_player_id');
+    });
+  }
+
+  const updateBoxScoreModal = document.getElementById('updateBoxScoreModal');
+  if (updateBoxScoreModal) {
+    updateBoxScoreModal.addEventListener('show.bs.modal', (event) => {
+      const updateButton = event.relatedTarget;
+      const data = updateButton.dataset;
+
+      const modalFields = updateBoxScoreModal.querySelectorAll('[id^="updateBoxScore_"]');
+      modalFields.forEach(field => {
+        const fieldName = field.name || field.id.replace('updateBoxScore_', '');
+        if (data[fieldName] !== undefined) {
+          var value = data[fieldName];
+          field.value = value;
+        }
+      });
+
+      fillTeamDropdownByGame(data.game_id, 'updateBoxScore_team_id', data.team_id);
+      fillPlayerDropdownByTeamSeason(data.game_id, data.team_id, 'updateBoxScore_player_id', data.player_id);
+
+      document.getElementById('updateBoxScore_game_id').addEventListener('change', (event) => {
+        fillTeamDropdownByGame(event.target.value, 'updateBoxScore_team_id');
+      });
+
+      document.getElementById('updateBoxScore_team_id').addEventListener('change', (event) => {
+        const game_id = document.getElementById('updateBoxScore_game_id').value;
+        fillPlayerDropdownByTeamSeason(game_id, event.target.value, 'updateBoxScore_player_id');
+      });
+    });
+  }
+
+  function fillTeamDropdownByGame(game_id, teamElement, team_id = null) {
+    fetch(`/panel/get_teams_by_match/${game_id}`)
+      .then(response => response.json())
+      .then(data => {
+        const teamSelect = document.getElementById(teamElement);
+        teamSelect.innerHTML = '<option disabled selected>Select a Team</option>';
+
+        var option = document.createElement('option');
+        option.value = data.team.team_id_a;
+        option.textContent = data.team.team_a;
+        if (data.team.team_id_a == team_id) option.selected = true;
+        teamSelect.appendChild(option);
+
+        option = document.createElement('option');
+        option.value = data.team.team_id_b;
+        option.textContent = data.team.team_b;
+        if (data.team.team_id_b == team_id) option.selected = true;
+        teamSelect.appendChild(option);
+      })
+  }
+
+  function fillPlayerDropdownByTeamSeason(game_id, team_id, playerElement, player_id = null) {
+    const season_code = game_id.split('_')[0];
+    fetch(`/panel/get_players_by_team_season/${team_id}/${season_code}`)
+      .then(response => response.json())
+      .then(data => {
+        const playerSelect = document.getElementById(playerElement);
+        playerSelect.innerHTML = '<option disabled selected>Select a Player</option>';
+
+        var option = document.createElement('option');
+        option.value = team_id;
+        option.textContent = 'TEAM TOTAL';
+        if (team_id == player_id) option.selected = true;
+        playerSelect.appendChild(option);
+
+        data.players.forEach(player => {
+          option = document.createElement('option');
+          option.value = player.player_id;
+          option.textContent = player.player_name;
+          if (player.player_id == player_id) option.selected = true;
+          playerSelect.appendChild(option);
+        });
+      })
+  }
+</script>
+{% endblock %}
