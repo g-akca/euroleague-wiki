@@ -88,14 +88,32 @@
             </div>
             <div class="col-6">
               <label>Is Starter</label>
-              <input type="number" class="form-control" name="is_starter" id="addBoxScore_is_starter" placeholder="Enter 1 for Starter, 0 for Not" required />
+              <div class="mt-2">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="is_starter" id="starter_yes" value="1" checked>
+                  <label class="form-check-label" for="starter_yes">Yes</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="is_starter" id="starter_no" value="0">
+                  <label class="form-check-label" for="starter_no">No</label>
+                </div>
+              </div>
             </div>
           </div>
 
           <div class="row mb-2">
             <div class="col-6">
               <label>Is Playing</label>
-              <input type="number" class="form-control" name="is_playing" id="addBoxScore_is_playing" placeholder="Enter 1 for Playing, 0 for Not" required />
+              <div class="mt-2">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="is_playing" id="playing_yes" value="1" checked>
+                  <label class="form-check-label" for="playing_yes">Yes</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="is_playing" id="playing_no" value="0">
+                  <label class="form-check-label" for="playing_no">No</label>
+                </div>
+              </div>
             </div>
             <div class="col-6">
               <label>Dorsal</label>
@@ -260,14 +278,32 @@
             </div>
             <div class="col-6">
               <label>Is Starter</label>
-              <input type="number" class="form-control" name="is_starter" id="updateBoxScore_is_starter" placeholder="Enter 1 for Starter, 0 for Not" required />
+              <div class="mt-2">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="is_starter" id="starter_yes" value="1" checked>
+                  <label class="form-check-label" for="starter_yes">Yes</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="is_starter" id="starter_no" value="0">
+                  <label class="form-check-label" for="starter_no">No</label>
+                </div>
+              </div>
             </div>
           </div>
 
           <div class="row mb-2">
             <div class="col-6">
               <label>Is Playing</label>
-              <input type="number" class="form-control" name="is_playing" id="updateBoxScore_is_playing" placeholder="Enter 1 for Playing, 0 for Not" required />
+              <div class="mt-2">
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="is_playing" id="playing_yes" value="1" checked>
+                  <label class="form-check-label" for="playing_yes">Yes</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="is_playing" id="playing_no" value="0">
+                  <label class="form-check-label" for="playing_no">No</label>
+                </div>
+              </div>
             </div>
             <div class="col-6">
               <label>Dorsal</label>
@@ -459,6 +495,20 @@
           field.value = value;
         }
       });
+
+      if (data.is_starter == 1) {
+        updateBoxScoreModal.querySelector('#starter_yes').checked = true;
+      }
+      else {
+        updateBoxScoreModal.querySelector('#starter_no').checked = true;
+      }
+
+      if (data.is_playing == 1) {
+        updateBoxScoreModal.querySelector('#playing_yes').checked = true;
+      }
+      else {
+        updateBoxScoreModal.querySelector('#playing_no').checked = true;
+      }
 
       fillTeamDropdownByGame(data.game_id, 'updateBoxScore_team_id', 'updateBoxScore_player_id', data.team_id);
       fillPlayerDropdownByTeamSeason(data.game_id, data.team_id, 'updateBoxScore_player_id', data.player_id);

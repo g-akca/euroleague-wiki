@@ -3,6 +3,7 @@ from db import get_db_connection
 from auth import admin_required
 import bcrypt
 
+# Needed for panel sidemenu
 @admin_required
 def get_counts():
     connection = get_db_connection()
@@ -38,6 +39,7 @@ def get_counts():
                     plays_count['plays_count']
                     ]})
 
+# Needed for populating Box Scores team dropdown
 @admin_required
 def get_teams_by_match(game_id):
     connection = get_db_connection()
@@ -48,6 +50,7 @@ def get_teams_by_match(game_id):
     connection.close()
     return jsonify({'team': team})
 
+# Needed for populating Box Scores player dropdown
 @admin_required
 def get_players_by_team_season(team_id, season_code):
     connection = get_db_connection()
@@ -140,7 +143,7 @@ def panel_users_delete():
 def panel_teams_page():
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM euroleague_team_names")
+    cursor.execute("SELECT euroleague_team_names.team_id AS team_id, euroleague_team_names.team_name AS team_name, GROUP_CONCAT(euroleague_teams.season_code ORDER BY euroleague_teams.season_code ASC SEPARATOR ', ') AS seasons FROM euroleague_team_names LEFT JOIN euroleague_teams ON euroleague_team_names.team_id = euroleague_teams.team_id GROUP BY euroleague_team_names.team_id, euroleague_team_names.team_name")
     team_names = cursor.fetchall()
     cursor.close()
     connection.close()

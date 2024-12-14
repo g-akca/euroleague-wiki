@@ -27,6 +27,7 @@
         <tr>
           <th>Team ID</th>
           <th>Team Name</th>
+          <th class="col-7">Seasons Active</th>
           <th class="col-1"></th>
           <th class="col-1"></th>
         </tr>
@@ -36,6 +37,7 @@
         <tr>
           <td><a class="text-success" href="/panel/teams/{{ team['team_id'] }}">{{ team['team_id'] }}</a></td>
           <td>{{ team['team_name'] }}</td>
+          <td>{{ team['seasons'] }}</td>
           <td><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateTeamModal" data-teamid="{{ team['team_id'] }}" data-team-name="{{ team['team_name'] }}">Update</button></td>
           <td><button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteTeamModal" data-teamid="{{ team['team_id'] }}" data-team-name="{{ team['team_name'] }}">Delete</button></td>
         </tr>
