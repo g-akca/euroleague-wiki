@@ -21,11 +21,11 @@
           <tbody class="table-group-divider">
             {% for bx in box_scores %}
             <tr>
-              <td><a class="text-success" href="/box_score/{{ bx['game_player_id'] }}">{{ bx['game_player_id'] }}</a></td>
-              <td>{{ bx['game_id'] }}</td>
-              <td>{{ bx['player_name'] }}</td>
-              <td>{{ bx['team_name'] }}</td>
-              <td>{{ bx['points'] }}</td>
+              <td><a class="text-success" href="/box_score/{{ bx['game_id'] }}">{{ bx['game_id'] }}</a></td>
+              <td>{{ bx['team_1_id'] }}</td>
+              <td>{{ bx['player_1_points'] }}</td>
+              <td>{{ bx['player_2_points'] }}</td>
+              <td>{{ bx['team_2_id'] }}</td>
             </tr>
             {% endfor %}
           </tbody>

@@ -120,17 +120,17 @@ def comparisons_page():
 def box_scores_page():
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
-    cursor.execute("SELECT *, euroleague_box_score.player_id AS player_id, euroleague_box_score.team_id AS team_id FROM euroleague_box_score LEFT JOIN euroleague_player_names ON euroleague_box_score.player_id = euroleague_player_names.player_id LEFT JOIN euroleague_team_names ON euroleague_box_score.team_id = euroleague_team_names.team_id ORDER BY game_id, euroleague_box_score.team_id ASC LIMIT 100")
+    cursor.execute("SELECT t1.game AS game_id, t1.team_id AS team_1_id, t1.points AS player_1_points, t2.points AS player_2_points, t2.team_id AS team_2_id FROM (SELECT a.game_id AS game, a.player_id AS player_id, a.team_id AS team_id, a.points AS points FROM euroleague_box_score a LEFT JOIN euroleague_player_names b ON a.player_id = b.player_id LEFT JOIN euroleague_team_names c ON a.team_id = c.team_id WHERE a.player_id = a.team_id) t1 JOIN (SELECT a.game_id AS game, a.player_id AS player_id, a.team_id AS team_id, a.points AS points FROM euroleague_box_score a LEFT JOIN euroleague_player_names b ON a.player_id = b.player_id LEFT JOIN euroleague_team_names c ON a.team_id = c.team_id WHERE a.player_id = a.team_id) t2 ON t1.game = t2.game AND t1.team_id < t2.team_id LIMIT 100;")
     box_scores = cursor.fetchall()
     cursor.close()
     connection.close()
     return render_template("box_scores.html", box_scores=box_scores)
 
-def box_score_details_page(box_score_id):
+def box_score_details_page(game_id):
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM euroleague_box_score WHERE game_player_id = %s", (box_score_id, ))
-    box_score = cursor.fetchone()
+    cursor.execute("SELECT * FROM euroleague_box_score a LEFT JOIN euroleague_player_names b ON a.player_id = b.player_id LEFT JOIN euroleague_team_names c ON a.team_id = c.team_id WHERE a.player_id != a.team_id AND game_id = %s ORDER BY team_name, minutes DESC;", (game_id,))
+    box_score = cursor.fetchall()
     cursor.close()
     connection.close()
     return render_template("box_score_details.html", box_score=box_score)
