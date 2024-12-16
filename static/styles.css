@@ -80,14 +80,6 @@ footer {
     text-align: center;
 }
 
-.btn-1,
-.btn-2 {
-    background-color: indigo;
-    color: white;
-    font-weight: bold;
-    pointer-events: none;
-}
-
 /* Admin Panel Sidemenu */
 .panel-sidemenu {
     width: 250px;
@@ -127,4 +119,14 @@ footer {
 
 .panel-sidemenu ul li span {
     color: rgb(185, 178, 178);
+}
+
+.randombutton {
+    background-color: rgb(238, 153, 153);
+    color: indigo;
+    font-weight: bold;
+    border: 2px solid indigo; 
+    border-radius: 5px;     
+    padding: 10px 20px;      
+    cursor: pointer;          
 }
