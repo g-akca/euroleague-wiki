@@ -120,7 +120,6 @@ def team_details_page(team_id, season_code=None):
     return render_template("team_details.html", team_name=team_name, team_seasons=team_seasons, season_data=season_data)
 
 def matches_page():
-    sort_by = request.args.get('sort_by', 'date asc')
     page_limit = 25
     page_num = int(request.args.get('page', 1))
     page_button = 4
@@ -129,8 +128,8 @@ def matches_page():
     cursor = connection.cursor(dictionary=True)
     cursor.execute("SELECT COUNT(*) as total FROM euroleague_header")
     entry_count = cursor.fetchone()['total']
-    page_count = (entry_count + page_limit - 1) // page_limit
-    cursor.execute(query_returner_per_page(sort_by, "euroleague_header", page_limit, (page_num-1) * page_limit, ""))
+    page_count = (entry_count + page_limit - 1)
+    cursor.execute("SELECT h.*, t1.team_name AS team_a, t2.team_name AS team_b FROM euroleague_header h LEFT JOIN euroleague_team_names t1 ON h.team_id_a = t1.team_id LEFT JOIN euroleague_team_names t2 ON h.team_id_b = t2.team_id ORDER BY date, time ASC LIMIT %s OFFSET %s", (page_limit, (page_num-1) * page_limit))
     matches = cursor.fetchall()
     cursor.close()
     connection.close()
@@ -138,11 +137,19 @@ def matches_page():
     return render_template(
         "matches.html", 
         matches=matches,
-        sort_by=sort_by,
         page_num=page_num,
         page_count=page_count,
         end_page = min(page_num + page_button, page_count)
     )
+
+def match_details_page(game_id):
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("SELECT h.*, t1.team_name AS team_a, t2.team_name AS team_b FROM euroleague_header h LEFT JOIN euroleague_team_names t1 ON h.team_id_a = t1.team_id LEFT JOIN euroleague_team_names t2 ON h.team_id_b = t2.team_id WHERE game_id = %s", (game_id, ))
+    match = cursor.fetchone()
+    cursor.close()
+    connection.close()
+    return render_template("match_details.html", match=match)
 
 def box_scores_page():
     connection = get_db_connection()
