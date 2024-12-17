@@ -36,20 +36,19 @@ def play_by_play_page():
     return render_template("play_by_play.html", data=data)
 
 def players_page():
-    connection = get_db_connection()
     sort_by = request.args.get('sort_by', 'player_id asc') #default sort'u ayarlayabiliyoruz
-    page_limit = 30
+    page_limit = 25
     page_num = int(request.args.get('page', 1))
     search_query = request.args.get('search', '').strip()
-    page_button = 5
-    
-    cursor = connection.cursor(dictionary=True)
+    page_button = 4
     
     if search_query:
         where = f"WHERE player_name LIKE \"%{search_query}%\""
     else:
         where = ""
 
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
     cursor.execute("SELECT COUNT(*) as total FROM euroleague_player_names")
     entry_count = cursor.fetchone()['total']
     page_count = (entry_count + page_limit - 1) // page_limit
@@ -64,21 +63,42 @@ def players_page():
         sort_by=sort_by, 
         page_num=page_num,
         page_count=page_count,
-        page_button=page_button,
-        end_page = min(page_num + page_button - 1, page_count)
+        end_page = min(page_num + page_button, page_count)
     )
 
 def query_returner_per_page(x, y, z, u, s):
     return f"SELECT * FROM {y} {s} ORDER BY {x} LIMIT {z} OFFSET {u};"
 
 def teams_page():
+    sort_by = request.args.get('sort_by', 'team_id asc')
+    page_limit = 25
+    page_num = int(request.args.get('page', 1))
+    search_query = request.args.get('search', '').strip()
+    page_button = 4
+    
+    if search_query:
+        where = f"WHERE team_name LIKE \"%{search_query}%\""
+    else:
+        where = ""
+
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM euroleague_team_names")
+    cursor.execute("SELECT COUNT(*) as total FROM euroleague_team_names")
+    entry_count = cursor.fetchone()['total']
+    page_count = (entry_count + page_limit - 1) // page_limit
+    cursor.execute(query_returner_per_page(sort_by, "euroleague_team_names", page_limit, (page_num-1) * page_limit, where))
     team_names = cursor.fetchall()
     cursor.close()
     connection.close()
-    return render_template("teams.html", team_names=team_names)
+    
+    return render_template(
+        "teams.html", 
+        team_names=team_names, 
+        sort_by=sort_by, 
+        page_num=page_num,
+        page_count=page_count,
+        end_page = min(page_num + page_button, page_count)
+    )
 
 def team_details_page(team_id, season_code=None):
     connection = get_db_connection()
@@ -100,13 +120,29 @@ def team_details_page(team_id, season_code=None):
     return render_template("team_details.html", team_name=team_name, team_seasons=team_seasons, season_data=season_data)
 
 def matches_page():
+    sort_by = request.args.get('sort_by', 'date asc')
+    page_limit = 25
+    page_num = int(request.args.get('page', 1))
+    page_button = 4
+    
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM euroleague_header")
+    cursor.execute("SELECT COUNT(*) as total FROM euroleague_header")
+    entry_count = cursor.fetchone()['total']
+    page_count = (entry_count + page_limit - 1) // page_limit
+    cursor.execute(query_returner_per_page(sort_by, "euroleague_header", page_limit, (page_num-1) * page_limit, ""))
     matches = cursor.fetchall()
     cursor.close()
     connection.close()
-    return render_template("matches.html", matches=matches)
+    
+    return render_template(
+        "matches.html", 
+        matches=matches,
+        sort_by=sort_by,
+        page_num=page_num,
+        page_count=page_count,
+        end_page = min(page_num + page_button, page_count)
+    )
 
 def box_scores_page():
     connection = get_db_connection()

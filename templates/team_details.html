@@ -7,19 +7,19 @@
 
 <ul class="nav nav-tabs" role="tablist">
 {% for team in team_seasons %}
-    {% if team['season_code'] == season_data['season_code'] %}
-    <li class="nav-item" role="presentation">
-        <a href="{{ url_for('team_details_page', team_id=team_name['team_id'], season_code=team['season_code']) }}" class="nav-link active" role="tab">
-            Season {{ team['season_code'] }}
-        </a>
-    </li>
-    {% else %}
-    <li class="nav-item" role="presentation">
-        <a href="{{ url_for('team_details_page', team_id=team_name['team_id'], season_code=team['season_code']) }}" class="nav-link" role="tab">
-            Season {{ team['season_code'] }}
-        </a>
-    </li>
-    {% endif %}
+  {% if team['season_code'] == season_data['season_code'] %}
+  <li class="nav-item" role="presentation">
+    <a href="{{ url_for('team_details_page', team_id=team_name['team_id'], season_code=team['season_code']) }}" class="nav-link active" role="tab">
+      Season {{ team['season_code'] }}
+    </a>
+  </li>
+  {% else %}
+  <li class="nav-item" role="presentation">
+    <a href="{{ url_for('team_details_page', team_id=team_name['team_id'], season_code=team['season_code']) }}" class="nav-link" role="tab">
+      Season {{ team['season_code'] }}
+    </a>
+  </li>
+  {% endif %}
 {% endfor %}
 </ul>
 

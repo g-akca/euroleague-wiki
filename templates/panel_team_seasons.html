@@ -18,12 +18,12 @@
         {% endfor %}
       {% endif %}
     {% endwith %}
-    <div class="d-flex justify-content-between align-items-center">
+    <div class="d-flex justify-content-between align-items-center mb-1">
       <h2><a class="text-success" href="/panel/teams">Teams</a> / {{ team_id }} ({{ season_count['season_count'] }})</h2>
       <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addTeamSeasonModal">Add New Season</button>
     </div>
-    <table class="table table-striped table-hover">
-      <thead>
+    <table class="table table-secondary table-striped table-hover">
+      <thead class="table-dark">
         <tr>
           <th>Season Team ID</th>
           <th>Season Code</th>

@@ -3,25 +3,99 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    font-family: Arial, sans-serif;
+    font-family: Trebuchet MS, sans-serif;
     background-color: #f8f9fa;
 }
 
-/* Header */
-header {
+/* Navbar */
+.navbar {
     text-align: center;
-    padding: 20px;
-    background-color: #ff4500;
+    padding: 18px;
+    padding-left: 50px;
+    padding-right: 50px;
+    background: linear-gradient(90deg, #00416a, #e4e5e6);
+    color: white;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.navbar .navbar-brand h2 {
+    color: white;
+    font-size: 1.8rem;
+    font-weight: bold;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+.navbar .navbar-brand h2:hover {
+    color: #ffd700;
+    transform: scale(1.1);
+}
+
+.navbar .dropdown .btn-light {
+    background-color: white;
+    color: #00416a;
+    border: 1px solid #00416a;
+    border-radius: 20px;
+    padding: 10px 15px;
+    font-weight: bold;
+}
+
+.navbar .dropdown .btn-light:hover {
+    background-color: #00416a;
     color: white;
 }
 
-.nav-link:hover {
-    color: #ffffff !important;
+/* Login Signup Buttons */
+.navbar .btn {
+    border-radius: 20px;
+    padding: 10px 20px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.navbar .btn-light {
+    background-color: #f9f9f9;
+    color: #00416a;
+    border: 1px solid #00416a;
+}
+
+.navbar .btn-light:hover {
+    background-color: #00416a;
+    color: white;
+}
+
+.navbar .btn-dark {
+    background-color: #333;
+    color: white;
+    border: none;
+}
+
+.navbar .btn-dark:hover {
+    background-color: #ffffff;
+    color: black;
+}
+
+/* Navbar 2 (Categories) */
+.navbar2 {
+    background-color: #333;
+    padding: 10px;
+    padding-left: 175px;
+    padding-right: 175px;
+}
+
+.navbar2 .nav-link {
+    color: #fff;
+    font-weight: bold;
+}
+
+.navbar2 .nav-link:hover {
+    color: #ffd700;
 }
 
 /* Main Content */
 main {
-    margin: 20px;
+    margin: 30px;
+    margin-left: 50px;
+    margin-right: 50px;
     flex: 1;
 }
 
@@ -32,52 +106,6 @@ footer {
     background-color: #343a40;
     color: white;
     margin-top: 30px;
-}
-
-.navButton-list {
-    display: inline;
-    padding-left: 0;
-}
-
-.navButton-list li {
-    display: inline;
-    justify-content: center;
-    list-style-type: none;
-}
-
-.navButton-link {
-    padding: 0.5rem 1rem;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-    text-decoration: none;
-    color: #333;
-}
-
-.navButton-link.is-current {
-    background-color: blue;
-    color: white;
-    font-weight: bold;
-    pointer-events: none;
-}
-
-.navButton-previous,
-.navButton-next {
-    padding: 0.5rem 0.5rem;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-    text-decoration: none;
-    color: #333;
-}
-
-.navButton-previous[disabled],
-.navButton-next[disabled] {
-    color: #aaa;
-    pointer-events: none;
-    background-color: #f5f5f5;
-}
-
-.navButtonWhole {
-    text-align: center;
 }
 
 /* Admin Panel Sidemenu */
@@ -121,6 +149,7 @@ footer {
     color: rgb(185, 178, 178);
 }
 
+/* Homepage */
 .randombutton {
     background-color: rgb(238, 153, 153);
     color: indigo;
