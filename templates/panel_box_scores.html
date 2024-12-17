@@ -39,7 +39,13 @@
         <tr>
           <td>{{ bx['game_player_id'] }}</td>
           <td>{{ bx['game_id'] }}</td>
-          <td>{{ bx['player_name'] }}</td>
+          <td>
+            {% if bx['player_id'] == bx['team_id'] %}
+              TEAM TOTAL
+            {% else %}
+              {{ bx['player_name'] }}
+            {% endif %}
+          </td>
           <td>{{ bx['team_name'] }}</td>
           <td>{{ bx['points'] }}</td>
           <td><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateBoxScoreModal" {{ bx['data_attributes'] }}>Update</button></td>

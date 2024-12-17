@@ -1,7 +1,8 @@
-from flask import render_template, request, session, redirect, url_for, flash
+from flask import current_app, render_template, request, session, redirect, url_for, flash
 from db import get_db_connection
 from markupsafe import Markup
 from functools import wraps
+from datetime import timedelta
 import bcrypt
 
 def admin_required(f):
@@ -53,7 +54,11 @@ def login():
             session['user_id'] = found_user['user_id']
 
             if remember == 'True':
-                session.permanent = True # Set session to permanent if "Remember me" is checked
+                session.permanent = True
+                current_app.permanent_session_lifetime = timedelta(days=20)
+            else:
+                session.permanent = True
+                current_app.permanent_session_lifetime = timedelta(days=1)
 
             flash("Welcome back to Euroleague Wiki!", "success")
             return redirect(url_for("home_page"))
@@ -117,7 +122,11 @@ def signup():
             session['user_id'] = new_account['user_id']
 
             if remember == 'True':
-                session.permanent = True # Set session to permanent if "Remember me" is checked
+                session.permanent = True
+                current_app.permanent_session_lifetime = timedelta(days=20)
+            else:
+                session.permanent = True
+                current_app.permanent_session_lifetime = timedelta(days=1)
 
             flash("Successfully signed up!", "success")
             return redirect(url_for("home_page"))

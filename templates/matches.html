@@ -1,13 +1,13 @@
 {% extends "layout.html" %}
 
-{% block title %}Box Scores{% endblock %}
+{% block title %}Matches{% endblock %}
 
 {% block content %} <!-- Will change how this page looks in general -->
 <section>
   <div class="container">
     <div class="row justify-content-center">
       <div class="col-10">
-        <h2>Euroleague Box Scores</h2>
+        <h2>Euroleague Matches</h2>
         <table class="table table-striped table-hover">
           <thead>
             <tr>
@@ -19,13 +19,13 @@
             </tr>
           </thead>
           <tbody class="table-group-divider">
-            {% for bx in box_scores %}
+            {% for match in matches %}
             <tr>
-              <td><a class="text-success" href="/box_score/{{ bx['game_id'] }}">{{ bx['game_id'] }}</a></td>
-              <td>{{ bx['team_1_id'] }}</td>
-              <td>{{ bx['player_1_points'] }}</td>
-              <td>{{ bx['player_2_points'] }}</td>
-              <td>{{ bx['team_2_id'] }}</td>
+              <td><a class="text-success" href="">{{ match['game_id'] }}</a></td>
+              <td>{{ match['team_id_a'] }}</td>
+              <td>{{ match['score_a'] }}</td>
+              <td>{{ match['score_b'] }}</td>
+              <td>{{ match['team_id_b'] }}</td>
             </tr>
             {% endfor %}
           </tbody>

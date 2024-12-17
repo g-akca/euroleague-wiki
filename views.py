@@ -99,23 +99,14 @@ def team_details_page(team_id, season_code=None):
     connection.close()
     return render_template("team_details.html", team_name=team_name, team_seasons=team_seasons, season_data=season_data)
 
-def header_page():
+def matches_page():
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
     cursor.execute("SELECT * FROM euroleague_header")
-    header = cursor.fetchall()
+    matches = cursor.fetchall()
     cursor.close()
     connection.close()
-    return render_template("header.html", header=header)
-
-def comparisons_page():
-    connection = get_db_connection()
-    cursor = connection.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM euroleague_comparison")
-    comparisons = cursor.fetchall()
-    cursor.close()
-    connection.close()
-    return render_template("comparisons.html", comparisons=comparisons)
+    return render_template("matches.html", matches=matches)
 
 def box_scores_page():
     connection = get_db_connection()
@@ -134,12 +125,3 @@ def box_score_details_page(game_id):
     cursor.close()
     connection.close()
     return render_template("box_score_details.html", box_score=box_score)
-
-def points_page():
-    connection = get_db_connection()
-    cursor = connection.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM euroleague_points")
-    points = cursor.fetchall()
-    cursor.close()
-    connection.close()
-    return render_template("points.html", points=points)

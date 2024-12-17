@@ -21,12 +21,7 @@ def create_app():
     app.add_url_rule("/team/<string:team_id>/<string:season_code>", view_func=views.team_details_page)
     app.add_url_rule("/team/<string:team_id>", view_func=views.team_details_page)
     app.add_url_rule("/players", view_func=views.players_page)
-    app.add_url_rule("/matches", view_func=views.header_page)
-    app.add_url_rule("/comparisons", view_func=views.comparisons_page)
-    app.add_url_rule("/box_scores", view_func=views.box_scores_page)
-    app.add_url_rule("/box_score/<string:game_id>", view_func=views.box_score_details_page)
-    app.add_url_rule("/points", view_func=views.points_page)
-    app.add_url_rule("/plays", view_func=views.play_by_play_page)
+    app.add_url_rule("/matches", view_func=views.matches_page)
 
     # Admin Panel related
     app.add_url_rule("/panel", view_func=panel.panel_users_page)

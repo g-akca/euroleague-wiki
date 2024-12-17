@@ -32,8 +32,6 @@ CREATE TABLE `euro`.`euroleague_header` (
 	season_code            VARCHAR(10) NOT NULL,
 	score_a                INTEGER  NOT NULL,
 	score_b                INTEGER  NOT NULL,
-	team_a                 VARCHAR(50) NOT NULL,
-	team_b                 VARCHAR(50) NOT NULL,
 	team_id_a              VARCHAR(10) NOT NULL,
 	team_id_b              VARCHAR(10) NOT NULL,
 	coach_a                VARCHAR(70),
