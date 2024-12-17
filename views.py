@@ -151,6 +151,9 @@ def match_details_page(game_id):
     connection.close()
     return render_template("match_details.html", match=match)
 
+def seasons_page():
+    return render_template("seasons.html")
+
 def box_scores_page():
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)

@@ -14,7 +14,7 @@
       <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
           <div class="navbar-brand">
-            <a class="nav-link" href="{{ url_for('home_page') }}"><h2>Euroleague Wiki</h2></a>
+            <a class="nav-link" href="{{ url_for('home_page') }}"><h2>🏀 Euroleague Wiki</h2></a>
           </div>
       
           {% if session.get('loggedin') == True %}
@@ -45,7 +45,7 @@
         <a class="nav-link" href="{{ url_for('teams_page') }}">Teams</a>
         <a class="nav-link" href="{{ url_for('players_page') }}">Players</a>
         <a class="nav-link" href="{{ url_for('matches_page') }}">Matches</a>
-        <a class="nav-link" href="">Seasons</a>
+        <a class="nav-link" href="{{ url_for('seasons_page') }}">Seasons</a>
       </div>
     </header>
     {% include '_settingsModal.html' %}
