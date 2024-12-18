@@ -25,10 +25,6 @@ def get_counts():
     plays_count = cursor.fetchone()
     cursor.execute("SELECT COUNT(primary_point_id) AS points_count FROM euroleague_points")
     points_count = cursor.fetchone()
-    cursor.execute("SELECT COUNT(season_team_id) AS points_count FROM euroleague_teams")
-    teams_detailed_count = cursor.fetchone()
-    cursor.execute("SELECT COUNT(season_player_id) AS points_count FROM euroleague_players")
-    players_detailed_count = cursor.fetchone()
 
     cursor.close()
     connection.close()
@@ -40,9 +36,7 @@ def get_counts():
                     comparisons_count['comparisons_count'],
                     box_scores_count['box_scores_count'],
                     points_count['points_count'],
-                    plays_count['plays_count'],
-                    teams_detailed_count['teams_detailed_count'],
-                    players_detailed_count['players_detailed_count']
+                    plays_count['plays_count']
                     ]})
 
 # Needed for populating Box Scores team dropdown
@@ -389,3 +383,95 @@ def panel_box_scores_delete():
 
     flash("Box score deleted successfully!", "success")
     return redirect(url_for('panel_box_scores_page'))
+
+############################################################################################
+
+@admin_required
+def panel_matches_page():
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("SELECT *, concat(score_a, ' - ', score_b) as result FROM euro.euroleague_header;")
+    matches = cursor.fetchall()
+    cursor.close()
+    connection.close()
+    return render_template("panel_matches.html", matches=matches)
+
+@admin_required
+def panel_matches_add(game_id):
+    form_data = request.form.to_dict()
+    season_code = request.form['season_code']
+    match_date = request.form['date']
+    teamaid = request.form['team_id_a']
+    teambid = request.form['team_id_b']
+    season_game_id = f"{season_code}_{game_id}"
+
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM euroleague_header WHERE season_code = %s AND date = %s AND team_id_a = %s AND team_id_b = %s", (season_code, match_date, teamaid, teambid, ))
+    ts_existing = cursor.fetchone()
+    if ts_existing:
+        flash("This game already exists!", "danger")
+        cursor.close()
+        connection.close()
+        return redirect(url_for("panel_matches_page", game_id=game_id))
+    
+    cursor.execute("DESCRIBE euroleague_header")
+    columns = [column['Field'] for column in cursor.fetchall()]
+    filtered_data = {key: form_data[key] for key in form_data if key in columns}
+    filtered_data['game_id'] = game_id
+    value_placeholders = ', '.join([f'%({key})s' for key in filtered_data])
+    columns_str = ', '.join(filtered_data.keys())
+    sql = f"""INSERT INTO euroleague_header ({columns_str}) VALUES ({value_placeholders})"""
+    cursor.execute(sql, filtered_data)
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+    flash("Game added successfully!", "success")
+    return redirect(url_for("panel_matches_page", game_id=game_id))
+
+@admin_required
+def panel_matches_update(game_id):
+    form_data = request.form.to_dict()
+    season_code = request.form['season_code']
+    match_date = request.form['date']
+    teamaid = request.form['team_id_a']
+    teambid = request.form['team_id_b']
+    season_game_id = f"{season_code}_{game_id}"
+
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM euroleague_header WHERE season_code = %s AND date = %s AND team_id_a = %s AND team_id_b = %s", (season_code, match_date, teamaid, teambid, ))
+    ts_existing = cursor.fetchone()
+    if ts_existing:
+        flash("???????????", "danger")
+        cursor.close()
+        connection.close()
+        return redirect(url_for("panel_team_seasons_page", game_id=game_id))
+
+    cursor.execute("DESCRIBE euroleague_header")
+    columns = [column['Field'] for column in cursor.fetchall()]
+    filtered_data = {key: form_data[key] for key in form_data if key in columns}
+    set_str = ', '.join([f"{key} = %({key})s" for key in filtered_data if key != 'game_id'])
+    sql = f"""UPDATE euroleague_header SET {set_str} WHERE game_id = %(game_id)s"""
+    cursor.execute(sql, filtered_data)
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+    flash("Match updated successfully!", "success")
+    return redirect(url_for("panel_matches_page", game_id=game_id))
+
+@admin_required
+def panel_matches_delete(game_id):
+    game_id = request.form['game_id']
+
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("DELETE FROM euroleague_header WHERE game_id = %s", (game_id, ))
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+    flash("Match deleted successfully!", "success")
+    return redirect(url_for("panel_team_seasons_page", game_id=game_id))
