@@ -25,6 +25,10 @@ def get_counts():
     plays_count = cursor.fetchone()
     cursor.execute("SELECT COUNT(primary_point_id) AS points_count FROM euroleague_points")
     points_count = cursor.fetchone()
+    cursor.execute("SELECT COUNT(season_team_id) AS points_count FROM euroleague_teams")
+    teams_detailed_count = cursor.fetchone()
+    cursor.execute("SELECT COUNT(season_player_id) AS points_count FROM euroleague_players")
+    players_detailed_count = cursor.fetchone()
 
     cursor.close()
     connection.close()
@@ -36,7 +40,9 @@ def get_counts():
                     comparisons_count['comparisons_count'],
                     box_scores_count['box_scores_count'],
                     points_count['points_count'],
-                    plays_count['plays_count']
+                    plays_count['plays_count'],
+                    teams_detailed_count['teams_detailed_count'],
+                    players_detailed_count['players_detailed_count']
                     ]})
 
 # Needed for populating Box Scores team dropdown
