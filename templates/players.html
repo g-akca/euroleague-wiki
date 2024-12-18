@@ -37,8 +37,8 @@
 
   <tbody class="table-group-divider">
     {% for player in player_names %}
-    <tr>
-      <td><a href="/player/{{ player['player_id'] }}">{{ player['player_id'] }}</a></td>
+    <tr onclick="window.location='/player/{{ player['player_id'] }}';" style="cursor: pointer;">
+      <td>{{ player['player_id'] }}</td>
       <td>{{ player['player_name'] }}</td>
     </tr>
     {% endfor %}

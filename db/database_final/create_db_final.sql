@@ -32,8 +32,6 @@ CREATE TABLE `euro`.`euroleague_header` (
 	season_code            VARCHAR(10) NOT NULL,
 	score_a                INTEGER  NOT NULL,
 	score_b                INTEGER  NOT NULL,
-	team_a                 VARCHAR(50) NOT NULL,
-	team_b                 VARCHAR(50) NOT NULL,
 	team_id_a              VARCHAR(10) NOT NULL,
 	team_id_b              VARCHAR(10) NOT NULL,
 	coach_a                VARCHAR(70),
@@ -82,7 +80,7 @@ CREATE TABLE `euro`.`euroleague_play_by_play` (
 	marker_time			VARCHAR(6), -- mm:ss
 	play_info			VARCHAR(50) NOT NULL,
 	PRIMARY KEY (game_play_id),
-	FOREIGN KEY (game_id) REFERENCES euroleague_header(game_id)
+	FOREIGN KEY (game_id) REFERENCES euroleague_header(game_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE `euro`.`euroleague_points` (
@@ -99,7 +97,7 @@ CREATE TABLE `euro`.`euroleague_points` (
 	points_a            INTEGER  NOT NULL,
 	points_b            INTEGER  NOT NULL,
 	PRIMARY KEY (primary_point_id),
-	FOREIGN KEY (game_play_id) REFERENCES euroleague_play_by_play(game_play_id)
+	FOREIGN KEY (game_play_id) REFERENCES euroleague_play_by_play(game_play_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE `euro`.`euroleague_team_names` (
@@ -155,7 +153,7 @@ CREATE TABLE `euro`.`euroleague_teams` (
 	fouls_received_per_game         NUMERIC(5,2) NOT NULL,
 	valuation_per_game              NUMERIC(6,2) NOT NULL,
 	PRIMARY KEY (season_team_id),
-	FOREIGN KEY (team_id) REFERENCES euroleague_team_names(team_id)
+	FOREIGN KEY (team_id) REFERENCES euroleague_team_names(team_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE `euro`.`euroleague_player_names` (
@@ -215,7 +213,7 @@ CREATE TABLE `euro`.`euroleague_players` (
 	valuation_per_game                  NUMERIC(5,2) NOT NULL,
 	plus_minus_per_game                 NUMERIC(5,2) NOT NULL,
 	PRIMARY KEY (season_player_id),
-	FOREIGN KEY (player_id) REFERENCES euroleague_player_names(player_id)
+	FOREIGN KEY (player_id) REFERENCES euroleague_player_names(player_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE `euro`.`euroleague_box_score` (
@@ -247,7 +245,7 @@ CREATE TABLE `euro`.`euroleague_box_score` (
 	valuation               INTEGER  NOT NULL,
 	plus_minus              INTEGER  NOT NULL,
 	PRIMARY KEY (game_player_id),
-	FOREIGN KEY (game_id) REFERENCES euroleague_header(game_id)
+	FOREIGN KEY (game_id) REFERENCES euroleague_header(game_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE `euro`.`euroleague_comparison` (
@@ -295,7 +293,7 @@ CREATE TABLE `euro`.`euroleague_comparison` (
 	points_max_lead_a           VARCHAR(10),
 	points_max_lead_b           VARCHAR(10),
 	PRIMARY KEY (game_id),
-	FOREIGN KEY (game_id) REFERENCES euroleague_header(game_id)
+	FOREIGN KEY (game_id) REFERENCES euroleague_header(game_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE `euro`.`users` (
@@ -307,7 +305,7 @@ CREATE TABLE `euro`.`users` (
 	register_time   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	team_supported  VARCHAR(10),
 	PRIMARY KEY (user_id),
-	FOREIGN KEY (team_supported) REFERENCES euroleague_team_names(team_id)
+	FOREIGN KEY (team_supported) REFERENCES euroleague_team_names(team_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 /* Creates an admin account with the username "admin" and password "cyclones" */
@@ -382,6 +380,3 @@ IGNORE 1 ROWS;
 
 CREATE USER 'BLG317E'@'localhost' IDENTIFIED BY 'Password12345*';
 GRANT CREATE, ALTER, DROP, INSERT, UPDATE, DELETE, SELECT, REFERENCES, RELOAD on *.* TO 'BLG317E'@'localhost' WITH GRANT OPTION;
-
-ALTER TABLE euro.euroleague_header DROP `team_a`;
-ALTER TABLE euro.euroleague_header DROP `team_b`;
