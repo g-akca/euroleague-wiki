@@ -2,6 +2,7 @@ from flask import render_template, request, flash
 from db import get_db_connection
 from mysql.connector import Error
 import queries
+import random
 
 def home_page():
     return render_template("homepage.html")
@@ -60,10 +61,20 @@ def players_page():
 def player_details_page(player_id, season_code=None):
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
+
+    if player_id == "random":
+        # Fetch all team_ids from the database
+        cursor.execute("SELECT player_id FROM euroleague_player_names")
+        player_ids = cursor.fetchall()
+        # Choose a random team_id
+        player_id = random.choice(player_ids)['player_id']
+
     cursor.execute("SELECT * FROM euroleague_player_names WHERE player_id = %s", (player_id, ))
     player_name = cursor.fetchone()
     cursor.execute("SELECT * FROM euroleague_players WHERE player_id = %s", (player_id, ))
     player_seasons = cursor.fetchall()
+
+
 
     if season_code:
         cursor.execute("SELECT * FROM euroleague_players WHERE player_id = %s AND season_code = %s", (player_id, season_code))
@@ -113,21 +124,46 @@ def teams_page():
 def team_details_page(team_id, season_code=None):
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM euroleague_team_names WHERE team_id = %s", (team_id, ))
+
+    if team_id == "random":
+        # Fetch all team_ids from the database
+        cursor.execute("SELECT team_id FROM euroleague_team_names")
+        team_ids = cursor.fetchall()
+        # Choose a random team_id
+        team_id = random.choice(team_ids)['team_id']
+
+    # Fetch the team name and seasons
+    cursor.execute("SELECT * FROM euroleague_team_names WHERE team_id = %s", (team_id,))
     team_name = cursor.fetchone()
-    cursor.execute("SELECT * FROM euroleague_teams WHERE team_id = %s", (team_id, ))
+
+    cursor.execute("SELECT * FROM euroleague_teams WHERE team_id = %s", (team_id,))
     team_seasons = cursor.fetchall()
 
+    # Fetch season data
     if season_code:
-        cursor.execute("SELECT * FROM euroleague_teams WHERE team_id = %s AND season_code = %s", (team_id, season_code))
+        cursor.execute(
+            "SELECT * FROM euroleague_teams WHERE team_id = %s AND season_code = %s",
+            (team_id, season_code),
+        )
         season_data = cursor.fetchone()
     else:
-        cursor.execute("SELECT * FROM euroleague_teams WHERE team_id = %s AND season_code = (SELECT MAX(season_code) FROM euroleague_teams WHERE team_id = %s)", (team_id, team_id))
+        cursor.execute(
+            "SELECT * FROM euroleague_teams WHERE team_id = %s AND season_code = (SELECT MAX(season_code) FROM euroleague_teams WHERE team_id = %s)",
+            (team_id, team_id),
+        )
         season_data = cursor.fetchone()
 
     cursor.close()
     connection.close()
-    return render_template("team_details.html", team_name=team_name, team_seasons=team_seasons, season_data=season_data)
+
+    return render_template(
+        "team_details.html", 
+        team_name=team_name, 
+        team_seasons=team_seasons, 
+        season_data=season_data,
+    )
+
+
 
 def matches_page():
     page_limit = 25

@@ -19,7 +19,7 @@
     The Euroleague is Europe's top-tier basketball competition, featuring the best teams from across the continent.
     Follow the action, view game statistics, and relive the most exciting moments.
   </p>
-  <a class = "randombutton" onclick=""> Show me a Random Player!</a>
-  <a class = "randombutton" href="/team/ARI"> Show me a Random Team!</a>
+  <a class="randombutton" href="{{ url_for('player_details_page', player_id='random') }}"> Show me a Random Player!</a>
+  <a class="randombutton" href="{{ url_for('team_details_page', team_id='random') }}">Show me a Random Team!</a>
 </section>
 {% endblock %}
