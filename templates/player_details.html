@@ -23,8 +23,23 @@
 {% endfor %}
 </ul>
 
-<p>player ID: {{ player_name['player_id'] }}</p>
-<p>Season: {{ season_data['season_code'] }}</p>
-<p>Games Played: {{ season_data['games_played'] }}</p>
-<p>Total Assists: {{ season_data['assists'] }}</p>
+<!-- Daha table görünümü veremedim vereceğim-->
+<tbody class="table-group-divider"> 
+    {% for player in player_seasons %}
+    {% if player['season_code'] == season_data['season_code'] %}
+    <tr>
+      <td>{{ player['team_id'] }}</td>
+      <td>{{ player['games_played'] }}</td>
+      <td>{{ player['games_started'] }}</td>
+      <td>{{ player['minutes'] }}</td>
+      <td>{{ player['points'] }}</td>
+      <td>{{ player['total_rebounds'] }}</td>
+      <td>{{ player['assists'] }}</td>
+      <td>{{ player['steals'] }}</td>
+      <td>{{ player['turnovers'] }}</td>
+    </tr>
+    {% endif %}
+    {% endfor %}
+  </tbody>
 {% endblock %}
+
