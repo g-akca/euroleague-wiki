@@ -44,7 +44,7 @@ def get_counts():
 def get_teams_by_match(game_id):
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
-    cursor.execute("SELECT team_id_a, team_id_b, team_a, team_b FROM euroleague_header WHERE game_id = %s", (game_id, ))
+    cursor.execute("SELECT t1.team_name AS team_a, t2.team_name AS team_b, team_id_a, team_id_b FROM euroleague_header h LEFT JOIN euroleague_team_names t1 ON h.team_id_a = t1.team_id LEFT JOIN euroleague_team_names t2 ON h.team_id_b = t2.team_id WHERE game_id = %s", (game_id, ))
     team = cursor.fetchone()
     cursor.close()
     connection.close()

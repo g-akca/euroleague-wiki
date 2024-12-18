@@ -1,16 +1,7 @@
-from flask import render_template, request, jsonify, flash
+from flask import render_template, request, flash
 from db import get_db_connection
 from mysql.connector import Error
 import queries
-
-def get_teams():
-    connection = get_db_connection()
-    cursor = connection.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM euroleague_team_names ORDER BY team_name ASC")
-    team_names = cursor.fetchall()
-    cursor.close()
-    connection.close()
-    return jsonify(team_names)
 
 def home_page():
     return render_template("homepage.html")

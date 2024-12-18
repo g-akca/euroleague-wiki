@@ -1,4 +1,4 @@
-from flask import current_app, render_template, request, session, redirect, url_for, flash
+from flask import current_app, render_template, request, session, redirect, url_for, flash, jsonify
 from db import get_db_connection
 from markupsafe import Markup
 from functools import wraps
@@ -11,8 +11,7 @@ def admin_required(f):
         if session['role'] == "A":
             return f(*args, **kwargs)
         else:
-            flash("You need to be an admin in order to view this page.", "danger")
-            return redirect(url_for('home_page'))
+            return redirect(url_for("restricted"))
     return wrap
 
 def refresh_session_data():
@@ -69,7 +68,7 @@ def login():
     # GET request
     else:
         if session.get('loggedin') == True:
-            return redirect(url_for("home_page")) # Sends user to homepage if already logged in. Might add a restricted page warning instead
+            return redirect(url_for("restricted"))
         else:
             return render_template("login.html")
 
@@ -132,7 +131,7 @@ def signup():
             return redirect(url_for("home_page"))
     else:
         if session.get('loggedin') == True:
-            return redirect(url_for("home_page")) # Sends user to homepage if already logged in. Might add a restricted page warning instead
+            return redirect(url_for("restricted"))
         else:
             connection = get_db_connection()
             cursor = connection.cursor(dictionary=True)
@@ -147,10 +146,19 @@ def logout():
     if session.get('loggedin') == True:
         session.clear()
         flash("Logged out successfully!", "success")
-        return redirect("login")
+        return redirect("/login")
     else:
-        return redirect(url_for("home_page")) # Sends user to homepage if not logged in. Might add a restricted page warning instead
+        return redirect(url_for("restricted"))
     
+def get_teams():
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM euroleague_team_names ORDER BY team_name ASC")
+    team_names = cursor.fetchall()
+    cursor.close()
+    connection.close()
+    return jsonify(team_names)
+
 def update_account():
     user_id = session['user_id']
     newUsername = request.form['username']
@@ -188,3 +196,9 @@ def update_account():
     else:
         flash("You have entered your current password wrong, please try again!", "danger")
         return redirect(url_for("home_page"))
+
+def restricted():
+    return render_template("403.html")
+
+def not_found():
+    return render_template("404.html")

@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, redirect
 import views, auth, panel
 from auth import refresh_session_data
 
@@ -14,7 +14,9 @@ def create_app():
     app.add_url_rule("/signup", view_func=auth.signup, methods=['GET', 'POST'])
     app.add_url_rule("/logout", view_func=auth.logout)
     app.add_url_rule("/update_account", view_func=auth.update_account, methods=['POST'])
-    app.add_url_rule("/settings/get_teams", view_func=views.get_teams)
+    app.add_url_rule("/settings/get_teams", view_func=auth.get_teams)
+    app.add_url_rule("/403", view_func=auth.restricted)
+    app.add_url_rule("/404", view_func=auth.not_found)
 
     # Category related
     app.add_url_rule("/teams", view_func=views.teams_page)
@@ -52,6 +54,14 @@ def create_app():
     @app.before_request
     def refresh_before_request():
         refresh_session_data()
+    
+    @app.errorhandler(403)
+    def page_restricted(e):
+        return redirect("/403")
+
+    @app.errorhandler(404)
+    def page_not_found(e):
+        return redirect("/404")
 
     return app
 
