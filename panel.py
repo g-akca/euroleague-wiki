@@ -403,7 +403,6 @@ def panel_matches_add(game_id):
     match_date = request.form['date']
     teamaid = request.form['team_id_a']
     teambid = request.form['team_id_b']
-    season_game_id = f"{season_code}_{game_id}"
 
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
@@ -437,7 +436,6 @@ def panel_matches_update(game_id):
     match_date = request.form['date']
     teamaid = request.form['team_id_a']
     teambid = request.form['team_id_b']
-    season_game_id = f"{season_code}_{game_id}"
 
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
