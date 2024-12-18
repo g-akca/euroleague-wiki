@@ -392,12 +392,14 @@ def panel_matches_page():
     cursor = connection.cursor(dictionary=True)
     cursor.execute("SELECT *, concat(score_a, ' - ', score_b) as result FROM euro.euroleague_header;")
     matches = cursor.fetchall()
+    for match in matches:
+        match['data_attributes'] = ' '.join([f'data-{key}={value}' for key, value in match.items()])
     cursor.close()
     connection.close()
     return render_template("panel_matches.html", matches=matches)
 
 @admin_required
-def panel_matches_add(game_id):
+def panel_matches_add():
     form_data = request.form.to_dict()
     season_code = request.form['season_code']
     match_date = request.form['date']
@@ -412,12 +414,11 @@ def panel_matches_add(game_id):
         flash("This game already exists!", "danger")
         cursor.close()
         connection.close()
-        return redirect(url_for("panel_matches_page", game_id=game_id))
+        return redirect(url_for("panel_matches_page"))
     
     cursor.execute("DESCRIBE euroleague_header")
     columns = [column['Field'] for column in cursor.fetchall()]
     filtered_data = {key: form_data[key] for key in form_data if key in columns}
-    filtered_data['game_id'] = game_id
     value_placeholders = ', '.join([f'%({key})s' for key in filtered_data])
     columns_str = ', '.join(filtered_data.keys())
     sql = f"""INSERT INTO euroleague_header ({columns_str}) VALUES ({value_placeholders})"""
@@ -427,11 +428,12 @@ def panel_matches_add(game_id):
     connection.close()
 
     flash("Game added successfully!", "success")
-    return redirect(url_for("panel_matches_page", game_id=game_id))
+    return redirect(url_for("panel_matches_page"))
 
 @admin_required
-def panel_matches_update(game_id):
+def panel_matches_update():
     form_data = request.form.to_dict()
+    game_id = request.form['game_id']
     season_code = request.form['season_code']
     match_date = request.form['date']
     teamaid = request.form['team_id_a']
@@ -441,15 +443,16 @@ def panel_matches_update(game_id):
     cursor = connection.cursor(dictionary=True)
     cursor.execute("SELECT * FROM euroleague_header WHERE season_code = %s AND date = %s AND team_id_a = %s AND team_id_b = %s", (season_code, match_date, teamaid, teambid, ))
     ts_existing = cursor.fetchone()
-    if ts_existing:
+    if not ts_existing:
         flash("???????????", "danger")
         cursor.close()
         connection.close()
-        return redirect(url_for("panel_team_seasons_page", game_id=game_id))
+        return redirect(url_for("panel_matches_page"))
 
     cursor.execute("DESCRIBE euroleague_header")
     columns = [column['Field'] for column in cursor.fetchall()]
     filtered_data = {key: form_data[key] for key in form_data if key in columns}
+    filtered_data['game_id'] = game_id
     set_str = ', '.join([f"{key} = %({key})s" for key in filtered_data if key != 'game_id'])
     sql = f"""UPDATE euroleague_header SET {set_str} WHERE game_id = %(game_id)s"""
     cursor.execute(sql, filtered_data)
@@ -458,10 +461,10 @@ def panel_matches_update(game_id):
     connection.close()
 
     flash("Match updated successfully!", "success")
-    return redirect(url_for("panel_matches_page", game_id=game_id))
+    return redirect(url_for("panel_matches_page"))
 
 @admin_required
-def panel_matches_delete(game_id):
+def panel_matches_delete():
     game_id = request.form['game_id']
 
     connection = get_db_connection()
@@ -472,4 +475,4 @@ def panel_matches_delete(game_id):
     connection.close()
 
     flash("Match deleted successfully!", "success")
-    return redirect(url_for("panel_team_seasons_page", game_id=game_id))
+    return redirect(url_for("panel_matches_page"))

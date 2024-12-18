@@ -45,8 +45,7 @@
                     <td>{{ match['date'] }}</td>
                     <td>{{ match['result'] }}</td>
                     <td><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateMatchModal"
-                            data-matchid="{{ match['game_id'] }}"
-                            data-match-name="{{ match['game_id'] }}">Update</button></td>
+                        {{ match['data_attributes'] }}>Update</button></td>
                     <td><button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteMatchModal"
                             data-matchid="{{ match['game_id'] }}"
                             data-match-name="{{ match['game_id'] }}">Delete</button></td>
@@ -69,254 +68,254 @@
                 <form action="/panel/matches/add" method="post" id="addmatchForm">
                     <div class="mb-2">
                         <label>Game ID</label>
-                        <input type="text" class="form-control" name="game_id" id="addmatch_game_id"
+                        <input type="text" class="form-control" name="game_id" id="addMatch_game_id"
                             placeholder="Enter game ID" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Game Name</label>
-                        <input type="text" class="form-control" name="game" id="addmatch_game"
+                        <input type="text" class="form-control" name="game" id="addMatch_game"
                             placeholder="Enter game name" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Match Date</label>
-                        <input type="date" class="form-control" name="date" id="addmatch_date"
+                        <input type="date" class="form-control" name="date" id="addMatch_date"
                             placeholder="Enter match date" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Match Time</label>
-                        <input type="time" class="form-control" name="time" id="addmatch_time"
+                        <input type="time" class="form-control" name="time" id="addMatch_time"
                             placeholder="Enter match time" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Round</label>
-                        <input type="text" class="form-control" name="round" id="addmatch_round"
+                        <input type="text" class="form-control" name="round" id="addMatch_round"
                             placeholder="Enter match round" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Phase</label>
-                        <input type="text" class="form-control" name="phase" id="addmatch_phase"
+                        <input type="text" class="form-control" name="phase" id="addMatch_phase"
                             placeholder="Enter match phase" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Season Code</label>
-                        <input type="text" class="form-control" name="season_code" id="addmatch_season_code"
+                        <input type="text" class="form-control" name="season_code" id="addMatch_season_code"
                             placeholder="Enter season code" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Score Team A</label>
-                        <input type="number" class="form-control" name="score_a" id="addmatch_score_a"
+                        <input type="number" class="form-control" name="score_a" id="addMatch_score_a"
                             placeholder="Enter score for team A" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Score Team B</label>
-                        <input type="number" class="form-control" name="score_b" id="addmatch_score_b"
+                        <input type="number" class="form-control" name="score_b" id="addMatch_score_b"
                             placeholder="Enter score for team B" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Team A</label>
-                        <input type="text" class="form-control" name="team_a" id="addmatch_team_a"
+                        <input type="text" class="form-control" name="team_a" id="addMatch_team_a"
                             placeholder="Enter team A name" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Team B</label>
-                        <input type="text" class="form-control" name="team_b" id="addmatch_team_b"
+                        <input type="text" class="form-control" name="team_b" id="addMatch_team_b"
                             placeholder="Enter team B name" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Team A ID</label>
-                        <input type="text" class="form-control" name="team_id_a" id="addmatch_team_id_a"
+                        <input type="text" class="form-control" name="team_id_a" id="addMatch_team_id_a"
                             placeholder="Enter team A ID" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Team B ID</label>
-                        <input type="text" class="form-control" name="team_id_b" id="addmatch_team_id_b"
+                        <input type="text" class="form-control" name="team_id_b" id="addMatch_team_id_b"
                             placeholder="Enter team B ID" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Coach A</label>
-                        <input type="text" class="form-control" name="coach_a" id="addmatch_coach_a"
+                        <input type="text" class="form-control" name="coach_a" id="addMatch_coach_a"
                             placeholder="Enter coach A name" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Coach B</label>
-                        <input type="text" class="form-control" name="coach_b" id="addmatch_coach_b"
+                        <input type="text" class="form-control" name="coach_b" id="addMatch_coach_b"
                             placeholder="Enter coach B name" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Game Time</label>
-                        <input type="text" class="form-control" name="game_time" id="addmatch_game_time"
+                        <input type="text" class="form-control" name="game_time" id="addMatch_game_time"
                             placeholder="Enter total game time" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Remaining Partial Time</label>
                         <input type="text" class="form-control" name="remaining_partial_time"
-                            id="addmatch_remaining_partial_time" placeholder="Enter remaining partial time" required />
+                            id="addMatch_remaining_partial_time" placeholder="Enter remaining partial time" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Referee 1</label>
-                        <input type="text" class="form-control" name="referee_1" id="addmatch_referee_1"
+                        <input type="text" class="form-control" name="referee_1" id="addMatch_referee_1"
                             placeholder="Enter referee 1 name" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Referee 2</label>
-                        <input type="text" class="form-control" name="referee_2" id="addmatch_referee_2"
+                        <input type="text" class="form-control" name="referee_2" id="addMatch_referee_2"
                             placeholder="Enter referee 2 name" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Referee 3</label>
-                        <input type="text" class="form-control" name="referee_3" id="addmatch_referee_3"
+                        <input type="text" class="form-control" name="referee_3" id="addMatch_referee_3"
                             placeholder="Enter referee 3 name" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Stadium</label>
-                        <input type="text" class="form-control" name="stadium" id="addmatch_stadium"
+                        <input type="text" class="form-control" name="stadium" id="addMatch_stadium"
                             placeholder="Enter stadium name" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Capacity</label>
-                        <input type="number" class="form-control" name="capacity" id="addmatch_capacity"
+                        <input type="number" class="form-control" name="capacity" id="addMatch_capacity"
                             placeholder="Enter stadium capacity" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Fouls Team A</label>
-                        <input type="number" class="form-control" name="fouls_a" id="addmatch_fouls_a"
+                        <input type="number" class="form-control" name="fouls_a" id="addMatch_fouls_a"
                             placeholder="Enter fouls for Team A" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Fouls Team B</label>
-                        <input type="number" class="form-control" name="fouls_b" id="addmatch_fouls_b"
+                        <input type="number" class="form-control" name="fouls_b" id="addMatch_fouls_b"
                             placeholder="Enter fouls for Team B" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Timeouts Team A</label>
-                        <input type="number" class="form-control" name="timeouts_a" id="addmatch_timeouts_a"
+                        <input type="number" class="form-control" name="timeouts_a" id="addMatch_timeouts_a"
                             placeholder="Enter timeouts for Team A" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Timeouts Team B</label>
-                        <input type="number" class="form-control" name="timeouts_b" id="addmatch_timeouts_b"
+                        <input type="number" class="form-control" name="timeouts_b" id="addMatch_timeouts_b"
                             placeholder="Enter timeouts for Team B" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Score Quarter 1 Team A</label>
                         <input type="number" class="form-control" name="score_quarter_1_a"
-                            id="addmatch_score_quarter_1_a" placeholder="Enter Team A score for Quarter 1" required />
+                            id="addMatch_score_quarter_1_a" placeholder="Enter Team A score for Quarter 1" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Score Quarter 1 Team B</label>
                         <input type="number" class="form-control" name="score_quarter_1_b"
-                            id="addmatch_score_quarter_1_b" placeholder="Enter Team B score for Quarter 1" required />
+                            id="addMatch_score_quarter_1_b" placeholder="Enter Team B score for Quarter 1" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Score Quarter 2 Team A</label>
                         <input type="number" class="form-control" name="score_quarter_2_a"
-                            id="addmatch_score_quarter_2_a" placeholder="Enter Team A score for Quarter 2" required />
+                            id="addMatch_score_quarter_2_a" placeholder="Enter Team A score for Quarter 2" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Score Quarter 2 Team B</label>
                         <input type="number" class="form-control" name="score_quarter_2_b"
-                            id="addmatch_score_quarter_2_b" placeholder="Enter Team B score for Quarter 2" required />
+                            id="addMatch_score_quarter_2_b" placeholder="Enter Team B score for Quarter 2" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Score Quarter 3 Team A</label>
                         <input type="number" class="form-control" name="score_quarter_3_a"
-                            id="addmatch_score_quarter_3_a" placeholder="Enter Team A score for Quarter 3" required />
+                            id="addMatch_score_quarter_3_a" placeholder="Enter Team A score for Quarter 3" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Score Quarter 3 Team B</label>
                         <input type="number" class="form-control" name="score_quarter_3_b"
-                            id="addmatch_score_quarter_3_b" placeholder="Enter Team B score for Quarter 3" required />
+                            id="addMatch_score_quarter_3_b" placeholder="Enter Team B score for Quarter 3" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Score Quarter 4 Team A</label>
                         <input type="number" class="form-control" name="score_quarter_4_a"
-                            id="addmatch_score_quarter_4_a" placeholder="Enter Team A score for Quarter 4" required />
+                            id="addMatch_score_quarter_4_a" placeholder="Enter Team A score for Quarter 4" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Score Quarter 4 Team B</label>
                         <input type="number" class="form-control" name="score_quarter_4_b"
-                            id="addmatch_score_quarter_4_b" placeholder="Enter Team B score for Quarter 4" required />
+                            id="addMatch_score_quarter_4_b" placeholder="Enter Team B score for Quarter 4" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Score Extra Time 1 Team A</label>
                         <input type="number" class="form-control" name="score_extra_time_1_a"
-                            id="addmatch_score_extra_time_1_a" placeholder="Enter Team A score for Extra Time 1" />
+                            id="addMatch_score_extra_time_1_a" placeholder="Enter Team A score for Extra Time 1" />
                     </div>
 
                     <div class="mb-2">
                         <label>Score Extra Time 1 Team B</label>
                         <input type="number" class="form-control" name="score_extra_time_1_b"
-                            id="addmatch_score_extra_time_1_b" placeholder="Enter Team B score for Extra Time 1" />
+                            id="addMatch_score_extra_time_1_b" placeholder="Enter Team B score for Extra Time 1" />
                     </div>
 
                     <div class="mb-2">
                         <label>Score Extra Time 2 Team A</label>
                         <input type="number" class="form-control" name="score_extra_time_2_a"
-                            id="addmatch_score_extra_time_2_a" placeholder="Enter Team A score for Extra Time 2" />
+                            id="addMatch_score_extra_time_2_a" placeholder="Enter Team A score for Extra Time 2" />
                     </div>
 
                     <div class="mb-2">
                         <label>Score Extra Time 2 Team B</label>
                         <input type="number" class="form-control" name="score_extra_time_2_b"
-                            id="addmatch_score_extra_time_2_b" placeholder="Enter Team B score for Extra Time 2" />
+                            id="addMatch_score_extra_time_2_b" placeholder="Enter Team B score for Extra Time 2" />
                     </div>
 
                     <div class="mb-2">
                         <label>Score Extra Time 3 Team A</label>
                         <input type="number" class="form-control" name="score_extra_time_3_a"
-                            id="addmatch_score_extra_time_3_a" placeholder="Enter Team A score for Extra Time 3" />
+                            id="addMatch_score_extra_time_3_a" placeholder="Enter Team A score for Extra Time 3" />
                     </div>
 
                     <div class="mb-2">
                         <label>Score Extra Time 3 Team B</label>
                         <input type="number" class="form-control" name="score_extra_time_3_b"
-                            id="addmatch_score_extra_time_3_b" placeholder="Enter Team B score for Extra Time 3" />
+                            id="addMatch_score_extra_time_3_b" placeholder="Enter Team B score for Extra Time 3" />
                     </div>
 
                     <div class="mb-2">
                         <label>Score Extra Time 4 Team A</label>
                         <input type="number" class="form-control" name="score_extra_time_4_a"
-                            id="addmatch_score_extra_time_4_a" placeholder="Enter Team A score for Extra Time 4" />
+                            id="addMatch_score_extra_time_4_a" placeholder="Enter Team A score for Extra Time 4" />
                     </div>
 
                     <div class="mb-2">
                         <label>Score Extra Time 4 Team B</label>
                         <input type="number" class="form-control" name="score_extra_time_4_b"
-                            id="addmatch_score_extra_time_4_b" placeholder="Enter Team B score for Extra Time 4" />
+                            id="addMatch_score_extra_time_4_b" placeholder="Enter Team B score for Extra Time 4" />
                     </div>
 
                 </form>
@@ -342,263 +341,263 @@
                 <form action="/panel/matches/update" method="post" id="updateMatchForm">
                     <div class="mb-2">
                         <label>Game ID</label>
-                        <input type="text" class="form-control" name="game_id" id="updatematchgame_id"
+                        <input type="text" class="form-control" name="game_id" id="updateMatch_game_id"
                             value="{{ game_id }}" disabled required />
                         <input type="hidden" name="game_id" value="{{ game_id }}" />
                     </div>
 
                     <div class="mb-2">
                         <label>Game Name</label>
-                        <input type="text" class="form-control" name="game" id="updatematch_game"
+                        <input type="text" class="form-control" name="game" id="updateMatch_game"
                             placeholder="Enter game name" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Match Date</label>
-                        <input type="date" class="form-control" name="date" id="updatematch_date"
+                        <input type="date" class="form-control" name="date" id="updateMatch_date"
                             placeholder="Enter match date" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Match Time</label>
-                        <input type="time" class="form-control" name="time" id="updatematch_time"
+                        <input type="time" class="form-control" name="time" id="updateMatch_time"
                             placeholder="Enter match time" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Round</label>
-                        <input type="text" class="form-control" name="round" id="updatematch_round"
+                        <input type="text" class="form-control" name="round" id="updateMatch_round"
                             placeholder="Enter match round" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Phase</label>
-                        <input type="text" class="form-control" name="phase" id="updatematch_phase"
+                        <input type="text" class="form-control" name="phase" id="updateMatch_phase"
                             placeholder="Enter match phase" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Season Code</label>
-                        <input type="text" class="form-control" name="season_code" id="updatematch_season_code"
+                        <input type="text" class="form-control" name="season_code" id="updateMatch_season_code"
                             placeholder="Enter season code" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Score Team A</label>
-                        <input type="number" class="form-control" name="score_a" id="updatematch_score_a"
+                        <input type="number" class="form-control" name="score_a" id="updateMatch_score_a"
                             placeholder="Enter score for team A" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Score Team B</label>
-                        <input type="number" class="form-control" name="score_b" id="updatematch_score_b"
+                        <input type="number" class="form-control" name="score_b" id="updateMatch_score_b"
                             placeholder="Enter score for team B" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Team A</label>
-                        <input type="text" class="form-control" name="team_a" id="updatematch_team_a"
+                        <input type="text" class="form-control" name="team_a" id="updateMatch_team_a"
                             placeholder="Enter team A name" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Team B</label>
-                        <input type="text" class="form-control" name="team_b" id="updatematch_team_b"
+                        <input type="text" class="form-control" name="team_b" id="updateMatch_team_b"
                             placeholder="Enter team B name" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Team A ID</label>
-                        <input type="text" class="form-control" name="team_id_a" id="updatematch_team_id_a"
+                        <input type="text" class="form-control" name="team_id_a" id="updateMatch_team_id_a"
                             placeholder="Enter team A ID" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Team B ID</label>
-                        <input type="text" class="form-control" name="team_id_b" id="updatematch_team_id_b"
+                        <input type="text" class="form-control" name="team_id_b" id="updateMatch_team_id_b"
                             placeholder="Enter team B ID" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Coach A</label>
-                        <input type="text" class="form-control" name="coach_a" id="updatematch_coach_a"
+                        <input type="text" class="form-control" name="coach_a" id="updateMatch_coach_a"
                             placeholder="Enter coach A name" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Coach B</label>
-                        <input type="text" class="form-control" name="coach_b" id="updatematch_coach_b"
+                        <input type="text" class="form-control" name="coach_b" id="updateMatch_coach_b"
                             placeholder="Enter coach B name" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Game Time</label>
-                        <input type="text" class="form-control" name="game_time" id="updatematch_game_time"
+                        <input type="text" class="form-control" name="game_time" id="updateMatch_game_time"
                             placeholder="Enter total game time" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Remaining Partial Time</label>
                         <input type="text" class="form-control" name="remaining_partial_time"
-                            id="updatematch_remaining_partial_time" placeholder="Enter remaining partial time"
+                            id="updateMatch_remaining_partial_time" placeholder="Enter remaining partial time"
                             required />
                     </div>
 
                     <div class="mb-2">
                         <label>Referee 1</label>
-                        <input type="text" class="form-control" name="referee_1" id="updatematch_referee_1"
+                        <input type="text" class="form-control" name="referee_1" id="updateMatch_referee_1"
                             placeholder="Enter referee 1 name" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Referee 2</label>
-                        <input type="text" class="form-control" name="referee_2" id="updatematch_referee_2"
+                        <input type="text" class="form-control" name="referee_2" id="updateMatch_referee_2"
                             placeholder="Enter referee 2 name" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Referee 3</label>
-                        <input type="text" class="form-control" name="referee_3" id="updatematch_referee_3"
+                        <input type="text" class="form-control" name="referee_3" id="updateMatch_referee_3"
                             placeholder="Enter referee 3 name" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Stadium</label>
-                        <input type="text" class="form-control" name="stadium" id="updatematch_stadium"
+                        <input type="text" class="form-control" name="stadium" id="updateMatch_stadium"
                             placeholder="Enter stadium name" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Capacity</label>
-                        <input type="number" class="form-control" name="capacity" id="updatematch_capacity"
+                        <input type="number" class="form-control" name="capacity" id="updateMatch_capacity"
                             placeholder="Enter stadium capacity" required />
                     </div>
                     <div class="mb-2">
                         <label>Fouls Team A</label>
-                        <input type="number" class="form-control" name="fouls_a" id="updatematch_fouls_a"
+                        <input type="number" class="form-control" name="fouls_a" id="updateMatch_fouls_a"
                             placeholder="Enter fouls for Team A" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Fouls Team B</label>
-                        <input type="number" class="form-control" name="fouls_b" id="updatematch_fouls_b"
+                        <input type="number" class="form-control" name="fouls_b" id="updateMatch_fouls_b"
                             placeholder="Enter fouls for Team B" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Timeouts Team A</label>
-                        <input type="number" class="form-control" name="timeouts_a" id="updatematch_timeouts_a"
+                        <input type="number" class="form-control" name="timeouts_a" id="updateMatch_timeouts_a"
                             placeholder="Enter timeouts for Team A" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Timeouts Team B</label>
-                        <input type="number" class="form-control" name="timeouts_b" id="updatematch_timeouts_b"
+                        <input type="number" class="form-control" name="timeouts_b" id="updateMatch_timeouts_b"
                             placeholder="Enter timeouts for Team B" required />
                     </div>
 
                     <div class="mb-2">
                         <label>Score Quarter 1 Team A</label>
                         <input type="number" class="form-control" name="score_quarter_1_a"
-                            id="updatematch_score_quarter_1_a" placeholder="Enter Team A score for Quarter 1"
+                            id="updateMatch_score_quarter_1_a" placeholder="Enter Team A score for Quarter 1"
                             required />
                     </div>
 
                     <div class="mb-2">
                         <label>Score Quarter 1 Team B</label>
                         <input type="number" class="form-control" name="score_quarter_1_b"
-                            id="updatematch_score_quarter_1_b" placeholder="Enter Team B score for Quarter 1"
+                            id="updateMatch_score_quarter_1_b" placeholder="Enter Team B score for Quarter 1"
                             required />
                     </div>
 
                     <div class="mb-2">
                         <label>Score Quarter 2 Team A</label>
                         <input type="number" class="form-control" name="score_quarter_2_a"
-                            id="updatematch_score_quarter_2_a" placeholder="Enter Team A score for Quarter 2"
+                            id="updateMatch_score_quarter_2_a" placeholder="Enter Team A score for Quarter 2"
                             required />
                     </div>
 
                     <div class="mb-2">
                         <label>Score Quarter 2 Team B</label>
                         <input type="number" class="form-control" name="score_quarter_2_b"
-                            id="updatematch_score_quarter_2_b" placeholder="Enter Team B score for Quarter 2"
+                            id="updateMatch_score_quarter_2_b" placeholder="Enter Team B score for Quarter 2"
                             required />
                     </div>
 
                     <div class="mb-2">
                         <label>Score Quarter 3 Team A</label>
                         <input type="number" class="form-control" name="score_quarter_3_a"
-                            id="updatematch_score_quarter_3_a" placeholder="Enter Team A score for Quarter 3"
+                            id="updateMatch_score_quarter_3_a" placeholder="Enter Team A score for Quarter 3"
                             required />
                     </div>
 
                     <div class="mb-2">
                         <label>Score Quarter 3 Team B</label>
                         <input type="number" class="form-control" name="score_quarter_3_b"
-                            id="updatematch_score_quarter_3_b" placeholder="Enter Team B score for Quarter 3"
+                            id="updateMatch_score_quarter_3_b" placeholder="Enter Team B score for Quarter 3"
                             required />
                     </div>
 
                     <div class="mb-2">
                         <label>Score Quarter 4 Team A</label>
                         <input type="number" class="form-control" name="score_quarter_4_a"
-                            id="updatematch_score_quarter_4_a" placeholder="Enter Team A score for Quarter 4"
+                            id="updateMatch_score_quarter_4_a" placeholder="Enter Team A score for Quarter 4"
                             required />
                     </div>
 
                     <div class="mb-2">
                         <label>Score Quarter 4 Team B</label>
                         <input type="number" class="form-control" name="score_quarter_4_b"
-                            id="updatematch_score_quarter_4_b" placeholder="Enter Team B score for Quarter 4"
+                            id="updateMatch_score_quarter_4_b" placeholder="Enter Team B score for Quarter 4"
                             required />
                     </div>
 
                     <div class="mb-2">
                         <label>Score Extra Time 1 Team A</label>
                         <input type="number" class="form-control" name="score_extra_time_1_a"
-                            id="updatematch_score_extra_time_1_a" placeholder="Enter Team A score for Extra Time 1" />
+                            id="updateMatch_score_extra_time_1_a" placeholder="Enter Team A score for Extra Time 1" />
                     </div>
 
                     <div class="mb-2">
                         <label>Score Extra Time 1 Team B</label>
                         <input type="number" class="form-control" name="score_extra_time_1_b"
-                            id="updatematch_score_extra_time_1_b" placeholder="Enter Team B score for Extra Time 1" />
+                            id="updateMatch_score_extra_time_1_b" placeholder="Enter Team B score for Extra Time 1" />
                     </div>
 
                     <div class="mb-2">
                         <label>Score Extra Time 2 Team A</label>
                         <input type="number" class="form-control" name="score_extra_time_2_a"
-                            id="updatematch_score_extra_time_2_a" placeholder="Enter Team A score for Extra Time 2" />
+                            id="updateMatch_score_extra_time_2_a" placeholder="Enter Team A score for Extra Time 2" />
                     </div>
 
                     <div class="mb-2">
                         <label>Score Extra Time 2 Team B</label>
                         <input type="number" class="form-control" name="score_extra_time_2_b"
-                            id="updatematch_score_extra_time_2_b" placeholder="Enter Team B score for Extra Time 2" />
+                            id="updateMatch_score_extra_time_2_b" placeholder="Enter Team B score for Extra Time 2" />
                     </div>
 
                     <div class="mb-2">
                         <label>Score Extra Time 3 Team A</label>
                         <input type="number" class="form-control" name="score_extra_time_3_a"
-                            id="updatematch_score_extra_time_3_a" placeholder="Enter Team A score for Extra Time 3" />
+                            id="updateMatch_score_extra_time_3_a" placeholder="Enter Team A score for Extra Time 3" />
                     </div>
 
                     <div class="mb-2">
                         <label>Score Extra Time 3 Team B</label>
                         <input type="number" class="form-control" name="score_extra_time_3_b"
-                            id="updatematch_score_extra_time_3_b" placeholder="Enter Team B score for Extra Time 3" />
+                            id="updateMatch_score_extra_time_3_b" placeholder="Enter Team B score for Extra Time 3" />
                     </div>
 
                     <div class="mb-2">
                         <label>Score Extra Time 4 Team A</label>
                         <input type="number" class="form-control" name="score_extra_time_4_a"
-                            id="updatematch_score_extra_time_4_a" placeholder="Enter Team A score for Extra Time 4" />
+                            id="updateMatch_score_extra_time_4_a" placeholder="Enter Team A score for Extra Time 4" />
                     </div>
 
                     <div class="mb-2">
                         <label>Score Extra Time 4 Team B</label>
                         <input type="number" class="form-control" name="score_extra_time_4_b"
-                            id="updatematch_score_extra_time_4_b" placeholder="Enter Team B score for Extra Time 4" />
+                            id="updateMatch_score_extra_time_4_b" placeholder="Enter Team B score for Extra Time 4" />
                     </div>
 
                 </form>
@@ -621,7 +620,7 @@
             </div>
             <div class="modal-body">
                 <form action="/panel/matches/delete" method="post" id="deleteMatchForm">
-                    <input type="hidden" class="form-control" name="game_id" id="deleteMatchgame_id" />
+                    <input type="hidden" class="form-control" name="game_id" id="deleteMatch_game_id" />
                 </form>
                 <div class="mt-1 mb-1" id="message"></div>
             </div>
@@ -645,24 +644,26 @@
             const message = deleteMatchModal.querySelector('#message');
             message.innerHTML = 'The match with the match ID <strong>' + game_id + '</strong> will be deleted. Are you sure?';
 
-            const matchIdInput = deleteMatchModal.querySelector('#deletematch_game_id');
+            const matchIdInput = deleteMatchModal.querySelector('#deleteMatch_game_id');
             matchIdInput.value = game_id;
         });
     }
 
     const updateMatchModal = document.getElementById('updateMatchModal');
-    if (updateMatchModal) {
-        updateMatchModal.addEventListener('show.bs.modal', (event) => {
-            const updateButton = event.relatedTarget;
-            const game_id = updateButton.getAttribute('data-matchid');
+  if (updateMatchModal) {
+    updateMatchModal.addEventListener('show.bs.modal', (event) => {
+      const updateButton = event.relatedTarget;
+      const data = updateButton.dataset;
 
-            const matchOldIdInput = updateMatchModal.querySelector('#updatematch_old_game_id');
-            matchOldIdInput.value = game_id;
-            const matchIdInput = updateMatchModal.querySelector('#updatematch_game_id');
-            matchIdInput.value = game_id;
-            const matchNameInput = updateMatchModal.querySelector('#updatematch_game_id');
-            matchNameInput.value = game_id;
-        });
-    }
+      const modalFields = updateMatchModal.querySelectorAll('[id^="updateMatch_"]');
+      modalFields.forEach(field => {
+        const fieldName = field.name || field.id.replace('updateMatch_', '');
+        if (data[fieldName] !== undefined) {
+          var value = data[fieldName];
+          field.value = value;
+        }
+      });
+    });
+  }
 </script>
 {% endblock %}
