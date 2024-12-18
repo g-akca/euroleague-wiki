@@ -401,17 +401,18 @@ def panel_matches_page():
 @admin_required
 def panel_matches_add():
     form_data = request.form.to_dict()
-    season_code = request.form['season_code']
-    match_date = request.form['date']
-    teamaid = request.form['team_id_a']
-    teambid = request.form['team_id_b']
+    game_id = request.form['game_id']
+
+    for key, value in form_data.items():
+        if value == "":
+            form_data[key] = None
 
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM euroleague_header WHERE season_code = %s AND date = %s AND team_id_a = %s AND team_id_b = %s", (season_code, match_date, teamaid, teambid, ))
-    ts_existing = cursor.fetchone()
-    if ts_existing:
-        flash("This game already exists!", "danger")
+    cursor.execute("SELECT * FROM euroleague_header WHERE game_id = %s", (game_id, ))
+    match_existing = cursor.fetchone()
+    if match_existing:
+        flash("This match already exists!", "danger")
         cursor.close()
         connection.close()
         return redirect(url_for("panel_matches_page"))
@@ -427,7 +428,7 @@ def panel_matches_add():
     cursor.close()
     connection.close()
 
-    flash("Game added successfully!", "success")
+    flash("Match added successfully!", "success")
     return redirect(url_for("panel_matches_page"))
 
 @admin_required
