@@ -32,6 +32,8 @@ CREATE TABLE `euro`.`euroleague_header` (
 	season_code            VARCHAR(10) NOT NULL,
 	score_a                INTEGER  NOT NULL,
 	score_b                INTEGER  NOT NULL,
+	team_a                 VARCHAR(50) NOT NULL,
+	team_b                 VARCHAR(50) NOT NULL,
 	team_id_a              VARCHAR(10) NOT NULL,
 	team_id_b              VARCHAR(10) NOT NULL,
 	coach_a                VARCHAR(70),
@@ -380,3 +382,6 @@ IGNORE 1 ROWS;
 
 CREATE USER 'BLG317E'@'localhost' IDENTIFIED BY 'Password12345*';
 GRANT CREATE, ALTER, DROP, INSERT, UPDATE, DELETE, SELECT, REFERENCES, RELOAD on *.* TO 'BLG317E'@'localhost' WITH GRANT OPTION;
+
+ALTER TABLE euro.euroleague_header DROP `team_a`;
+ALTER TABLE euro.euroleague_header DROP `team_b`;

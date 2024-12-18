@@ -433,26 +433,16 @@ def panel_matches_add():
 @admin_required
 def panel_matches_update():
     form_data = request.form.to_dict()
-    game_id = request.form['game_id']
-    season_code = request.form['season_code']
-    match_date = request.form['date']
-    teamaid = request.form['team_id_a']
-    teambid = request.form['team_id_b']
+
+    for key, value in form_data.items():
+        if value == "":
+            form_data[key] = None
 
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM euroleague_header WHERE season_code = %s AND date = %s AND team_id_a = %s AND team_id_b = %s", (season_code, match_date, teamaid, teambid, ))
-    ts_existing = cursor.fetchone()
-    if not ts_existing:
-        flash("???????????", "danger")
-        cursor.close()
-        connection.close()
-        return redirect(url_for("panel_matches_page"))
-
     cursor.execute("DESCRIBE euroleague_header")
     columns = [column['Field'] for column in cursor.fetchall()]
     filtered_data = {key: form_data[key] for key in form_data if key in columns}
-    filtered_data['game_id'] = game_id
     set_str = ', '.join([f"{key} = %({key})s" for key in filtered_data if key != 'game_id'])
     sql = f"""UPDATE euroleague_header SET {set_str} WHERE game_id = %(game_id)s"""
     cursor.execute(sql, filtered_data)
