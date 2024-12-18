@@ -197,8 +197,40 @@ def match_details_page(game_id):
     connection.close()
     return render_template("match_details.html", match=match)
 
+#sort'lar, search'ler ve pagination bozuk, düzeltilecek. overall nasıl olmalı gibi bir bakıştayız şu anda
 def seasons_page():
-    return render_template("seasons.html")
+    sort_by = request.args.get('sort_by', 'season_code asc') #default sort'u ayarlayabiliyoruz
+    page_limit = 25
+    page_num = int(request.args.get('page', 1))
+    search_query = request.args.get('search', '').strip()
+    page_button = 4
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    if search_query:
+        where = f"WHERE player_name LIKE \"%{search_query}%\""
+    else:
+        where = ""
+    cursor.execute("SELECT COUNT(season_code) as total FROM euroleague_header")
+    entry_count = cursor.fetchone()['total']
+    page_count = (entry_count + page_limit - 1) // page_limit
+    #cursor.execute(query_returner_per_page(sort_by, "euroleague_team_names", page_limit, (page_num-1) * page_limit, where))
+    cursor.execute("SELECT DISTINCT(season_code) FROM euroleague_header")
+    season_codes = cursor.fetchall()
+    #buradan şampiyonu çekerek halledebiliriz
+    # cursor.execute("SELECT season_code, team_id, COUNT(*) AS games_played, SUM(CASE WHEN points_scored > points_conceded THEN 1 ELSE 0 END) AS wins, SUM(CASE WHEN points_scored < points_conceded THEN 1 ELSE 0 END) AS losses, SUM(points_scored) AS total_points_scored, SUM(points_conceded) AS total_points_conceded FROM (SELECT season_code, team_id_a AS team_id, score_a AS points_scored, score_b AS points_conceded FROM euro.euroleague_header WHERE season_code = %s UNION ALL SELECT season_code, team_id_b AS team_id, score_b AS points_scored, score_a AS points_conceded FROM euro.euroleague_header WHERE season_code = %s) AS combined_teams GROUP BY season_code, team_id ORDER BY wins DESC LIMIT 1;", (season_code, season_code,))
+    # most_wins = cursor.fetchone()
+    cursor.close()
+    connection.close()
+    return render_template("seasons.html", season_codes = season_codes, page_count = page_count, page_num = page_num, end_page = min(page_num + page_button, page_count))
+
+def season_details_page(season_code):
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("SELECT season_code, team_id, COUNT(*) AS games_played, SUM(CASE WHEN points_scored > points_conceded THEN 1 ELSE 0 END) AS wins, SUM(CASE WHEN points_scored < points_conceded THEN 1 ELSE 0 END) AS losses, SUM(points_scored) AS total_points_scored, SUM(points_conceded) AS total_points_conceded FROM (SELECT season_code, team_id_a AS team_id, score_a AS points_scored, score_b AS points_conceded FROM euro.euroleague_header WHERE season_code = %s UNION ALL SELECT season_code, team_id_b AS team_id, score_b AS points_scored, score_a AS points_conceded FROM euro.euroleague_header WHERE season_code = %s) AS combined_teams GROUP BY season_code, team_id ORDER BY season_code, team_id;", (season_code, season_code,))
+    season_detail = cursor.fetchall()
+    cursor.close()
+    connection.close()
+    return render_template("season_details.html", season_detail = season_detail)
 
 def box_scores_page():
     connection = get_db_connection()
