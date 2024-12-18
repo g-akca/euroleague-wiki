@@ -38,7 +38,7 @@
   <tbody class="table-group-divider">
     {% for player in player_names %}
     <tr>
-      <td>{{ player['player_id'] }}</td>
+      <td><a href="/player/{{ player['player_id'] }}">{{ player['player_id'] }}</a></td>
       <td>{{ player['player_name'] }}</td>
     </tr>
     {% endfor %}

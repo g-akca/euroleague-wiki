@@ -66,6 +66,25 @@ def players_page():
         end_page = min(page_num + page_button, page_count)
     )
 
+def player_details_page(player_id, season_code=None):
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM euroleague_player_names WHERE player_id = %s", (player_id, ))
+    player_name = cursor.fetchone()
+    cursor.execute("SELECT * FROM euroleague_players WHERE player_id = %s", (player_id, ))
+    player_seasons = cursor.fetchall()
+
+    if season_code:
+        cursor.execute("SELECT * FROM euroleague_players WHERE player_id = %s AND season_code = %s", (player_id, season_code))
+        season_data = cursor.fetchone()
+    else:
+        cursor.execute("SELECT * FROM euroleague_players WHERE player_id = %s AND season_code = (SELECT MAX(season_code) FROM euroleague_players WHERE player_id = %s)", (player_id, player_id))
+        season_data = cursor.fetchone()
+
+    cursor.close()
+    connection.close()
+    return render_template("player_details.html", player_name=player_name, player_seasons=player_seasons, season_data=season_data)
+
 def query_returner_per_page(x, y, z, u, s):
     return f"SELECT * FROM {y} {s} ORDER BY {x} LIMIT {z} OFFSET {u};"
 

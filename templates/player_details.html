@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ player_name['player_name'] }}{% endblock %}
+
+{% block content %} <!-- Will change how this page looks in general -->
+<h1>{{ player_name['player_name'] }}</h1>
+
+<ul class="nav nav-tabs" role="tablist">
+{% for player in player_seasons %}
+  {% if player['season_code'] == season_data['season_code'] %}
+  <li class="nav-item" role="presentation">
+    <a href="{{ url_for('player_details_page', player_id=player_name['player_id'], season_code=player['season_code']) }}" class="nav-link active" role="tab">
+      Season {{ player['season_code'] }}
+    </a>
+  </li>
+  {% else %}
+  <li class="nav-item" role="presentation">
+    <a href="{{ url_for('player_details_page', player_id=player_name['player_id'], season_code=player['season_code']) }}" class="nav-link" role="tab">
+      Season {{ player['season_code'] }}
+    </a>
+  </li>
+  {% endif %}
+{% endfor %}
+</ul>
+
+<p>player ID: {{ player_name['player_id'] }}</p>
+<p>Season: {{ season_data['season_code'] }}</p>
+<p>Games Played: {{ season_data['games_played'] }}</p>
+<p>Total Assists: {{ season_data['assists'] }}</p>
+{% endblock %}
