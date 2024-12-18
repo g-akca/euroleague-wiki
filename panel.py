@@ -312,6 +312,10 @@ def panel_box_scores_add():
     player_id = request.form['player_id']
     game_player_id = f"{game_id}_{player_id}"
 
+    for key, value in form_data.items():
+        if value == "":
+            form_data[key] = None
+
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
     cursor.execute("SELECT * FROM euroleague_box_score WHERE game_player_id = %s", (game_player_id, ))
@@ -344,6 +348,10 @@ def panel_box_scores_update():
     player_id = request.form['player_id']
     game_player_id = request.form['game_player_id']
     new_game_player_id = f"{game_id}_{player_id}"
+
+    for key, value in form_data.items():
+        if value == "":
+            form_data[key] = None
 
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
@@ -392,8 +400,10 @@ def panel_matches_page():
     cursor = connection.cursor(dictionary=True)
     cursor.execute("SELECT *, concat(score_a, ' - ', score_b) as result FROM euro.euroleague_header;")
     matches = cursor.fetchall()
+
     for match in matches:
         match['data_attributes'] = ' '.join([f'data-{key}={value}' for key, value in match.items()])
+        
     cursor.close()
     connection.close()
     return render_template("panel_matches.html", matches=matches)

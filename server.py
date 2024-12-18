@@ -1,6 +1,5 @@
-from flask import Flask, redirect
+from flask import Flask
 import views, auth, panel
-from auth import refresh_session_data
 
 def create_app():
     app = Flask(__name__)
@@ -57,15 +56,15 @@ def create_app():
 
     @app.before_request
     def refresh_before_request():
-        refresh_session_data()
+        auth.refresh_session_data()
     
     @app.errorhandler(403)
     def page_restricted(e):
-        return redirect("/403")
+        return auth.restricted()
 
     @app.errorhandler(404)
     def page_not_found(e):
-        return redirect("/404")
+        return auth.not_found()
 
     return app
 
