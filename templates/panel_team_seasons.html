@@ -652,7 +652,7 @@
       modalFields.forEach(field => {
         const fieldName = field.name || field.id.replace('updateTeamSeason_', '');
         if (data[fieldName] !== undefined) {
-          var value = data[fieldName];
+          var value = decodeURIComponent(data[fieldName]);
           field.value = value;
         }
       });

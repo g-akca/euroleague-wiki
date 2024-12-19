@@ -1,8 +1,8 @@
-from flask import render_template, request, jsonify, flash, redirect, url_for
+from flask import render_template, request, jsonify, flash, redirect, url_for, session
 from db import get_db_connection
 from auth import admin_required
-from views import query_returner_per_page
 import bcrypt
+import urllib.parse
 
 # Needed for panel sidemenu
 @admin_required
@@ -73,12 +73,12 @@ def panel_users_page():
     cursor = connection.cursor(dictionary=True)
     cursor.execute("SELECT COUNT(*) as total FROM users")
     entry_count = cursor.fetchone()['total']
-    page_count = (entry_count + page_limit - 1) // page_limit
+    page_count = (entry_count + page_limit - 1)
     cursor.execute("SELECT *, CASE WHEN role = 'U' THEN 'User' WHEN role = 'A' THEN 'Admin' ELSE 'Unknown' END AS role_detailed FROM users LIMIT %s OFFSET %s", (page_limit, (page_num-1) * page_limit ))
     users = cursor.fetchall()
 
     for user in users:
-        user['data_attributes'] = ' '.join([f'data-{key}={value}' for key, value in user.items()])
+        user['data_attributes'] = ' '.join([f'data-{key}={urllib.parse.quote(str(value))}' for key, value in user.items()])
 
     cursor.execute("SELECT * FROM euroleague_team_names ORDER BY team_name ASC")
     team_names = cursor.fetchall()
@@ -141,17 +141,22 @@ def panel_users_update():
 
 @admin_required
 def panel_users_delete():
-    user_id = request.form['user_id']
+    user_id = int(request.form['user_id'])
+    own_id = session['user_id']
 
-    connection = get_db_connection()
-    cursor = connection.cursor(dictionary=True)
-    cursor.execute("DELETE FROM users WHERE user_id = %s", (user_id, ))
-    connection.commit()
-    cursor.close()
-    connection.close()
+    if user_id == own_id:
+        flash("You can't delete your own account!", "danger")
+        return redirect(url_for("panel_users_page"))
+    else:
+        connection = get_db_connection()
+        cursor = connection.cursor(dictionary=True)
+        cursor.execute("DELETE FROM users WHERE user_id = %s", (user_id, ))
+        connection.commit()
+        cursor.close()
+        connection.close()
 
-    flash("User deleted successfully!", "success")
-    return redirect(url_for('panel_users_page'))
+        flash("User deleted successfully!", "success")
+        return redirect(url_for('panel_users_page'))
 
 # Teams Panel
 @admin_required
@@ -164,7 +169,7 @@ def panel_teams_page():
     cursor = connection.cursor(dictionary=True)
     cursor.execute("SELECT COUNT(*) as total FROM euroleague_team_names")
     entry_count = cursor.fetchone()['total']
-    page_count = (entry_count + page_limit - 1) // page_limit
+    page_count = (entry_count + page_limit - 1)
     cursor.execute("SELECT euroleague_team_names.team_id AS team_id, euroleague_team_names.team_name AS team_name, GROUP_CONCAT(euroleague_teams.season_code ORDER BY euroleague_teams.season_code ASC SEPARATOR ', ') AS seasons FROM euroleague_team_names LEFT JOIN euroleague_teams ON euroleague_team_names.team_id = euroleague_teams.team_id GROUP BY euroleague_team_names.team_id, euroleague_team_names.team_name LIMIT %s OFFSET %s", (page_limit, (page_num-1) * page_limit ))
     team_names = cursor.fetchall()
     cursor.close()
@@ -232,12 +237,12 @@ def panel_team_seasons_page(team_id):
     cursor = connection.cursor(dictionary=True)
     cursor.execute("SELECT COUNT(team_id) AS season_count FROM euroleague_teams WHERE team_id = %s", (team_id, ))
     season_count = cursor.fetchone()['season_count']
-    page_count = (season_count + page_limit - 1) // page_limit
+    page_count = (season_count + page_limit - 1)
     cursor.execute("SELECT *, euroleague_teams.team_id AS team_id, euroleague_team_names.team_name AS team_name FROM euroleague_teams LEFT JOIN euroleague_team_names ON euroleague_teams.team_id = euroleague_team_names.team_id WHERE euroleague_teams.team_id = %s LIMIT %s OFFSET %s", (team_id, page_limit, (page_num-1) * page_limit ))
     team_seasons = cursor.fetchall()
 
     for ts in team_seasons:
-        ts['data_attributes'] = ' '.join([f'data-{key}={value}' for key, value in ts.items()])
+        ts['data_attributes'] = ' '.join([f'data-{key}={urllib.parse.quote(str(value))}' for key, value in ts.items()])
 
     cursor.close()
     connection.close()
@@ -338,12 +343,12 @@ def panel_box_scores_page():
     cursor = connection.cursor(dictionary=True)
     cursor.execute("SELECT COUNT(*) as total FROM euroleague_box_score")
     entry_count = cursor.fetchone()['total']
-    page_count = (entry_count + page_limit - 1) // page_limit
+    page_count = (entry_count + page_limit - 1)
     cursor.execute("SELECT *, euroleague_box_score.player_id AS player_id, euroleague_box_score.team_id AS team_id FROM euroleague_box_score LEFT JOIN euroleague_player_names ON euroleague_box_score.player_id = euroleague_player_names.player_id LEFT JOIN euroleague_team_names ON euroleague_box_score.team_id = euroleague_team_names.team_id ORDER BY game_id, euroleague_box_score.team_id ASC LIMIT %s OFFSET %s", (page_limit, (page_num-1) * page_limit ))
     box_scores = cursor.fetchall()
 
     for bx in box_scores:
-        bx['data_attributes'] = ' '.join([f'data-{key}={value}' for key, value in bx.items()])
+        bx['data_attributes'] = ' '.join([f'data-{key}={urllib.parse.quote(str(value))}' for key, value in bx.items()])
 
     cursor.execute("SELECT * FROM euroleague_header")
     matches = cursor.fetchall()
@@ -458,12 +463,12 @@ def panel_matches_page():
     cursor = connection.cursor(dictionary=True)
     cursor.execute("SELECT COUNT(*) as total FROM euroleague_header")
     entry_count = cursor.fetchone()['total']
-    page_count = (entry_count + page_limit - 1) // page_limit
+    page_count = (entry_count + page_limit - 1)
     cursor.execute("SELECT *, concat(score_a, ' - ', score_b) as result FROM euro.euroleague_header LIMIT %s OFFSET %s", (page_limit, (page_num-1) * page_limit))
     matches = cursor.fetchall()
 
     for match in matches:
-        match['data_attributes'] = ' '.join([f'data-{key}={value}' for key, value in match.items()])
+        match['data_attributes'] = ' '.join([f'data-{key}={urllib.parse.quote(str(value))}' for key, value in match.items()])
         
     cursor.close()
     connection.close()
@@ -554,12 +559,12 @@ def panel_plays_page():
     cursor = connection.cursor(dictionary=True)
     cursor.execute("SELECT COUNT(*) as total FROM euroleague_play_by_play")
     entry_count = cursor.fetchone()['total']
-    page_count = (entry_count + page_limit - 1) // page_limit
+    page_count = (entry_count + page_limit - 1)
     cursor.execute("SELECT *, euroleague_play_by_play.player_id AS player_id, euroleague_play_by_play.team_id AS team_id FROM euroleague_play_by_play LEFT JOIN euroleague_player_names ON euroleague_play_by_play.player_id = euroleague_player_names.player_id LEFT JOIN euroleague_team_names ON euroleague_play_by_play.team_id = euroleague_team_names.team_id ORDER BY game_id, number_of_play ASC LIMIT %s OFFSET %s", (page_limit, (page_num-1) * page_limit))
     plays = cursor.fetchall()
 
     for play in plays:
-        play['data_attributes'] = ' '.join([f'data-{key}={value}' for key, value in play.items()])
+        play['data_attributes'] = ' '.join([f'data-{key}={urllib.parse.quote(str(value))}' for key, value in play.items()])
 
     cursor.execute("SELECT * FROM euroleague_header")
     matches = cursor.fetchall()

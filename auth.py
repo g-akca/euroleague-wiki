@@ -8,7 +8,7 @@ import bcrypt
 def admin_required(f):
     @wraps(f)
     def wrap(*args, **kwargs):
-        if session['role'] == "A":
+        if session.get('role') == "A":
             return f(*args, **kwargs)
         else:
             return redirect(url_for("restricted"))
