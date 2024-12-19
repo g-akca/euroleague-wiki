@@ -133,37 +133,24 @@ def team_details_page(team_id, season_code=None):
         team_id = random.choice(team_ids)['team_id']
 
     # Fetch the team name and seasons
-    cursor.execute("SELECT * FROM euroleague_team_names WHERE team_id = %s", (team_id,))
+    cursor.execute("SELECT * FROM euroleague_team_names WHERE team_id = %s", (team_id, ))
     team_name = cursor.fetchone()
 
-    cursor.execute("SELECT * FROM euroleague_teams WHERE team_id = %s", (team_id,))
+    cursor.execute("SELECT * FROM euroleague_teams WHERE team_id = %s", (team_id, ))
     team_seasons = cursor.fetchall()
 
     # Fetch season data
     if season_code:
-        cursor.execute(
-            "SELECT * FROM euroleague_teams WHERE team_id = %s AND season_code = %s",
-            (team_id, season_code),
-        )
+        cursor.execute("SELECT * FROM euroleague_teams WHERE team_id = %s AND season_code = %s", (team_id, season_code))
         season_data = cursor.fetchone()
     else:
-        cursor.execute(
-            "SELECT * FROM euroleague_teams WHERE team_id = %s AND season_code = (SELECT MAX(season_code) FROM euroleague_teams WHERE team_id = %s)",
-            (team_id, team_id),
-        )
+        cursor.execute("SELECT * FROM euroleague_teams WHERE team_id = %s AND season_code = (SELECT MAX(season_code) FROM euroleague_teams WHERE team_id = %s)", (team_id, team_id))
         season_data = cursor.fetchone()
 
     cursor.close()
     connection.close()
 
-    return render_template(
-        "team_details.html", 
-        team_name=team_name, 
-        team_seasons=team_seasons, 
-        season_data=season_data,
-    )
-
-
+    return render_template("team_details.html", team_name=team_name, team_seasons=team_seasons, season_data=season_data)
 
 def matches_page():
     page_limit = 25

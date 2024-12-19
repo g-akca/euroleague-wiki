@@ -61,6 +61,7 @@ def get_players_by_team_season(team_id, season_code):
     connection.close()
     return jsonify({'players': players})
 
+# Users Panel
 @admin_required
 def panel_users_page():
     connection = get_db_connection()
@@ -139,6 +140,7 @@ def panel_users_delete():
     flash("User deleted successfully!", "success")
     return redirect(url_for('panel_users_page'))
 
+# Teams Panel
 @admin_required
 def panel_teams_page():
     connection = get_db_connection()
@@ -194,6 +196,7 @@ def panel_teams_delete():
     flash("Team deleted successfully!", "success")
     return redirect(url_for('panel_teams_page'))
 
+# Team Seasons Panel
 @admin_required
 def panel_team_seasons_page(team_id):
     connection = get_db_connection()
@@ -287,6 +290,7 @@ def panel_team_seasons_delete(team_id):
     flash("Team season deleted successfully!", "success")
     return redirect(url_for("panel_team_seasons_page", team_id=team_id))
 
+# Box Scores Panel
 @admin_required
 def panel_box_scores_page():
     connection = get_db_connection()
@@ -392,8 +396,7 @@ def panel_box_scores_delete():
     flash("Box score deleted successfully!", "success")
     return redirect(url_for('panel_box_scores_page'))
 
-############################################################################################
-
+# Matches Panel
 @admin_required
 def panel_matches_page():
     connection = get_db_connection()
