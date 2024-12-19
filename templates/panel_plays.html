@@ -1,0 +1,107 @@
+{% extends "layout.html" %} 
+
+{% block title %}Admin Panel - Plays{% endblock %}
+
+{% block content %}
+<div class="container-fluid d-flex flex-row">
+  <div>
+    {% include '_panelSidemenu.html' %}
+  </div>
+  <div class="content flex-grow-1">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    <div class="d-flex justify-content-between align-items-center mb-1">
+      <h2>Plays</h2>
+      <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addPlayModal">Add New Play</button>
+    </div>
+    <table class="table table-striped table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th>Game Play ID</th>
+          <th>Game ID</th>
+          <th>Player</th>
+          <th>Team</th>
+          <th>Play No</th>
+          <th>Quarter</th>
+          <th>Marker Time</th>
+          <th>Play Type</th>
+          <th>Play Info</th>
+          <th class="col-1"></th>
+          <th class="col-1"></th>
+        </tr>
+      </thead>
+      <tbody class="table-group-divider">
+        {% for play in plays %}
+        <tr>
+          <td>{{ play['game_play_id'] }}</td>
+          <td>{{ play['game_id'] }}</td>
+          <td>{{ play['player_name'] }}</td>
+          <td>{{ play['team_name'] }}</td>
+          <td>{{ play['number_of_play'] }}</td>
+          <td>{{ play['quarter'] }}</td>
+          <td>{{ play['marker_time'] }}</td>
+          <td>{{ play['play_type'] }}</td>
+          <td>{{ play['play_info'] }}</td>
+          <td><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updatePlayModal" {{ play['data_attributes'] }}>Update</button></td>
+          <td><button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deletePlayModal" data-game-play-id="{{ play['game_play_id'] }}">Delete</button></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Add Play Modal -->
+
+
+<!-- Update Play Modal -->
+
+
+<!-- Delete Play Modal -->
+<div class="modal fade" id="deletePlayModal" tabindex="-1" aria-labelledby="deletePlayModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Delete Play</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/panel/plays/delete" method="post" id="deletePlayForm">
+          <input type="hidden" class="form-control" name="game_play_id" id="deletePlay_game_play_id" />
+        </form>
+        <div class="mt-1 mb-1" id="message"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-danger" form="deletePlayForm">Delete Play</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const deletePlayModal = document.getElementById('deletePlayModal');
+  if (deletePlayModal) {
+    deletePlayModal.addEventListener('show.bs.modal', (event) => {
+      const deleteButton = event.relatedTarget;
+      const play_id = deleteButton.getAttribute('data-game-play-id');
+
+      const message = deletePlayModal.querySelector('#message');
+      message.innerHTML = 'The play with the ID <strong>' + play_id + '</strong> will be deleted. Are you sure?';
+
+      const playIdInput = deletePlayModal.querySelector('#deletePlay_game_play_id');
+      playIdInput.value = play_id;
+    });
+  }
+</script>
+{% endblock %}

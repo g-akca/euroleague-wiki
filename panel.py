@@ -480,3 +480,36 @@ def panel_matches_delete():
 
     flash("Match deleted successfully!", "success")
     return redirect(url_for("panel_matches_page"))
+
+# Plays Panel
+@admin_required
+def panel_plays_page():
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("SELECT *, euroleague_play_by_play.player_id AS player_id, euroleague_play_by_play.team_id AS team_id FROM euroleague_play_by_play LEFT JOIN euroleague_player_names ON euroleague_play_by_play.player_id = euroleague_player_names.player_id LEFT JOIN euroleague_team_names ON euroleague_play_by_play.team_id = euroleague_team_names.team_id ORDER BY game_id, number_of_play ASC LIMIT 100")
+    plays = cursor.fetchall()
+
+    for play in plays:
+        play['data_attributes'] = ' '.join([f'data-{key}={value}' for key, value in play.items()])
+
+    cursor.execute("SELECT * FROM euroleague_header")
+    matches = cursor.fetchall()
+    cursor.execute("SELECT * FROM euroleague_player_names ORDER BY player_name ASC")
+    player_names = cursor.fetchall()
+    cursor.close()
+    connection.close()
+    return render_template("panel_plays.html", plays=plays, matches=matches, player_names=player_names)
+
+@admin_required
+def panel_plays_delete():
+    game_play_id = request.form['game_play_id']
+
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("DELETE FROM euroleague_play_by_play WHERE game_play_id = %s", (game_play_id, ))
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+    flash("Play deleted successfully!", "success")
+    return redirect(url_for('panel_plays_page'))
