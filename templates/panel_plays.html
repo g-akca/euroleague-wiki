@@ -60,10 +60,174 @@
 </div>
 
 <!-- Add Play Modal -->
-
+<div class="modal fade" id="addPlayModal" tabindex="-1" aria-labelledby="addPlayModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">Add New Play</h3>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/panel/plays/add" method="post" id="addPlayForm">
+            <div class="row mb-2">
+              <div class="col-6">
+                <label>Game Play ID</label>
+                <input type="text" class="form-control" name="game_play_id" id="addPlay_game_play_id" placeholder="Enter game play ID" required />
+              </div>
+              <div class="col-6">
+                <label>Game ID</label>
+                <select name="game_id" id="addPlay_game_id" class="form-select">
+                  <option disabled selected>Select a Game</option>
+                  {% for match in matches %}
+                    <option value="{{ match['game_id'] }}">{{ match['game_id'] }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+  
+            <div class="row mb-2">
+              <div class="col-6">
+                <label>Quarter</label>
+                <input type="text" class="form-control" name="quarter" id="addPlay_quarter" placeholder="Enter quarter" required />
+              </div>
+              <div class="col-6">
+                <label>Number of Play</label>
+                <input type="number" class="form-control" name="number_of_play" id="addPlay_number_of_play" placeholder="Enter play number" required />
+              </div>
+            </div>
+  
+            <div class="row mb-2">
+              <div class="col-6">
+                <label>Team</label>
+                <select name="team_id" id="addPlay_team_id" class="form-select">
+                  <option disabled selected>Select a Team</option>
+                </select>
+              </div>
+              <div class="col-6">
+                <label>Player</label>
+                <select name="player_id" id="addPlay_player_id" class="form-select">
+                  <option disabled selected>Select a Player</option>
+                </select>
+              </div>
+            </div>
+  
+            <div class="row mb-2">
+              <div class="col-6">
+                <label>Play Type</label>
+                <input type="text" class="form-control" name="play_type" id="addPlay_play_type" placeholder="Enter play type" required />
+              </div>
+              <div class="col-6">
+                <label>Dorsal</label>
+                <input type="number" class="form-control" name="dorsal" id="addPlay_dorsal" placeholder="Enter player dorsal" />
+              </div>
+            </div>
+  
+            <div class="row mb-2">
+              <div class="col-6">
+                <label>Minute</label>
+                <input type="number" class="form-control" name="minute" id="addPlay_minute" placeholder="Enter minute" required />
+              </div>
+              <div class="col-6">
+                <label>Marker Time</label>
+                <input type="text" class="form-control" name="marker_time" id="addPlay_marker_time" placeholder="Enter marker time (mm:ss)" required />
+              </div>
+            </div>
+  
+            <div class="row mb-2">
+              <div class="col-12">
+                <label>Play Info</label>
+                <input type="text" class="form-control" name="play_info" id="addPlay_play_info" placeholder="Enter play information" required />
+              </div>
+            </div>
+          </form>      
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-success" form="addPlayForm">Create Play</button>
+        </div>
+      </div>
+    </div>
+  </div>  
 
 <!-- Update Play Modal -->
-
+<div class="modal fade" id="updatePlayModal" tabindex="-1" aria-labelledby="updatePlayModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title">Update Play</h3>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/panel/plays/update" method="post" id="updatePlayForm">
+            <input type="hidden" class="form-control" name="game_play_id" id="updatePlay_game_play_id" />
+            <div class="row mb-2">
+              <div class="col-6">
+                <label>Game ID</label>
+                <select name="game_id" id="updatePlay_game_id" class="form-select">
+                  <option disabled selected>Select a Match</option>
+                  {% for match in matches %}
+                    <option value="{{ match['game_id'] }}">{{ match['game_id'] }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="col-6">
+                <label>Quarter</label>
+                <input type="text" class="form-control" name="quarter" id="updatePlay_quarter" placeholder="Enter quarter" required />
+              </div>
+            </div>
+            <div class="row mb-2">
+              <div class="col-6">
+                <label>Number of Play</label>
+                <input type="number" class="form-control" name="number_of_play" id="updatePlay_number_of_play" placeholder="Enter play number" required />
+              </div>
+              <div class="col-6">
+                <label>Team</label>
+                <select name="team_id" id="updatePlay_team_id" class="form-select">
+                  <option disabled selected>Select a Team</option>
+                </select>
+              </div>
+            </div>
+            <div class="row mb-2">
+              <div class="col-6">
+                <label>Player</label>
+                <select name="player_id" id="updatePlay_player_id" class="form-select">
+                  <option disabled selected>Select a Player</option>
+                </select>
+              </div>
+              <div class="col-6">
+                <label>Play Type</label>
+                <input type="text" class="form-control" name="play_type" id="updatePlay_play_type" placeholder="Enter play type" required />
+              </div>
+            </div>
+            <div class="row mb-2">
+              <div class="col-6">
+                <label>Dorsal</label>
+                <input type="number" class="form-control" name="dorsal" id="updatePlay_dorsal" placeholder="Enter dorsal" />
+              </div>
+              <div class="col-6">
+                <label>Minute</label>
+                <input type="number" class="form-control" name="minute" id="updatePlay_minute" placeholder="Enter minute" required />
+              </div>
+            </div>
+            <div class="row mb-2">
+              <div class="col-6">
+                <label>Marker Time</label>
+                <input type="text" class="form-control" name="marker_time" id="updatePlay_marker_time" placeholder="Enter marker time (mm:ss)" required />
+              </div>
+              <div class="col-6">
+                <label>Play Info</label>
+                <input type="text" class="form-control" name="play_info" id="updatePlay_play_info" placeholder="Enter play information" required />
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary" form="updatePlayForm">Update Play</button>
+        </div>
+      </div>
+    </div>
+  </div>  
 
 <!-- Delete Play Modal -->
 <div class="modal fade" id="deletePlayModal" tabindex="-1" aria-labelledby="deletePlayModalLabel" aria-hidden="true">
@@ -102,6 +266,88 @@
       const playIdInput = deletePlayModal.querySelector('#deletePlay_game_play_id');
       playIdInput.value = play_id;
     });
+  }
+
+  const addPlayModal = document.getElementById('addPlayModal');
+  if (addPlayModal) {
+    document.getElementById('addPlay_game_id').addEventListener('change', (event) => {
+      fillTeamDropdownByGame(event.target.value, 'addPlay_team_id', 'addPlay_player_id');
+    });
+
+    document.getElementById('addPlay_team_id').addEventListener('change', (event) => {
+      const game_id = document.getElementById('addPlay_game_id').value;
+      fillPlayerDropdownByTeamSeason(game_id, event.target.value, 'addPlay_player_id');
+    });
+  }
+
+  const updatePlayModal = document.getElementById('updatePlayModal');
+  if (updatePlayModal) {
+    updatePlayModal.addEventListener('show.bs.modal', (event) => {
+      const updateButton = event.relatedTarget;
+      const data = updateButton.dataset;
+
+      const modalFields = updatePlayModal.querySelectorAll('[id^="updatePlay_"]');
+      modalFields.forEach(field => {
+        const fieldName = field.name || field.id.replace('updatePlay_', '');
+        if (data[fieldName] !== undefined) {
+          var value = data[fieldName];
+          field.value = value;
+        }
+      });
+
+      fillTeamDropdownByGame(data.game_id, 'updatePlay_team_id', 'updatePlay_player_id', data.team_id);
+      fillPlayerDropdownByTeamSeason(data.game_id, data.team_id, 'updatePlay_player_id', data.player_id);
+    });
+
+    document.getElementById('updatePlay_game_id').addEventListener('change', (event) => {
+      fillTeamDropdownByGame(event.target.value, 'updatePlay_team_id', 'updatePlay_player_id');
+    });
+
+    document.getElementById('updatePlay_team_id').addEventListener('change', (event) => {
+      const game_id = document.getElementById('updatePlay_game_id').value;
+      fillPlayerDropdownByTeamSeason(game_id, event.target.value, 'updatePlay_player_id');
+    });
+  }
+
+  function fillTeamDropdownByGame(game_id, teamElement, playerElement, team_id = null) {
+    fetch(`/panel/get_teams_by_match/${game_id}`)
+      .then(response => response.json())
+      .then(data => {
+        const teamSelect = document.getElementById(teamElement);
+        teamSelect.innerHTML = '<option disabled selected>Select a Team</option>';
+        const playerSelect = document.getElementById(playerElement);
+        playerSelect.innerHTML = '<option disabled selected>Select a Player</option>';
+
+        var option = document.createElement('option');
+        option.value = data.team.team_id_a;
+        option.textContent = data.team.team_a;
+        if (data.team.team_id_a == team_id) option.selected = true;
+        teamSelect.appendChild(option);
+
+        option = document.createElement('option');
+        option.value = data.team.team_id_b;
+        option.textContent = data.team.team_b;
+        if (data.team.team_id_b == team_id) option.selected = true;
+        teamSelect.appendChild(option);
+      })
+  }
+
+  function fillPlayerDropdownByTeamSeason(game_id, team_id, playerElement, player_id = null) {
+    const season_code = game_id.split('_')[0];
+    fetch(`/panel/get_players_by_team_season/${team_id}/${season_code}`)
+      .then(response => response.json())
+      .then(data => {
+        const playerSelect = document.getElementById(playerElement);
+        playerSelect.innerHTML = '<option disabled selected>Select a Player</option>';
+
+        data.players.forEach(player => {
+          option = document.createElement('option');
+          option.value = player.player_id;
+          option.textContent = player.player_name;
+          if (player.player_id == player_id) option.selected = true;
+          playerSelect.appendChild(option);
+        });
+      })
   }
 </script>
 {% endblock %}

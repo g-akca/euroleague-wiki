@@ -501,6 +501,62 @@ def panel_plays_page():
     return render_template("panel_plays.html", plays=plays, matches=matches, player_names=player_names)
 
 @admin_required
+def panel_plays_add():
+    form_data = request.form.to_dict()
+    game_play_id = request.form['game_play_id']
+
+    for key, value in form_data.items():
+        if value == "":
+            form_data[key] = None
+
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM euroleague_play_by_play WHERE game_play_id = %s", (game_play_id, ))
+    play_existing = cursor.fetchone()
+    if play_existing:
+        flash("This play already exists!", "danger")
+        cursor.close()
+        connection.close()
+        return redirect(url_for('panel_plays_page'))
+    
+    cursor.execute("DESCRIBE euroleague_play_by_play")
+    columns = [column['Field'] for column in cursor.fetchall()]
+    filtered_data = {key: form_data[key] for key in form_data if key in columns}
+    value_placeholders = ', '.join([f'%({key})s' for key in filtered_data])
+    columns_str = ', '.join(filtered_data.keys())
+    sql = f"""INSERT INTO euroleague_play_by_play ({columns_str}) VALUES ({value_placeholders})"""
+    cursor.execute(sql, filtered_data)
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+    flash("Play added successfully!", "success")
+    return redirect(url_for('panel_plays_page'))
+
+@admin_required
+def panel_plays_update():
+    form_data = request.form.to_dict()
+
+    for key, value in form_data.items():
+        if value == "":
+            form_data[key] = None
+
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("DESCRIBE euroleague_play_by_play")
+    columns = [column['Field'] for column in cursor.fetchall()]
+    filtered_data = {key: form_data[key] for key in form_data if key in columns}
+    set_str = ', '.join([f"{key} = %({key})s" for key in filtered_data])
+    sql = f"""UPDATE euroleague_play_by_play SET {set_str} WHERE game_play_id = %(game_play_id)s"""
+    cursor.execute(sql, filtered_data)
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+    flash("Play updated successfully!", "success")
+    return redirect(url_for('panel_plays_page'))
+
+@admin_required
 def panel_plays_delete():
     game_play_id = request.form['game_play_id']
 
