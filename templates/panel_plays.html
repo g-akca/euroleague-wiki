@@ -59,6 +59,31 @@
   </div>
 </div>
 
+<!-- Pagination -->
+<nav aria-label="Page navigation">
+  <ul class="pagination justify-content-center">
+    {% if page_num > 1 %}
+    <li class="page-item"><a class="page-link" href="?sort_by={{ sort_by }}&page={{ page_num - 1 }}">Previous</a></li>
+    {% else %}
+    <li class="page-item disabled"><a class="page-link" disabled>Previous</a></li>
+    {% endif %}
+
+    {% for p in range(page_num - 4, end_page + 1) %}
+      {% if p == page_num and p > 0 %}
+      <li class="page-item active"><a class="page-link" href="?sort_by={{ sort_by }}&page={{ p }}">{{ p }}</a></li>
+      {% elif p > 0 %}
+      <li class="page-item"><a class="page-link" href="?sort_by={{ sort_by }}&page={{ p }}">{{ p }}</a></li>
+      {% endif %}
+    {% endfor %}
+
+    {% if page_count > page_num %}
+    <li class="page-item"><a class="page-link" href="?sort_by={{ sort_by }}&page={{ page_num + 1 }}">Next</a></li>
+    {% else %}
+    <li class="page-item disabled"><a class="page-link" disabled>Next</a></li>
+    {% endif %}
+  </ul>
+</nav>
+
 <!-- Add Play Modal -->
 <div class="modal fade" id="addPlayModal" tabindex="-1" aria-labelledby="addPlayModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-lg">

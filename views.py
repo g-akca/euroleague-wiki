@@ -74,8 +74,6 @@ def player_details_page(player_id, season_code=None):
     cursor.execute("SELECT * FROM euroleague_players WHERE player_id = %s", (player_id, ))
     player_seasons = cursor.fetchall()
 
-
-
     if season_code:
         cursor.execute("SELECT * FROM euroleague_players WHERE player_id = %s AND season_code = %s", (player_id, season_code))
         season_data = cursor.fetchone()

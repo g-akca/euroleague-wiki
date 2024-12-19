@@ -1,6 +1,7 @@
 from flask import render_template, request, jsonify, flash, redirect, url_for
 from db import get_db_connection
 from auth import admin_required
+from views import query_returner_per_page
 import bcrypt
 
 # Needed for panel sidemenu
@@ -64,9 +65,16 @@ def get_players_by_team_season(team_id, season_code):
 # Users Panel
 @admin_required
 def panel_users_page():
+    page_limit = 25
+    page_num = int(request.args.get('page', 1))
+    page_button = 4
+
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
-    cursor.execute("SELECT *, CASE WHEN role = 'U' THEN 'User' WHEN role = 'A' THEN 'Admin' ELSE 'Unknown' END AS role_detailed FROM users")
+    cursor.execute("SELECT COUNT(*) as total FROM users")
+    entry_count = cursor.fetchone()['total']
+    page_count = (entry_count + page_limit - 1) // page_limit
+    cursor.execute("SELECT *, CASE WHEN role = 'U' THEN 'User' WHEN role = 'A' THEN 'Admin' ELSE 'Unknown' END AS role_detailed FROM users LIMIT %s OFFSET %s", (page_limit, (page_num-1) * page_limit ))
     users = cursor.fetchall()
 
     for user in users:
@@ -76,7 +84,12 @@ def panel_users_page():
     team_names = cursor.fetchall()
     cursor.close()
     connection.close()
-    return render_template("panel_users.html", users=users, team_names=team_names)
+    return render_template("panel_users.html", 
+        users=users, 
+        team_names=team_names, 
+        page_num=page_num,
+        page_count=page_count,
+        end_page = min(page_num + page_button, page_count))
 
 @admin_required
 def panel_users_add():
@@ -143,13 +156,25 @@ def panel_users_delete():
 # Teams Panel
 @admin_required
 def panel_teams_page():
+    page_limit = 25
+    page_num = int(request.args.get('page', 1))
+    page_button = 4
+
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
-    cursor.execute("SELECT euroleague_team_names.team_id AS team_id, euroleague_team_names.team_name AS team_name, GROUP_CONCAT(euroleague_teams.season_code ORDER BY euroleague_teams.season_code ASC SEPARATOR ', ') AS seasons FROM euroleague_team_names LEFT JOIN euroleague_teams ON euroleague_team_names.team_id = euroleague_teams.team_id GROUP BY euroleague_team_names.team_id, euroleague_team_names.team_name")
+    cursor.execute("SELECT COUNT(*) as total FROM euroleague_team_names")
+    entry_count = cursor.fetchone()['total']
+    page_count = (entry_count + page_limit - 1) // page_limit
+    cursor.execute("SELECT euroleague_team_names.team_id AS team_id, euroleague_team_names.team_name AS team_name, GROUP_CONCAT(euroleague_teams.season_code ORDER BY euroleague_teams.season_code ASC SEPARATOR ', ') AS seasons FROM euroleague_team_names LEFT JOIN euroleague_teams ON euroleague_team_names.team_id = euroleague_teams.team_id GROUP BY euroleague_team_names.team_id, euroleague_team_names.team_name LIMIT %s OFFSET %s", (page_limit, (page_num-1) * page_limit ))
     team_names = cursor.fetchall()
     cursor.close()
     connection.close()
-    return render_template("panel_teams.html", team_names=team_names)
+
+    return render_template("panel_teams.html", 
+        team_names=team_names,
+        page_num=page_num,
+        page_count=page_count,
+        end_page = min(page_num + page_button, page_count))
 
 @admin_required
 def panel_teams_add():
@@ -199,19 +224,31 @@ def panel_teams_delete():
 # Team Seasons Panel
 @admin_required
 def panel_team_seasons_page(team_id):
+    page_limit = 25
+    page_num = int(request.args.get('page', 1))
+    page_button = 4
+
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
-    cursor.execute("SELECT *, euroleague_teams.team_id AS team_id, euroleague_team_names.team_name AS team_name FROM euroleague_teams LEFT JOIN euroleague_team_names ON euroleague_teams.team_id = euroleague_team_names.team_id WHERE euroleague_teams.team_id = %s", (team_id, ))
-    team_seasons = cursor.fetchall()
     cursor.execute("SELECT COUNT(team_id) AS season_count FROM euroleague_teams WHERE team_id = %s", (team_id, ))
-    season_count = cursor.fetchone()
-    cursor.close()
-    connection.close()
+    season_count = cursor.fetchone()['season_count']
+    page_count = (season_count + page_limit - 1) // page_limit
+    cursor.execute("SELECT *, euroleague_teams.team_id AS team_id, euroleague_team_names.team_name AS team_name FROM euroleague_teams LEFT JOIN euroleague_team_names ON euroleague_teams.team_id = euroleague_team_names.team_id WHERE euroleague_teams.team_id = %s LIMIT %s OFFSET %s", (team_id, page_limit, (page_num-1) * page_limit ))
+    team_seasons = cursor.fetchall()
 
     for ts in team_seasons:
         ts['data_attributes'] = ' '.join([f'data-{key}={value}' for key, value in ts.items()])
 
-    return render_template("panel_team_seasons.html", team_seasons=team_seasons, team_id=team_id, season_count=season_count)
+    cursor.close()
+    connection.close()
+
+    return render_template("panel_team_seasons.html", 
+        team_seasons=team_seasons, 
+        team_id=team_id, 
+        season_count=season_count,
+        page_num=page_num,
+        page_count=page_count,
+        end_page = min(page_num + page_button, page_count))
 
 @admin_required
 def panel_team_seasons_add(team_id):
@@ -293,9 +330,16 @@ def panel_team_seasons_delete(team_id):
 # Box Scores Panel
 @admin_required
 def panel_box_scores_page():
+    page_limit = 25
+    page_num = int(request.args.get('page', 1))
+    page_button = 4
+
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
-    cursor.execute("SELECT *, euroleague_box_score.player_id AS player_id, euroleague_box_score.team_id AS team_id FROM euroleague_box_score LEFT JOIN euroleague_player_names ON euroleague_box_score.player_id = euroleague_player_names.player_id LEFT JOIN euroleague_team_names ON euroleague_box_score.team_id = euroleague_team_names.team_id ORDER BY game_id, euroleague_box_score.team_id ASC LIMIT 100")
+    cursor.execute("SELECT COUNT(*) as total FROM euroleague_box_score")
+    entry_count = cursor.fetchone()['total']
+    page_count = (entry_count + page_limit - 1) // page_limit
+    cursor.execute("SELECT *, euroleague_box_score.player_id AS player_id, euroleague_box_score.team_id AS team_id FROM euroleague_box_score LEFT JOIN euroleague_player_names ON euroleague_box_score.player_id = euroleague_player_names.player_id LEFT JOIN euroleague_team_names ON euroleague_box_score.team_id = euroleague_team_names.team_id ORDER BY game_id, euroleague_box_score.team_id ASC LIMIT %s OFFSET %s", (page_limit, (page_num-1) * page_limit ))
     box_scores = cursor.fetchall()
 
     for bx in box_scores:
@@ -307,7 +351,14 @@ def panel_box_scores_page():
     player_names = cursor.fetchall()
     cursor.close()
     connection.close()
-    return render_template("panel_box_scores.html", box_scores=box_scores, matches=matches, player_names=player_names)
+
+    return render_template("panel_box_scores.html", 
+        box_scores=box_scores,
+        matches=matches, 
+        player_names=player_names,
+        page_num=page_num,
+        page_count=page_count,
+        end_page = min(page_num + page_button, page_count))
 
 @admin_required
 def panel_box_scores_add():
@@ -399,9 +450,16 @@ def panel_box_scores_delete():
 # Matches Panel
 @admin_required
 def panel_matches_page():
+    page_limit = 25
+    page_num = int(request.args.get('page', 1))
+    page_button = 4
+
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
-    cursor.execute("SELECT *, concat(score_a, ' - ', score_b) as result FROM euro.euroleague_header;")
+    cursor.execute("SELECT COUNT(*) as total FROM euroleague_header")
+    entry_count = cursor.fetchone()['total']
+    page_count = (entry_count + page_limit - 1) // page_limit
+    cursor.execute("SELECT *, concat(score_a, ' - ', score_b) as result FROM euro.euroleague_header LIMIT %s OFFSET %s", (page_limit, (page_num-1) * page_limit))
     matches = cursor.fetchall()
 
     for match in matches:
@@ -409,7 +467,11 @@ def panel_matches_page():
         
     cursor.close()
     connection.close()
-    return render_template("panel_matches.html", matches=matches)
+    return render_template("panel_matches.html", 
+        matches=matches,
+        page_num=page_num,
+        page_count=page_count,
+        end_page = min(page_num + page_button, page_count))
 
 @admin_required
 def panel_matches_add():
@@ -484,9 +546,16 @@ def panel_matches_delete():
 # Plays Panel
 @admin_required
 def panel_plays_page():
+    page_limit = 25
+    page_num = int(request.args.get('page', 1))
+    page_button = 4
+
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
-    cursor.execute("SELECT *, euroleague_play_by_play.player_id AS player_id, euroleague_play_by_play.team_id AS team_id FROM euroleague_play_by_play LEFT JOIN euroleague_player_names ON euroleague_play_by_play.player_id = euroleague_player_names.player_id LEFT JOIN euroleague_team_names ON euroleague_play_by_play.team_id = euroleague_team_names.team_id ORDER BY game_id, number_of_play ASC LIMIT 100")
+    cursor.execute("SELECT COUNT(*) as total FROM euroleague_play_by_play")
+    entry_count = cursor.fetchone()['total']
+    page_count = (entry_count + page_limit - 1) // page_limit
+    cursor.execute("SELECT *, euroleague_play_by_play.player_id AS player_id, euroleague_play_by_play.team_id AS team_id FROM euroleague_play_by_play LEFT JOIN euroleague_player_names ON euroleague_play_by_play.player_id = euroleague_player_names.player_id LEFT JOIN euroleague_team_names ON euroleague_play_by_play.team_id = euroleague_team_names.team_id ORDER BY game_id, number_of_play ASC LIMIT %s OFFSET %s", (page_limit, (page_num-1) * page_limit))
     plays = cursor.fetchall()
 
     for play in plays:
@@ -498,7 +567,13 @@ def panel_plays_page():
     player_names = cursor.fetchall()
     cursor.close()
     connection.close()
-    return render_template("panel_plays.html", plays=plays, matches=matches, player_names=player_names)
+    return render_template("panel_plays.html", 
+        plays=plays, 
+        matches=matches, 
+        player_names=player_names,
+        page_num=page_num,
+        page_count=page_count,
+        end_page = min(page_num + page_button, page_count))
 
 @admin_required
 def panel_plays_add():
