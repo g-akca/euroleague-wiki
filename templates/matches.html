@@ -22,7 +22,7 @@
           <div class="col-md-8 d-flex align-items-center justify-content-between">
             <div class="text-start flex-shrink-0" style="width: 30%;">
               {% if match['team_id_a'] == session['team_supported'] %}
-              <span class="fw-bold d-block fs-5">⭐ {{ match['team_a'] }}</span>
+              <span class="supported-team-hl fw-bold d-block fs-5">⭐ {{ match['team_a'] }}</span>
               {% else %}
               <span class="fw-bold d-block fs-5">{{ match['team_a'] }}</span>
               {% endif %}
@@ -45,7 +45,7 @@
             </div>          
             <div class="text-end flex-shrink-0" style="width: 30%;">
               {% if match['team_id_b'] == session['team_supported'] %}
-              <span class="fw-bold d-block fs-5">{{ match['team_b'] }} ⭐</span>
+              <span class="supported-team-hl fw-bold d-block fs-5">{{ match['team_b'] }} ⭐</span>
               {% else %}
               <span class="fw-bold d-block fs-5">{{ match['team_b'] }}</span>
               {% endif %}

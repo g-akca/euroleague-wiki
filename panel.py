@@ -583,7 +583,18 @@ def panel_plays_page():
 @admin_required
 def panel_plays_add():
     form_data = request.form.to_dict()
-    game_play_id = request.form['game_play_id']
+    game_id = request.form['game_id']
+    play_num = int(request.form['number_of_play'])
+
+    if play_num < 0:
+        flash("Number of play cannot be below 0!")
+        return redirect(url_for('panel_plays_page'))
+    elif play_num < 10:
+        game_play_id = f"{game_id}_00{play_num}"
+    elif play_num < 100:
+        game_play_id = f"{game_id}_0{play_num}"
+    else:
+        game_play_id = f"{game_id}_{play_num}"
 
     for key, value in form_data.items():
         if value == "":
@@ -594,7 +605,7 @@ def panel_plays_add():
     cursor.execute("SELECT * FROM euroleague_play_by_play WHERE game_play_id = %s", (game_play_id, ))
     play_existing = cursor.fetchone()
     if play_existing:
-        flash("This play already exists!", "danger")
+        flash("The number of play given already exists in the match!", "danger")
         cursor.close()
         connection.close()
         return redirect(url_for('panel_plays_page'))
@@ -602,6 +613,7 @@ def panel_plays_add():
     cursor.execute("DESCRIBE euroleague_play_by_play")
     columns = [column['Field'] for column in cursor.fetchall()]
     filtered_data = {key: form_data[key] for key in form_data if key in columns}
+    filtered_data['game_play_id'] = game_play_id
     value_placeholders = ', '.join([f'%({key})s' for key in filtered_data])
     columns_str = ', '.join(filtered_data.keys())
     sql = f"""INSERT INTO euroleague_play_by_play ({columns_str}) VALUES ({value_placeholders})"""
@@ -616,6 +628,19 @@ def panel_plays_add():
 @admin_required
 def panel_plays_update():
     form_data = request.form.to_dict()
+    game_id = request.form['game_id']
+    play_num = int(request.form['number_of_play'])
+    game_play_id = request.form['game_play_id']
+
+    if play_num < 0:
+        flash("Number of play cannot be below 0!")
+        return redirect(url_for('panel_plays_page'))
+    elif play_num < 10:
+        new_game_play_id = f"{game_id}_00{play_num}"
+    elif play_num < 100:
+        new_game_play_id = f"{game_id}_0{play_num}"
+    else:
+        new_game_play_id = f"{game_id}_{play_num}"
 
     for key, value in form_data.items():
         if value == "":
@@ -623,11 +648,21 @@ def panel_plays_update():
 
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM euroleague_play_by_play WHERE game_play_id = %s", (new_game_play_id, ))
+    play_existing = cursor.fetchone()
+    if play_existing and game_play_id != new_game_play_id:
+        flash("The number of play given already exists in that match!", "danger")
+        cursor.close()
+        connection.close()
+        return redirect(url_for('panel_plays_page'))
+
     cursor.execute("DESCRIBE euroleague_play_by_play")
     columns = [column['Field'] for column in cursor.fetchall()]
     filtered_data = {key: form_data[key] for key in form_data if key in columns}
-    set_str = ', '.join([f"{key} = %({key})s" for key in filtered_data])
-    sql = f"""UPDATE euroleague_play_by_play SET {set_str} WHERE game_play_id = %(game_play_id)s"""
+    filtered_data['game_play_id'] = new_game_play_id
+    filtered_data['old_game_play_id'] = game_play_id
+    set_str = ', '.join([f"{key} = %({key})s" for key in filtered_data if key != 'old_game_play_id'])
+    sql = f"""UPDATE euroleague_play_by_play SET {set_str} WHERE game_play_id = %(old_game_play_id)s"""
     cursor.execute(sql, filtered_data)
     connection.commit()
     cursor.close()
