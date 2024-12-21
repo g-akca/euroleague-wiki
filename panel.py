@@ -40,7 +40,7 @@ def get_counts():
                     plays_count['plays_count']
                     ]})
 
-# Needed for populating Box Scores team dropdown
+# Needed for dynamically populating Box Scores and Plays team dropdown
 @admin_required
 def get_teams_by_match(game_id):
     connection = get_db_connection()
@@ -51,7 +51,7 @@ def get_teams_by_match(game_id):
     connection.close()
     return jsonify({'team': team})
 
-# Needed for populating Box Scores player dropdown
+# Needed for dynamically populating Box Scores and Plays player dropdown
 @admin_required
 def get_players_by_team_season(team_id, season_code):
     connection = get_db_connection()
@@ -73,7 +73,7 @@ def panel_users_page():
     cursor = connection.cursor(dictionary=True)
     cursor.execute("SELECT COUNT(*) as total FROM users")
     entry_count = cursor.fetchone()['total']
-    page_count = (entry_count + page_limit - 1)
+    page_count = (entry_count + page_limit - 1) // page_limit
     cursor.execute("SELECT *, CASE WHEN role = 'U' THEN 'User' WHEN role = 'A' THEN 'Admin' ELSE 'Unknown' END AS role_detailed FROM users LIMIT %s OFFSET %s", (page_limit, (page_num-1) * page_limit ))
     users = cursor.fetchall()
 
@@ -84,6 +84,7 @@ def panel_users_page():
     team_names = cursor.fetchall()
     cursor.close()
     connection.close()
+
     return render_template("panel_users.html", 
         users=users, 
         team_names=team_names, 
@@ -169,7 +170,7 @@ def panel_teams_page():
     cursor = connection.cursor(dictionary=True)
     cursor.execute("SELECT COUNT(*) as total FROM euroleague_team_names")
     entry_count = cursor.fetchone()['total']
-    page_count = (entry_count + page_limit - 1)
+    page_count = (entry_count + page_limit - 1) // page_limit
     cursor.execute("SELECT euroleague_team_names.team_id AS team_id, euroleague_team_names.team_name AS team_name, GROUP_CONCAT(euroleague_teams.season_code ORDER BY euroleague_teams.season_code ASC SEPARATOR ', ') AS seasons FROM euroleague_team_names LEFT JOIN euroleague_teams ON euroleague_team_names.team_id = euroleague_teams.team_id GROUP BY euroleague_team_names.team_id, euroleague_team_names.team_name LIMIT %s OFFSET %s", (page_limit, (page_num-1) * page_limit ))
     team_names = cursor.fetchall()
     cursor.close()
@@ -236,8 +237,8 @@ def panel_team_seasons_page(team_id):
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
     cursor.execute("SELECT COUNT(team_id) AS season_count FROM euroleague_teams WHERE team_id = %s", (team_id, ))
-    season_count = cursor.fetchone()['season_count']
-    page_count = (season_count + page_limit - 1)
+    season_count = cursor.fetchone()
+    page_count = (season_count['season_count'] + page_limit - 1) // page_limit
     cursor.execute("SELECT *, euroleague_teams.team_id AS team_id, euroleague_team_names.team_name AS team_name FROM euroleague_teams LEFT JOIN euroleague_team_names ON euroleague_teams.team_id = euroleague_team_names.team_id WHERE euroleague_teams.team_id = %s LIMIT %s OFFSET %s", (team_id, page_limit, (page_num-1) * page_limit ))
     team_seasons = cursor.fetchall()
 
@@ -343,7 +344,7 @@ def panel_box_scores_page():
     cursor = connection.cursor(dictionary=True)
     cursor.execute("SELECT COUNT(*) as total FROM euroleague_box_score")
     entry_count = cursor.fetchone()['total']
-    page_count = (entry_count + page_limit - 1)
+    page_count = (entry_count + page_limit - 1) // page_limit
     cursor.execute("SELECT *, euroleague_box_score.player_id AS player_id, euroleague_box_score.team_id AS team_id FROM euroleague_box_score LEFT JOIN euroleague_player_names ON euroleague_box_score.player_id = euroleague_player_names.player_id LEFT JOIN euroleague_team_names ON euroleague_box_score.team_id = euroleague_team_names.team_id ORDER BY game_id, euroleague_box_score.team_id ASC LIMIT %s OFFSET %s", (page_limit, (page_num-1) * page_limit ))
     box_scores = cursor.fetchall()
 
@@ -463,7 +464,7 @@ def panel_matches_page():
     cursor = connection.cursor(dictionary=True)
     cursor.execute("SELECT COUNT(*) as total FROM euroleague_header")
     entry_count = cursor.fetchone()['total']
-    page_count = (entry_count + page_limit - 1)
+    page_count = (entry_count + page_limit - 1) // page_limit
     cursor.execute("SELECT *, concat(score_a, ' - ', score_b) as result FROM euro.euroleague_header LIMIT %s OFFSET %s", (page_limit, (page_num-1) * page_limit))
     matches = cursor.fetchall()
 
@@ -559,7 +560,7 @@ def panel_plays_page():
     cursor = connection.cursor(dictionary=True)
     cursor.execute("SELECT COUNT(*) as total FROM euroleague_play_by_play")
     entry_count = cursor.fetchone()['total']
-    page_count = (entry_count + page_limit - 1)
+    page_count = (entry_count + page_limit - 1) // page_limit
     cursor.execute("SELECT *, euroleague_play_by_play.player_id AS player_id, euroleague_play_by_play.team_id AS team_id FROM euroleague_play_by_play LEFT JOIN euroleague_player_names ON euroleague_play_by_play.player_id = euroleague_player_names.player_id LEFT JOIN euroleague_team_names ON euroleague_play_by_play.team_id = euroleague_team_names.team_id ORDER BY game_id, number_of_play ASC LIMIT %s OFFSET %s", (page_limit, (page_num-1) * page_limit))
     plays = cursor.fetchall()
 
