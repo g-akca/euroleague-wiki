@@ -954,6 +954,10 @@ UPDATE euro.euroleague_header
 SET phase = 'TOP 16'
 WHERE phase = 'TOP SIXTEEN';
 
+UPDATE euroleague_header
+SET phase = 'PLAYOFFS'
+WHERE phase = 'PLAY OFF';
+
 /* Export the finalized data that will be used for the project. */
 
 SELECT 'game_id', 'game', 'date', 'time', 'round', 'phase', 'season_code', 'score_a', 'score_b', 'team_id_a', 'team_id_b', 'coach_a', 'coach_b', 'game_time', 'remaining_partial_time', 'referee_1', 'referee_2', 'referee_3', 'stadium', 'capacity', 'w_id', 'fouls_a', 'fouls_b', 'timeouts_a', 'timeouts_b', 'score_quarter_1_a', 'score_quarter_2_a', 'score_quarter_3_a', 'score_quarter_4_a', 'score_quarter_1_b', 'score_quarter_2_b', 'score_quarter_3_b', 'score_quarter_4_b', 'score_extra_time_1_a', 'score_extra_time_2_a', 'score_extra_time_3_a', 'score_extra_time_4_a', 'score_extra_time_1_b', 'score_extra_time_2_b', 'score_extra_time_3_b', 'score_extra_time_4_b'

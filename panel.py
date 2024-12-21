@@ -374,7 +374,7 @@ def panel_box_scores_add():
     game_player_id = f"{game_id}_{player_id}"
 
     for key, value in form_data.items():
-        if value == "":
+        if value == "" or value == "None":
             form_data[key] = None
 
     connection = get_db_connection()
@@ -411,7 +411,7 @@ def panel_box_scores_update():
     new_game_player_id = f"{game_id}_{player_id}"
 
     for key, value in form_data.items():
-        if value == "":
+        if value == "" or value == "None":
             form_data[key] = None
 
     connection = get_db_connection()
@@ -470,11 +470,15 @@ def panel_matches_page():
 
     for match in matches:
         match['data_attributes'] = ' '.join([f'data-{key}={urllib.parse.quote(str(value))}' for key, value in match.items()])
-        
+
+    cursor.execute("SELECT * FROM euroleague_team_names ORDER BY team_name ASC")
+    teams = cursor.fetchall()
     cursor.close()
     connection.close()
+
     return render_template("panel_matches.html", 
         matches=matches,
+        teams=teams,
         page_num=page_num,
         page_count=page_count,
         end_page = min(page_num + page_button, page_count))
@@ -483,9 +487,12 @@ def panel_matches_page():
 def panel_matches_add():
     form_data = request.form.to_dict()
     game_id = request.form['game_id']
+    team_a = request.form['team_id_a']
+    team_b = request.form['team_id_b']
+    game = f"{team_a}-{team_b}"
 
     for key, value in form_data.items():
-        if value == "":
+        if value == "" or value == "None":
             form_data[key] = None
 
     connection = get_db_connection()
@@ -501,6 +508,7 @@ def panel_matches_add():
     cursor.execute("DESCRIBE euroleague_header")
     columns = [column['Field'] for column in cursor.fetchall()]
     filtered_data = {key: form_data[key] for key in form_data if key in columns}
+    filtered_data['game'] = game
     value_placeholders = ', '.join([f'%({key})s' for key in filtered_data])
     columns_str = ', '.join(filtered_data.keys())
     sql = f"""INSERT INTO euroleague_header ({columns_str}) VALUES ({value_placeholders})"""
@@ -515,9 +523,12 @@ def panel_matches_add():
 @admin_required
 def panel_matches_update():
     form_data = request.form.to_dict()
+    team_a = request.form['team_id_a']
+    team_b = request.form['team_id_b']
+    game = f"{team_a}-{team_b}"
 
     for key, value in form_data.items():
-        if value == "":
+        if value == "" or value == "None":
             form_data[key] = None
 
     connection = get_db_connection()
@@ -525,6 +536,7 @@ def panel_matches_update():
     cursor.execute("DESCRIBE euroleague_header")
     columns = [column['Field'] for column in cursor.fetchall()]
     filtered_data = {key: form_data[key] for key in form_data if key in columns}
+    filtered_data['game'] = game
     set_str = ', '.join([f"{key} = %({key})s" for key in filtered_data if key != 'game_id'])
     sql = f"""UPDATE euroleague_header SET {set_str} WHERE game_id = %(game_id)s"""
     cursor.execute(sql, filtered_data)
@@ -598,7 +610,7 @@ def panel_plays_add():
         game_play_id = f"{game_id}_{play_num}"
 
     for key, value in form_data.items():
-        if value == "":
+        if value == "" or value == "None":
             form_data[key] = None
 
     connection = get_db_connection()
@@ -644,7 +656,7 @@ def panel_plays_update():
         new_game_play_id = f"{game_id}_{play_num}"
 
     for key, value in form_data.items():
-        if value == "":
+        if value == "" or value == "None":
             form_data[key] = None
 
     connection = get_db_connection()
