@@ -2,11 +2,19 @@
 
 {% block title %}{{ match['game_id'] }}{% endblock %}
 
-{% block content %} <!-- Will change how this page looks in general -->
-<h1>{{ match['game_id'] }}</h1>
+{% block content %}
+<div class="container bg-light shadow rounded p-3">
+  <div class="d-flex justify-content-center mb-3">
+    <span class="badge bg-secondary">{{ match['date'] }} · {{ match['time'] }} · {{ match['stadium'] }} · Attendance: {{ match['capacity'] }}</span>
+  </div>
+  <div class="d-flex justify-content-around align-items-center">
+    <h1 class="text-center" style="width: 25%;">{{ match['team_a'] }}</h1>
+    <div class="d-flex flex-column justify-content-center align-items-center">
+      <h1 class="display-2 mt-1 mb-0">{{ match['score_a'] }} - {{ match['score_b'] }}</h1>
+      <span class="badge bg-primary">Round {{ match['round'] }} · {{ match['phase'] }}</span>
+    </div>       
+    <h1 class="text-center" style="width: 25%;">{{ match['team_b'] }}</h1>
+  </div>
 
-<p>Game ID: {{ match['game_id'] }}</p>
-<p>Season: {{ match['season_code'] }}</p>
-<p>Team A: {{ match['team_a'] }}</p>
-<p>Team B: {{ match['team_b'] }}</p>
+</div>
 {% endblock %}

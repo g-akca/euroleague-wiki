@@ -353,15 +353,12 @@ def panel_box_scores_page():
 
     cursor.execute("SELECT * FROM euroleague_header")
     matches = cursor.fetchall()
-    cursor.execute("SELECT * FROM euroleague_player_names ORDER BY player_name ASC")
-    player_names = cursor.fetchall()
     cursor.close()
     connection.close()
 
     return render_template("panel_box_scores.html", 
         box_scores=box_scores,
-        matches=matches, 
-        player_names=player_names,
+        matches=matches,
         page_num=page_num,
         page_count=page_count,
         end_page = min(page_num + page_button, page_count))
@@ -587,8 +584,7 @@ def panel_plays_page():
     connection.close()
     return render_template("panel_plays.html", 
         plays=plays, 
-        matches=matches, 
-        player_names=player_names,
+        matches=matches,
         page_num=page_num,
         page_count=page_count,
         end_page = min(page_num + page_button, page_count))
