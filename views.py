@@ -1,31 +1,9 @@
-from flask import render_template, request, flash
+from flask import render_template, request
 from db import get_db_connection
-from mysql.connector import Error
-import queries
 import random
 
 def home_page():
     return render_template("homepage.html")
-
-def play_by_play_page():
-    connection = get_db_connection()
-    if connection is None:
-        flash("Couldn't connect to the database.", "danger")
-        return render_template("play_by_play.html", data=[])
-    try: 
-        cursor = connection.cursor(dictionary=True)
-        query = queries.play_by_play_query
-        cursor.execute(query)
-        data = cursor.fetchall()
-
-    except Error as e: 
-        flash(f"Query failed: {e}", "danger")
-        data = []
-    finally:
-        if connection.is_connected():
-            cursor.close()
-            connection.close()
-    return render_template("play_by_play.html", data=data)
 
 def players_page():
     sort_by = request.args.get('sort_by', 'player_id asc') #default sort'u ayarlayabiliyoruz
@@ -178,9 +156,15 @@ def match_details_page(game_id):
     cursor = connection.cursor(dictionary=True)
     cursor.execute("SELECT h.*, t1.team_name AS team_a, t2.team_name AS team_b FROM euroleague_header h LEFT JOIN euroleague_team_names t1 ON h.team_id_a = t1.team_id LEFT JOIN euroleague_team_names t2 ON h.team_id_b = t2.team_id WHERE game_id = %s", (game_id, ))
     match = cursor.fetchone()
+    cursor.execute("SELECT *, euroleague_box_score.player_id AS player_id, euroleague_box_score.team_id AS team_id FROM euroleague_box_score LEFT JOIN euroleague_player_names ON euroleague_box_score.player_id = euroleague_player_names.player_id LEFT JOIN euroleague_team_names ON euroleague_box_score.team_id = euroleague_team_names.team_id WHERE game_id = %s ORDER BY euroleague_box_score.team_id ASC, points DESC", (game_id, ))
+    box_score = cursor.fetchall()
+    cursor.execute("SELECT * from euroleague_comparison WHERE game_id = %s", (game_id, ))
+    comparison = cursor.fetchone()
+    cursor.execute("SELECT * from euroleague_play_by_play WHERE game_id = %s", (game_id, ))
+    play_by_play = cursor.fetchall()
     cursor.close()
     connection.close()
-    return render_template("match_details.html", match=match)
+    return render_template("match_details.html", match=match, box_score=box_score, comparison=comparison, play_by_play=play_by_play)
 
 #sort'lar, search'ler ve pagination bozuk, düzeltilecek. overall nasıl olmalı gibi bir bakıştayız şu anda
 def seasons_page():
@@ -216,21 +200,3 @@ def season_details_page(season_code):
     cursor.close()
     connection.close()
     return render_template("season_details.html", season_detail = season_detail)
-
-def box_scores_page():
-    connection = get_db_connection()
-    cursor = connection.cursor(dictionary=True)
-    cursor.execute("SELECT t1.game AS game_id, t1.team_id AS team_1_id, t1.points AS player_1_points, t2.points AS player_2_points, t2.team_id AS team_2_id FROM (SELECT a.game_id AS game, a.player_id AS player_id, a.team_id AS team_id, a.points AS points FROM euroleague_box_score a LEFT JOIN euroleague_player_names b ON a.player_id = b.player_id LEFT JOIN euroleague_team_names c ON a.team_id = c.team_id WHERE a.player_id = a.team_id) t1 JOIN (SELECT a.game_id AS game, a.player_id AS player_id, a.team_id AS team_id, a.points AS points FROM euroleague_box_score a LEFT JOIN euroleague_player_names b ON a.player_id = b.player_id LEFT JOIN euroleague_team_names c ON a.team_id = c.team_id WHERE a.player_id = a.team_id) t2 ON t1.game = t2.game AND t1.team_id < t2.team_id LIMIT 100;")
-    box_scores = cursor.fetchall()
-    cursor.close()
-    connection.close()
-    return render_template("box_scores.html", box_scores=box_scores)
-
-def box_score_details_page(game_id):
-    connection = get_db_connection()
-    cursor = connection.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM euroleague_box_score a LEFT JOIN euroleague_player_names b ON a.player_id = b.player_id LEFT JOIN euroleague_team_names c ON a.team_id = c.team_id WHERE a.player_id != a.team_id AND game_id = %s ORDER BY team_name, minutes DESC;", (game_id,))
-    box_score = cursor.fetchall()
-    cursor.close()
-    connection.close()
-    return render_template("box_score_details.html", box_score=box_score)

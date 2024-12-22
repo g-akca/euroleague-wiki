@@ -31,7 +31,7 @@
           <th>Team</th>
           <th>Play No</th>
           <th>Quarter</th>
-          <th>Marker Time</th>
+          <th>Minute</th>
           <th>Play Type</th>
           <th>Play Info</th>
           <th class="col-1"></th>
@@ -46,8 +46,12 @@
           <td>{{ play['player_name'] }}</td>
           <td>{{ play['team_name'] }}</td>
           <td>{{ play['number_of_play'] }}</td>
-          <td>{{ play['quarter'] }}</td>
-          <td>{{ play['marker_time'] }}</td>
+          <td>{{ play['quarter_description'] }}</td>
+          {% if play['minute'] < 10 %}
+            <td>0{{ play['minute'] }}:00</td>
+          {% else %}
+            <td>{{ play['minute'] }}:00</td>
+          {% endif %}
           <td>{{ play['play_type'] }}</td>
           <td>{{ play['play_info'] }}</td>
           <td><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updatePlayModal" {{ play['data_attributes'] }}>Update</button></td>
@@ -127,7 +131,7 @@
                   <option value="q2">2nd Quarter</option>
                   <option value="q3">3rd Quarter</option>
                   <option value="q4">4th Quarter</option>
-                  <option value="extra_time">Extra Time</option>
+                  <option value="extra_time">Overtime</option>
                 </select>
               </div>
             </div>
@@ -218,7 +222,7 @@
                   <option value="q2">2nd Quarter</option>
                   <option value="q3">3rd Quarter</option>
                   <option value="q4">4th Quarter</option>
-                  <option value="extra_time">Extra Time</option>
+                  <option value="extra_time">Overtime</option>
                 </select>
               </div>
             </div>

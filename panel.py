@@ -345,7 +345,7 @@ def panel_box_scores_page():
     cursor.execute("SELECT COUNT(*) as total FROM euroleague_box_score")
     entry_count = cursor.fetchone()['total']
     page_count = (entry_count + page_limit - 1) // page_limit
-    cursor.execute("SELECT *, euroleague_box_score.player_id AS player_id, euroleague_box_score.team_id AS team_id FROM euroleague_box_score LEFT JOIN euroleague_player_names ON euroleague_box_score.player_id = euroleague_player_names.player_id LEFT JOIN euroleague_team_names ON euroleague_box_score.team_id = euroleague_team_names.team_id ORDER BY game_id, euroleague_box_score.team_id ASC LIMIT %s OFFSET %s", (page_limit, (page_num-1) * page_limit ))
+    cursor.execute("SELECT *, euroleague_box_score.player_id AS player_id, euroleague_box_score.team_id AS team_id FROM euroleague_box_score LEFT JOIN euroleague_player_names ON euroleague_box_score.player_id = euroleague_player_names.player_id LEFT JOIN euroleague_team_names ON euroleague_box_score.team_id = euroleague_team_names.team_id ORDER BY game_id ASC, euroleague_box_score.team_id ASC, points DESC LIMIT %s OFFSET %s", (page_limit, (page_num-1) * page_limit ))
     box_scores = cursor.fetchall()
 
     for bx in box_scores:
@@ -570,7 +570,7 @@ def panel_plays_page():
     cursor.execute("SELECT COUNT(*) as total FROM euroleague_play_by_play")
     entry_count = cursor.fetchone()['total']
     page_count = (entry_count + page_limit - 1) // page_limit
-    cursor.execute("SELECT *, euroleague_play_by_play.player_id AS player_id, euroleague_play_by_play.team_id AS team_id FROM euroleague_play_by_play LEFT JOIN euroleague_player_names ON euroleague_play_by_play.player_id = euroleague_player_names.player_id LEFT JOIN euroleague_team_names ON euroleague_play_by_play.team_id = euroleague_team_names.team_id ORDER BY game_id, number_of_play ASC LIMIT %s OFFSET %s", (page_limit, (page_num-1) * page_limit))
+    cursor.execute("SELECT *, play.player_id AS player_id, play.team_id AS team_id, CASE WHEN play.quarter = 'q1' THEN 'Quarter 1' WHEN play.quarter = 'q2' THEN 'Quarter 2' WHEN play.quarter = 'q3' THEN 'Quarter 3' WHEN play.quarter = 'q4' THEN 'Quarter 4' WHEN play.quarter = 'extra_time' THEN 'Overtime' ELSE 'Unknown' END AS quarter_description FROM euroleague_play_by_play as play LEFT JOIN euroleague_player_names ON play.player_id = euroleague_player_names.player_id LEFT JOIN euroleague_team_names ON play.team_id = euroleague_team_names.team_id ORDER BY game_id, number_of_play ASC LIMIT %s OFFSET %s", (page_limit, (page_num-1) * page_limit))
     plays = cursor.fetchall()
 
     for play in plays:
@@ -578,8 +578,6 @@ def panel_plays_page():
 
     cursor.execute("SELECT * FROM euroleague_header")
     matches = cursor.fetchall()
-    cursor.execute("SELECT * FROM euroleague_player_names ORDER BY player_name ASC")
-    player_names = cursor.fetchall()
     cursor.close()
     connection.close()
     return render_template("panel_plays.html", 
