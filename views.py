@@ -156,7 +156,7 @@ def match_details_page(game_id):
     cursor = connection.cursor(dictionary=True)
     cursor.execute("SELECT h.*, t1.team_name AS team_a, t2.team_name AS team_b FROM euroleague_header h LEFT JOIN euroleague_team_names t1 ON h.team_id_a = t1.team_id LEFT JOIN euroleague_team_names t2 ON h.team_id_b = t2.team_id WHERE game_id = %s", (game_id, ))
     match = cursor.fetchone()
-    cursor.execute("SELECT *, euroleague_box_score.player_id AS player_id, euroleague_box_score.team_id AS team_id FROM euroleague_box_score LEFT JOIN euroleague_player_names ON euroleague_box_score.player_id = euroleague_player_names.player_id LEFT JOIN euroleague_team_names ON euroleague_box_score.team_id = euroleague_team_names.team_id WHERE game_id = %s ORDER BY euroleague_box_score.team_id ASC, points DESC", (game_id, ))
+    cursor.execute("SELECT *, euroleague_box_score.player_id AS player_id, euroleague_box_score.team_id AS team_id, CAST(euroleague_box_score.dorsal AS UNSIGNED) AS dorsal_int FROM euroleague_box_score LEFT JOIN euroleague_player_names ON euroleague_box_score.player_id = euroleague_player_names.player_id LEFT JOIN euroleague_team_names ON euroleague_box_score.team_id = euroleague_team_names.team_id WHERE game_id = %s ORDER BY euroleague_box_score.team_id ASC, dorsal_int ASC", (game_id, ))
     box_score = cursor.fetchall()
     cursor.execute("SELECT * from euroleague_comparison WHERE game_id = %s", (game_id, ))
     comparison = cursor.fetchone()

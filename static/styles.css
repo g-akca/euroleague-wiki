@@ -206,3 +206,13 @@ footer {
     color: #fff;
     background-color: #6d6d6d;
 }
+
+/* Match Details */
+.box-score-table {
+    font-size: 13px;
+}
+
+.player-column {
+    min-width: 200px;
+    max-width: 300px;
+}
