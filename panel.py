@@ -691,3 +691,48 @@ def panel_plays_delete():
 
     flash("Play deleted successfully!", "success")
     return redirect(url_for('panel_plays_page'))
+
+#Comparisons Panel
+@admin_required
+def panel_comparisons_page():
+    page_limit = 25
+    page_num = int(request.args.get('page', 1))
+    page_button = 4
+
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("SELECT COUNT(*) as total FROM euroleague_comparison")
+    entry_count = cursor.fetchone()['total']
+    page_count = (entry_count + page_limit - 1) // page_limit
+    cursor.execute("""
+                   SELECT 
+                    C.*,
+                    H.*,
+                    T1.team_name AS team_name_a,
+                    T2.team_name AS team_name_b
+                    FROM euroleague_comparison AS C
+                    LEFT JOIN euroleague_header AS H ON C.game_id = H.game_id
+                    LEFT JOIN euroleague_team_names T1 ON H.team_id_a = T1.team_id
+                    LEFT JOIN euroleague_team_names T2 ON H.team_id_b = T2.team_id
+                    ORDER BY H.game_id
+                    LIMIT %s OFFSET %s;"""
+                   ,(page_limit, (page_num-1) * page_limit ))
+    comparisons = cursor.fetchall()
+
+    for comp in comparisons:
+        comp['data_attributes'] = ' '.join([f'data-{key}={urllib.parse.quote(str(value))}' for key, value in comp.items()])
+
+    cursor.execute("SELECT * FROM euroleague_header")
+    matches = cursor.fetchall()
+    cursor.execute("SELECT * FROM euroleague_player_names ORDER BY player_name ASC")
+    player_names = cursor.fetchall()
+    cursor.close()
+    connection.close()
+
+    return render_template("panel_comparisons.html", 
+        comparisons=comparisons,
+        matches=matches, 
+        player_names=player_names,
+        page_num=page_num,
+        page_count=page_count,
+        end_page = min(page_num + page_button, page_count))
