@@ -1,0 +1,89 @@
+{% extends "layout.html" %} 
+
+{% block title %}Admin Panel - Comparisons{% endblock %}
+
+{% block content %}
+<div class="container-fluid d-flex flex-row">
+  <div>
+    {% include '_panelSidemenu.html' %}
+  </div>
+  <div class="content flex-grow-1">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{category}} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    <div class="d-flex justify-content-between align-items-center mb-1">
+      <h2>Comparisons</h2>
+      <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addComparisonModal">Add New Comparison</button>
+    </div>
+    <table class="table table-striped table-hover">
+      <thead class="table-dark">
+        <tr>
+            <th>Game ID</th>
+            <th>Date</th>
+            <th>Team A</th>
+            <th>Team B</th>
+            <th>Fast Break Points A</th>
+            <th>Fast Break Points B</th>
+            <th>Turnover Points A</th>
+            <th>Turnover Points B</th>
+            <th class="col-1"></th>
+            <th class="col-1"></th>
+        </tr>
+      </thead>
+      <tbody class="table-group-divider">
+        {% for comp in comparisons %}
+        <tr>
+          <td>{{ comp['game_id'] }}</td>
+          <td>{{ comp['date'] }}</td>
+          <td>{{ comp['team_name_a'] }}</td>
+          <td>{{ comp['team_name_b'] }}</td>
+          <td>{{ comp['fast_break_points_a'] }}</td>
+          <td>{{ comp['fast_break_points_b'] }}</td>
+          <td>{{ comp['turnover_points_a'] }}</td>
+          <td>{{ comp['turnover_points_b'] }}</td>
+          <td>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateComparisonModal" {{ comp['data_attributes'] }}>Update</button>
+          </td>
+          <td>
+            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteComparisonModal" data-game-id="{{ comp['game_id'] }}">Delete</button>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+<!-- Pagination -->
+<nav aria-label="Page navigation">
+  <ul class="pagination justify-content-center">
+    {% if page_num > 1 %}
+    <li class="page-item"><a class="page-link" href="?sort_by={{ sort_by }}&page={{ page_num - 1 }}">Previous</a></li>
+    {% else %}
+    <li class="page-item disabled"><a class="page-link" disabled>Previous</a></li>
+    {% endif %}
+
+    {% for p in range(page_num - 4, end_page + 1) %}
+      {% if p == page_num and p > 0 %}
+      <li class="page-item active"><a class="page-link" href="?sort_by={{ sort_by }}&page={{ p }}">{{ p }}</a></li>
+      {% elif p > 0 %}
+      <li class="page-item"><a class="page-link" href="?sort_by={{ sort_by }}&page={{ p }}">{{ p }}</a></li>
+      {% endif %}
+    {% endfor %}
+
+    {% if page_count > page_num %}
+    <li class="page-item"><a class="page-link" href="?sort_by={{ sort_by }}&page={{ page_num + 1 }}">Next</a></li>
+    {% else %}
+    <li class="page-item disabled"><a class="page-link" disabled>Next</a></li>
+    {% endif %}
+  </ul>
+</nav>
+
