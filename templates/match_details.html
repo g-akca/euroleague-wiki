@@ -10,7 +10,17 @@
   <div class="d-flex justify-content-around align-items-center mb-5">
     <h1 class="text-center" style="width: 25%;">{{ match['team_a'] }}</h1>
     <div class="d-flex flex-column justify-content-center align-items-center">
-      <h1 class="display-2 mt-1 mb-0">{{ match['score_a'] }} - {{ match['score_b'] }}</h1>
+      <div class="d-flex text-center flex-grow-1">
+        {% if match['score_a'] > match['score_b'] %}
+        <h1 class="text-primary display-2 mt-1 mb-0">{{ match['score_a'] }}&nbsp;</h1>
+        <h1 class="display-2 mt-1 mb-0">-&nbsp;{{ match['score_b'] }}</h1>
+        {% elif match['score_b'] > match['score_a'] %}
+        <h1 class="display-2 mt-1 mb-0">{{ match['score_a'] }}&nbsp;-</h1>
+        <h1 class="text-danger display-2 mt-1 mb-0">&nbsp;{{ match['score_b'] }}</h1>
+        {% else %}
+        <h1 class="display-2 mt-1 mb-0">{{ match['score_a'] }}&nbsp;-&nbsp;{{ match['score_b'] }}</h1>
+        {% endif %}
+      </div>
       <span class="badge bg-primary">Round {{ match['round'] }} · {{ match['phase'] }}</span>
     </div>       
     <h1 class="text-center" style="width: 25%;">{{ match['team_b'] }}</h1>
@@ -36,7 +46,213 @@
   <div class="tab-content p-4">
     <!-- Match Details Tab -->
     <div class="tab-pane fade show active" id="details-tab-content" role="tabpanel" tabindex="0">
-      test1
+      <div class="card shadow mb-4">
+        <div class="card-header bg-success text-white">
+          <h4 class="mb-0"><i class="bi bi-bar-chart"></i> Scores by Quarter</h4>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered text-center">
+              <thead class="table-dark">
+                <tr>
+                  <th class="col-4">{{ match['team_a'] }}</th>
+                  <th>Quarter</th>
+                  <th class="col-4">{{ match['team_b'] }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  {% if match['score_quarter_1_a'] > match['score_quarter_1_b'] %}
+                  <td class="table-primary"><strong>{{ match['score_quarter_1_a'] }}</strong></td>
+                  <td>Quarter 1</td>
+                  <td class="table-danger">{{ match['score_quarter_1_b'] }}</td>
+                  {% elif match['score_quarter_1_b'] > match['score_quarter_1_a'] %}
+                  <td class="table-primary">{{ match['score_quarter_1_a'] }}</td>
+                  <td>Quarter 1</td>
+                  <td class="table-danger"><strong>{{ match['score_quarter_1_b'] }}</strong></td>
+                  {% else %}
+                  <td class="table-primary">{{ match['score_quarter_1_a'] }}</td>
+                  <td>Quarter 1</td>
+                  <td class="table-danger">{{ match['score_quarter_1_b'] }}</td>
+                  {% endif %}
+                </tr>
+                <tr>
+                  {% if match['score_quarter_2_a'] > match['score_quarter_2_b'] %}
+                  <td class="table-primary"><strong>{{ match['score_quarter_2_a'] }}</strong></td>
+                  <td>Quarter 2</td>
+                  <td class="table-danger">{{ match['score_quarter_2_b'] }}</td>
+                  {% elif match['score_quarter_2_b'] > match['score_quarter_2_a'] %}
+                  <td class="table-primary">{{ match['score_quarter_2_a'] }}</td>
+                  <td>Quarter 2</td>
+                  <td class="table-danger"><strong>{{ match['score_quarter_2_b'] }}</strong></td>
+                  {% else %}
+                  <td class="table-primary">{{ match['score_quarter_2_a'] }}</td>
+                  <td>Quarter 2</td>
+                  <td class="table-danger">{{ match['score_quarter_2_b'] }}</td>
+                  {% endif %}
+                </tr>
+                <tr>
+                  {% if match['score_quarter_3_a'] > match['score_quarter_3_b'] %}
+                  <td class="table-primary"><strong>{{ match['score_quarter_3_a'] }}</strong></td>
+                  <td>Quarter 3</td>
+                  <td class="table-danger">{{ match['score_quarter_3_b'] }}</td>
+                  {% elif match['score_quarter_3_b'] > match['score_quarter_3_a'] %}
+                  <td class="table-primary">{{ match['score_quarter_3_a'] }}</td>
+                  <td>Quarter 3</td>
+                  <td class="table-danger"><strong>{{ match['score_quarter_3_b'] }}</strong></td>
+                  {% else %}
+                  <td class="table-primary">{{ match['score_quarter_3_a'] }}</td>
+                  <td>Quarter 3</td>
+                  <td class="table-danger">{{ match['score_quarter_3_b'] }}</td>
+                  {% endif %}
+                </tr>
+                <tr>
+                  {% if match['score_quarter_4_a'] > match['score_quarter_4_b'] %}
+                  <td class="table-primary"><strong>{{ match['score_quarter_4_a'] }}</strong></td>
+                  <td>Quarter 4</td>
+                  <td class="table-danger">{{ match['score_quarter_4_b'] }}</td>
+                  {% elif match['score_quarter_4_b'] > match['score_quarter_4_a'] %}
+                  <td class="table-primary">{{ match['score_quarter_4_a'] }}</td>
+                  <td>Quarter 4</td>
+                  <td class="table-danger"><strong>{{ match['score_quarter_4_b'] }}</strong></td>
+                  {% else %}
+                  <td class="table-primary">{{ match['score_quarter_4_a'] }}</td>
+                  <td>Quarter 4</td>
+                  <td class="table-danger">{{ match['score_quarter_4_b'] }}</td>
+                  {% endif %}
+                </tr>
+                {% if match['score_extra_time_1_a'] is not none %}
+                <tr>
+                  {% if match['score_extra_time_1_a'] > match['score_extra_time_1_b'] %}
+                  <td class="table-primary"><strong>{{ match['score_extra_time_1_a'] }}</strong></td>
+                  <td>Overtime 1</td>
+                  <td class="table-danger">{{ match['score_extra_time_1_b'] }}</td>
+                  {% elif match['score_extra_time_1_b'] > match['score_extra_time_1_a'] %}
+                  <td class="table-primary">{{ match['score_extra_time_1_a'] }}</td>
+                  <td>Overtime 1</td>
+                  <td class="table-danger"><strong>{{ match['score_extra_time_1_b'] }}</strong></td>
+                  {% else %}
+                  <td class="table-primary">{{ match['score_extra_time_1_a'] }}</td>
+                  <td>Overtime 1</td>
+                  <td class="table-danger">{{ match['score_extra_time_1_b'] }}</td>
+                  {% endif %}
+                </tr>
+                {% endif %}
+                {% if match['score_extra_time_2_a'] is not none %}
+                <tr>
+                  {% if match['score_extra_time_2_a'] > match['score_extra_time_2_b'] %}
+                  <td class="table-primary"><strong>{{ match['score_extra_time_2_a'] }}</strong></td>
+                  <td>Overtime 2</td>
+                  <td class="table-danger">{{ match['score_extra_time_2_b'] }}</td>
+                  {% elif match['score_extra_time_2_b'] > match['score_extra_time_2_a'] %}
+                  <td class="table-primary">{{ match['score_extra_time_2_a'] }}</td>
+                  <td>Overtime 2</td>
+                  <td class="table-danger"><strong>{{ match['score_extra_time_2_b'] }}</strong></td>
+                  {% else %}
+                  <td class="table-primary">{{ match['score_extra_time_2_a'] }}</td>
+                  <td>Overtime 2</td>
+                  <td class="table-danger">{{ match['score_extra_time_2_b'] }}</td>
+                  {% endif %}
+                </tr>
+                {% endif %}
+                {% if match['score_extra_time_3_a'] is not none %}
+                <tr>
+                  {% if match['score_extra_time_3_a'] > match['score_extra_time_3_b'] %}
+                  <td class="table-primary"><strong>{{ match['score_extra_time_3_a'] }}</strong></td>
+                  <td>Overtime 3</td>
+                  <td class="table-danger">{{ match['score_extra_time_3_b'] }}</td>
+                  {% elif match['score_extra_time_3_b'] > match['score_extra_time_3_a'] %}
+                  <td class="table-primary">{{ match['score_extra_time_3_a'] }}</td>
+                  <td>Overtime 3</td>
+                  <td class="table-danger"><strong>{{ match['score_extra_time_3_b'] }}</strong></td>
+                  {% else %}
+                  <td class="table-primary">{{ match['score_extra_time_3_a'] }}</td>
+                  <td>Overtime 3</td>
+                  <td class="table-danger">{{ match['score_extra_time_3_b'] }}</td>
+                  {% endif %}
+                </tr>
+                {% endif %}
+                {% if match['score_extra_time_4_a'] is not none %}
+                <tr>
+                  {% if match['score_extra_time_4_a'] > match['score_extra_time_4_b'] %}
+                  <td class="table-primary"><strong>{{ match['score_extra_time_4_a'] }}</strong></td>
+                  <td>Overtime 4</td>
+                  <td class="table-danger">{{ match['score_extra_time_4_b'] }}</td>
+                  {% elif match['score_extra_time_4_b'] > match['score_extra_time_4_a'] %}
+                  <td class="table-primary">{{ match['score_extra_time_4_a'] }}</td>
+                  <td>Overtime 4</td>
+                  <td class="table-danger"><strong>{{ match['score_extra_time_4_b'] }}</strong></td>
+                  {% else %}
+                  <td class="table-primary">{{ match['score_extra_time_4_a'] }}</td>
+                  <td>Overtime 4</td>
+                  <td class="table-danger">{{ match['score_extra_time_4_b'] }}</td>
+                  {% endif %}
+                </tr>
+                {% endif %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mb-4 d-flex align-items-stretch">
+        <div class="col-4">
+          <div class="card shadow h-100">
+            <div class="card-header bg-warning text-dark">
+              <h4 class="mb-0"><i class="bi bi-clock-history"></i> Timeouts</h4>
+            </div>
+            <div class="card-body">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item"><strong>{{ match['team_a'] }}:</strong> {{ match['timeouts_a'] }}</li>
+                <li class="list-group-item"><strong>{{ match['team_b'] }}:</strong> {{ match['timeouts_b'] }}</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="card shadow h-100">
+            <div class="card-header bg-danger text-white">
+              <h4 class="mb-0"><i class="bi bi-person-x-fill"></i> Fouls</h4>
+            </div>
+            <div class="card-body">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item"><strong>{{ match['team_a'] }}:</strong> {{ match['fouls_a'] }}</li>
+                <li class="list-group-item"><strong>{{ match['team_b'] }}:</strong> {{ match['fouls_b'] }}</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-4">
+          <div class="card shadow h-100">
+            <div class="card-header bg-primary text-white">
+              <h4 class="mb-0"><i class="bi bi-people-fill"></i> Referees</h4>
+            </div>
+            <div class="card-body">
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item"><strong>Referee 1:</strong> {{ match['referee_1'] }}</li>
+                <li class="list-group-item"><strong>Referee 2:</strong> {{ match['referee_2'] }}</li>
+                <li class="list-group-item"><strong>Referee 3:</strong> {{ match['referee_3'] }}</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mb-4 shadow">
+        <div class="card-header bg-secondary text-white">
+          <h4 class="mb-0"><i class="bi bi-info-square-fill"></i> Other Details</h4>
+        </div>
+        <div class="card-body px-4">
+          <ul class="list-group list-group-flush">
+            <li class="list-group-item"><strong>Date and Time:</strong> {{ match['date'] }} · {{ match['time'] }}</li>
+            <li class="list-group-item"><strong>Season:</strong> {{ match['season_code'] }}</li>
+            <li class="list-group-item"><strong>Phase:</strong> {{ match['phase'] }} (Round: {{ match['round'] }})</li>
+            <li class="list-group-item"><strong>Total Game Time:</strong> {{ match['game_time'] }}</li>
+            <li class="list-group-item"><strong>Remaining Partial Time:</strong> {{ match['remaining_partial_time'] }}</li>
+            <li class="list-group-item"><strong>Stadium:</strong> {{ match['stadium'] }} (Attendance: {{ match['capacity'] }})</li>
+          </ul>
+        </div>
+      </div>
     </div>
 
     <!-- Comparison Tab -->
