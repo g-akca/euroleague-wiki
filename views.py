@@ -182,12 +182,8 @@ def seasons_page():
     cursor.execute("SELECT COUNT(season_code) as total FROM euroleague_header")
     entry_count = cursor.fetchone()['total']
     page_count = (entry_count + page_limit - 1) // page_limit
-    #cursor.execute(query_returner_per_page(sort_by, "euroleague_team_names", page_limit, (page_num-1) * page_limit, where))
-    cursor.execute("SELECT DISTINCT(season_code) FROM euroleague_header")
+    cursor.execute("SELECT final_four_teams.season AS SEASON, b.team_name AS CHAMPION FROM (SELECT team_id, season, SUM(CASE WHEN points_scored > points_conceded THEN 1 ELSE 0 END) AS wins FROM (SELECT team_id_a AS team_id, score_a AS points_scored, score_b AS points_conceded, season_code AS season FROM euro.euroleague_header WHERE phase = 'FINAL FOUR' UNION ALL SELECT team_id_b AS team_id, score_b AS points_scored, score_a AS points_conceded, season_code AS season FROM euro.euroleague_header WHERE phase = 'FINAL FOUR') AS initial GROUP BY team_id, season) AS final_four_teams RIGHT JOIN euroleague_team_names b ON final_four_teams.team_id = b.team_id WHERE wins = 2 ORDER BY final_four_teams.season ASC, wins DESC;")
     season_codes = cursor.fetchall()
-    #buradan şampiyonu çekerek halledebiliriz
-    # cursor.execute("SELECT season_code, team_id, COUNT(*) AS games_played, SUM(CASE WHEN points_scored > points_conceded THEN 1 ELSE 0 END) AS wins, SUM(CASE WHEN points_scored < points_conceded THEN 1 ELSE 0 END) AS losses, SUM(points_scored) AS total_points_scored, SUM(points_conceded) AS total_points_conceded FROM (SELECT season_code, team_id_a AS team_id, score_a AS points_scored, score_b AS points_conceded FROM euro.euroleague_header WHERE season_code = %s UNION ALL SELECT season_code, team_id_b AS team_id, score_b AS points_scored, score_a AS points_conceded FROM euro.euroleague_header WHERE season_code = %s) AS combined_teams GROUP BY season_code, team_id ORDER BY wins DESC LIMIT 1;", (season_code, season_code,))
-    # most_wins = cursor.fetchone()
     cursor.close()
     connection.close()
     return render_template("seasons.html", season_codes = season_codes, page_count = page_count, page_num = page_num, end_page = min(page_num + page_button, page_count))
