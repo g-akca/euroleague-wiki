@@ -6,7 +6,7 @@ def home_page():
     return render_template("homepage.html")
 
 def players_page():
-    sort_by = request.args.get('sort_by', 'player_id asc')  # Default sort
+    sort_by = request.args.get('sort_by', 'player_id asc')  
     page_limit = 25
     page_num = int(request.args.get('page', 1))
     search_query = request.args.get('search', '').strip()
@@ -18,7 +18,6 @@ def players_page():
     entry_count = cursor.fetchone()['total']
     page_count = (entry_count + page_limit - 1) // page_limit
 
-    # Ensure the page_num is within valid range
     if page_num < 1:
         page_num = 1
     elif page_num > page_count:
@@ -57,11 +56,9 @@ def player_details_page(player_id, season_code=None):
         player_ids = cursor.fetchall()
         player_id = random.choice(player_ids)['player_id']
 
-    # Get player name
     cursor.execute("SELECT * FROM euroleague_player_names WHERE player_id = %s", (player_id,))
     player_name = cursor.fetchone()
 
-    # Get all season data for the player
     cursor.execute("""
         SELECT season_code as season, 
                SUM(games_played) as total_games_played, 
@@ -133,20 +130,16 @@ def team_details_page(team_id, season_code=None):
     cursor = connection.cursor(dictionary=True)
 
     if team_id == "random":
-        # Fetch all team_ids from the database
         cursor.execute("SELECT team_id FROM euroleague_team_names")
         team_ids = cursor.fetchall()
-        # Choose a random team_id
         team_id = random.choice(team_ids)['team_id']
 
-    # Fetch the team name and seasons
     cursor.execute("SELECT * FROM euroleague_team_names WHERE team_id = %s", (team_id, ))
     team_name = cursor.fetchone()
 
     cursor.execute("SELECT * FROM euroleague_teams WHERE team_id = %s", (team_id, ))
     team_seasons = cursor.fetchall()
 
-    # Fetch season data
     if season_code:
         cursor.execute("SELECT * FROM euroleague_teams WHERE team_id = %s AND season_code = %s", (team_id, season_code))
         season_data = cursor.fetchone()
@@ -199,7 +192,7 @@ def match_details_page(game_id):
 
 #sort'lar, search'ler ve pagination bozuk, düzeltilecek. overall nasıl olmalı gibi bir bakıştayız şu anda
 def seasons_page():
-    sort_by = request.args.get('sort_by', 'season_code asc') #default sort'u ayarlayabiliyoruz, şu anda ayarlı değil
+    sort_by = request.args.get('sort_by', 'season_code asc')
     page_limit = 25
     page_num = int(request.args.get('page', 1))
     search_query = request.args.get('search', '').strip()
