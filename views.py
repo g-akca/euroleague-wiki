@@ -11,17 +11,18 @@ def players_page():
     page_num = int(request.args.get('page', 1))
     search_query = request.args.get('search', '').strip()
     page_button = 4
-    
-    if search_query:
-        where = f"WHERE player_name LIKE \"%{search_query}%\""
-    else:
-        where = ""
-
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
     cursor.execute("SELECT COUNT(*) as total FROM euroleague_player_names")
     entry_count = cursor.fetchone()['total']
     page_count = (entry_count + page_limit - 1) // page_limit
+
+    if search_query:
+        where = f"WHERE player_name LIKE \"%{search_query}%\""
+        page_limit = 100
+    else:
+        where = ""
+
     cursor.execute(query_returner_per_page(sort_by, "euroleague_player_names", page_limit, (page_num-1) * page_limit, where))
     player_names = cursor.fetchall()
     cursor.close()
@@ -36,35 +37,57 @@ def players_page():
         end_page = min(page_num + page_button, page_count)
     )
 
+def query_returner_per_page(x, y, z, u, s):
+    return f"SELECT * FROM {y} {s} ORDER BY {x} LIMIT {z} OFFSET {u};"
+
 def player_details_page(player_id, season_code=None):
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
 
     if player_id == "random":
-        # Fetch all team_ids from the database
         cursor.execute("SELECT player_id FROM euroleague_player_names")
         player_ids = cursor.fetchall()
-        # Choose a random team_id
         player_id = random.choice(player_ids)['player_id']
 
-    cursor.execute("SELECT * FROM euroleague_player_names WHERE player_id = %s", (player_id, ))
+    # Get player name
+    cursor.execute("SELECT * FROM euroleague_player_names WHERE player_id = %s", (player_id,))
     player_name = cursor.fetchone()
-    cursor.execute("SELECT * FROM euroleague_players WHERE player_id = %s", (player_id, ))
-    player_seasons = cursor.fetchall()
 
+    # Get all season data for the player
+    cursor.execute("""
+        SELECT season_code as season, 
+               SUM(games_played) as total_games_played, 
+               SUM(games_started) as total_games_started, 
+               ROUND(SUM(points) / NULLIF(SUM(games_played), 0), 2) AS points_per_game, 
+               SUM(points) as total_points,
+               ROUND(SUM(total_rebounds) / NULLIF(SUM(games_played), 0), 2) AS rebounds_per_game, 
+               SUM(total_rebounds) as total_rebounds, 
+               ROUND(SUM(assists) / NULLIF(SUM(games_played), 0), 2) AS assists_per_game, 
+               SUM(assists) AS total_assists, 
+               SUM(steals) as total_steals, 
+               ROUND(SUM(steals) / NULLIF(SUM(games_played), 0), 2) AS steals_per_game, 
+               ROUND(SUM(blocks_favour) / NULLIF(SUM(games_played), 0), 2) AS blocks_per_game, 
+               SUM(blocks_favour) as total_blocks 
+        FROM euro.euroleague_players 
+        WHERE player_id = %s 
+        GROUP BY season_code;
+    """, (player_id,))
+    all_seasons_data = cursor.fetchall()
+
+    specific_season_data = None
     if season_code:
-        cursor.execute("SELECT * FROM euroleague_players WHERE player_id = %s AND season_code = %s", (player_id, season_code))
-        season_data = cursor.fetchone()
-    else:
-        cursor.execute("SELECT * FROM euroleague_players WHERE player_id = %s AND season_code = (SELECT MAX(season_code) FROM euroleague_players WHERE player_id = %s)", (player_id, player_id))
-        season_data = cursor.fetchone()
+        cursor.execute("""
+            select * from euro.euroleague_players where player_id = %s and season_code = %s;
+        """, (player_id, season_code))
+        specific_season_data = cursor.fetchall()
 
     cursor.close()
     connection.close()
-    return render_template("player_details.html", player_name=player_name, player_seasons=player_seasons, season_data=season_data)
 
-def query_returner_per_page(x, y, z, u, s):
-    return f"SELECT * FROM {y} {s} ORDER BY {x} LIMIT {z} OFFSET {u};"
+    return render_template("player_details.html", player_name=player_name, all_seasons_data=all_seasons_data, specific_season_data=specific_season_data)
+
+
+
 
 def teams_page():
     sort_by = request.args.get('sort_by', 'team_id asc')
@@ -168,7 +191,7 @@ def match_details_page(game_id):
 
 #sort'lar, search'ler ve pagination bozuk, düzeltilecek. overall nasıl olmalı gibi bir bakıştayız şu anda
 def seasons_page():
-    sort_by = request.args.get('sort_by', 'season_code asc') #default sort'u ayarlayabiliyoruz
+    sort_by = request.args.get('sort_by', 'season_code asc') #default sort'u ayarlayabiliyoruz, şu anda ayarlı değil
     page_limit = 25
     page_num = int(request.args.get('page', 1))
     search_query = request.args.get('search', '').strip()
@@ -191,8 +214,8 @@ def seasons_page():
 def season_details_page(season_code):
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
-    cursor.execute("SELECT season_code, team_id, COUNT(*) AS games_played, SUM(CASE WHEN points_scored > points_conceded THEN 1 ELSE 0 END) AS wins, SUM(CASE WHEN points_scored < points_conceded THEN 1 ELSE 0 END) AS losses, SUM(points_scored) AS total_points_scored, SUM(points_conceded) AS total_points_conceded FROM (SELECT season_code, team_id_a AS team_id, score_a AS points_scored, score_b AS points_conceded FROM euro.euroleague_header WHERE season_code = %s UNION ALL SELECT season_code, team_id_b AS team_id, score_b AS points_scored, score_a AS points_conceded FROM euro.euroleague_header WHERE season_code = %s) AS combined_teams GROUP BY season_code, team_id ORDER BY season_code, team_id;", (season_code, season_code,))
+    cursor.execute("SELECT season_code, team_id, COUNT(*) AS games_played, SUM(CASE WHEN points_scored > points_conceded THEN 1 ELSE 0 END) AS wins, SUM(CASE WHEN points_scored < points_conceded THEN 1 ELSE 0 END) AS losses, SUM(points_scored) AS total_points_scored, SUM(points_conceded) AS total_points_conceded FROM (SELECT season_code, team_id_a AS team_id, score_a AS points_scored, score_b AS points_conceded FROM euro.euroleague_header WHERE season_code = %s UNION ALL SELECT season_code, team_id_b AS team_id, score_b AS points_scored, score_a AS points_conceded FROM euro.euroleague_header WHERE season_code = %s) AS combined_teams GROUP BY season_code, team_id ORDER BY games_played DESC, wins DESC, team_id;", (season_code, season_code,))
     season_detail = cursor.fetchall()
     cursor.close()
     connection.close()
-    return render_template("season_details.html", season_detail = season_detail)
+    return render_template("season_details.html", season_detail = season_detail, current_season = season_code)

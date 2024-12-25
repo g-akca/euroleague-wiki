@@ -2,44 +2,60 @@
 
 {% block title %}{{ player_name['player_name'] }}{% endblock %}
 
-{% block content %} <!-- Will change how this page looks in general -->
-<h1>{{ player_name['player_name'] }}</h1>
+{% block content %}
+<h1 class="centered-title">{{ player_name['player_name'] }} Career Stats</h1>
+<div class="player-stat-list">
+  <ul>
+    {% for player in all_seasons_data %}
+    <li class="player-row" id="season-{{ player['season'] }}" onclick="toggleDetails('{{ player['season'] }}')">
+      <div class="season-code">{{ player['season'] }}</div>
+      <div class="rest-of-stats">
+        <span>{{ player['total_games_played'] }}</span>
+        <span>{{ player['total_games_started'] }}</span>
+        <span>{{ player['points_per_game'] }}</span>
+        <span>{{ player['total_points'] }}</span>
+        <span>{{ player['rebounds_per_game'] }}</span>
+        <span>{{ player['total_rebounds'] }}</span>
+        <span>{{ player['assists_per_game'] }}</span>
+        <span>{{ player['total_assists'] }}</span>
+        <span>{{ player['total_steals'] }}</span>
+        <span>{{ player['steals_per_game'] }}</span>
+        <span>{{ player['blocks_per_game'] }}</span>
+        <span>{{ player['total_blocks'] }}</span>
+      </div>
+    </li>
 
-<ul class="nav nav-tabs" role="tablist">
-{% for player in player_seasons %}
-  {% if player['season_code'] == season_data['season_code'] %}
-  <li class="nav-item" role="presentation">
-    <a href="{{ url_for('player_details_page', player_id=player_name['player_id'], season_code=player['season_code']) }}" class="nav-link active" role="tab">
-      Season {{ player['season_code'] }}
-    </a>
-  </li>
-  {% else %}
-  <li class="nav-item" role="presentation">
-    <a href="{{ url_for('player_details_page', player_id=player_name['player_id'], season_code=player['season_code']) }}" class="nav-link" role="tab">
-      Season {{ player['season_code'] }}
-    </a>
-  </li>
-  {% endif %}
-{% endfor %}
-</ul>
-
-<!-- Daha table görünümü veremedim vereceğim-->
-<tbody class="table-group-divider"> 
-    {% for player in player_seasons %}
-    {% if player['season_code'] == season_data['season_code'] %}
-    <tr>
-      <td>{{ player['team_id'] }}</td>
-      <td>{{ player['games_played'] }}</td>
-      <td>{{ player['games_started'] }}</td>
-      <td>{{ player['minutes'] }}</td>
-      <td>{{ player['points'] }}</td>
-      <td>{{ player['total_rebounds'] }}</td>
-      <td>{{ player['assists'] }}</td>
-      <td>{{ player['steals'] }}</td>
-      <td>{{ player['turnovers'] }}</td>
-    </tr>
-    {% endif %}
+    <li id="details-{{ player['season'] }}" class="season-details" style="display: none;">
+      {% if specific_season_data %}
+        <div class="additional-details">
+          {% for seasonplayer in specific_season_data %}
+            <p>Team ID: {{ seasonplayer['team_id'] }}</p>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="additional-details">
+          <p>No data for this season</p>
+        </div>
+      {% endif %}
+    </li>    
     {% endfor %}
-  </tbody>
-{% endblock %}
+  </ul>
+</div>
 
+<script>
+  function toggleDetails(season) {
+    var details = document.getElementById('details-' + season);
+
+    if (details.style.display === 'none' || details.style.display === '') {
+      details.style.display = 'block';  
+      var li = document.getElementById('season-' + season);
+      li.style.marginBottom = '20px'; 
+    } else {
+      details.style.display = 'none';  
+      var li = document.getElementById('season-' + season);
+      li.style.marginBottom = '0';  
+    }
+  }
+</script>
+
+{% endblock %}
