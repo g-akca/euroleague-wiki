@@ -207,6 +207,22 @@ footer {
     background-color: #6d6d6d;
 }
 
+.page-input {
+    max-width: 100px;
+    color: #fff;
+    background-color: #414141;
+    border: 1px solid #6d6d6d;
+}   
+
+.page-input:focus {
+    max-width: 100px;
+    justify-content: center;
+    color: #fff;
+    background-color: #414141;
+    border: 1px solid #6d6d6d;
+}
+
+
 /* Match Details */
 .box-score-table {
     font-size: 13px;

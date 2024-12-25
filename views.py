@@ -6,16 +6,23 @@ def home_page():
     return render_template("homepage.html")
 
 def players_page():
-    sort_by = request.args.get('sort_by', 'player_id asc') #default sort'u ayarlayabiliyoruz
+    sort_by = request.args.get('sort_by', 'player_id asc')  # Default sort
     page_limit = 25
     page_num = int(request.args.get('page', 1))
     search_query = request.args.get('search', '').strip()
     page_button = 4
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
+
     cursor.execute("SELECT COUNT(*) as total FROM euroleague_player_names")
     entry_count = cursor.fetchone()['total']
     page_count = (entry_count + page_limit - 1) // page_limit
+
+    # Ensure the page_num is within valid range
+    if page_num < 1:
+        page_num = 1
+    elif page_num > page_count:
+        page_num = page_count
 
     if search_query:
         where = f"WHERE player_name LIKE \"%{search_query}%\""
@@ -23,19 +30,20 @@ def players_page():
     else:
         where = ""
 
-    cursor.execute(query_returner_per_page(sort_by, "euroleague_player_names", page_limit, (page_num-1) * page_limit, where))
+    cursor.execute(query_returner_per_page(sort_by, "euroleague_player_names", page_limit, (page_num - 1) * page_limit, where))
     player_names = cursor.fetchall()
     cursor.close()
     connection.close()
-    
+
     return render_template(
-        "players.html", 
-        player_names=player_names, 
-        sort_by=sort_by, 
+        "players.html",
+        player_names=player_names,
+        sort_by=sort_by,
         page_num=page_num,
         page_count=page_count,
-        end_page = min(page_num + page_button, page_count)
+        end_page=min(page_num + page_button, page_count)
     )
+
 
 def query_returner_per_page(x, y, z, u, s):
     return f"SELECT * FROM {y} {s} ORDER BY {x} LIMIT {z} OFFSET {u};"
