@@ -812,6 +812,8 @@ def panel_player_seasons_page(player_id):
 
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM euroleague_team_names ORDER BY team_name ASC")
+    teams = cursor.fetchall()
     cursor.execute("SELECT COUNT(player_id) AS season_count FROM euroleague_players WHERE player_id = %s", (player_id, ))
     season_count = cursor.fetchone()
     page_count = (season_count['season_count'] + page_limit - 1) // page_limit
@@ -828,6 +830,7 @@ def panel_player_seasons_page(player_id):
         player_seasons=player_seasons, 
         player_id=player_id, 
         season_count=season_count,
+        teams=teams,
         page_num=page_num,
         page_count=page_count,
         end_page = min(page_num + page_button, page_count))

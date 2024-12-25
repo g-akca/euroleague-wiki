@@ -18,6 +18,7 @@
         {% endfor %}
       {% endif %}
     {% endwith %}
+
     <div class="d-flex justify-content-between align-items-center mb-1">
       <h2><a class="text-success" href="/panel/players">Players</a> / {{ player_id }} ({{ season_count['season_count'] }})</h2>
       <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addPlayerSeasonModal">Add New Season</button>
@@ -93,10 +94,10 @@
       <div class="modal-body">
         <form action="/panel/players/{{ player_id }}/add" method="post" id="addPlayerSeasonForm">
             <div class="row mb-2">
-                <div class="col-6">
-                  <label>Season Player ID</label>
-                  <input type="text" class="form-control" name="season_player_id" id="addPlayerSeason_season_player_id" placeholder="Enter season player ID" required />
-                </div>
+              <div class="col-6">
+                <label>Plus/Minus Per Game</label>
+                <input type="number" step="0.01" class="form-control" name="plus_minus_per_game" id="addPlayerSeason_plus_minus_per_game" placeholder="Enter plus/minus per game" required />
+              </div>
                 <div class="col-6">
                   <label>Season Code</label>
                   <input type="text" class="form-control" name="season_code" id="addPlayerSeason_season_code" placeholder="Enter season code" required />
@@ -111,7 +112,12 @@
                 </div>
                 <div class="col-6">
                   <label>Team ID</label>
-                  <input type="text" class="form-control" name="team_id" id="addPlayerSeason_team_id" placeholder="Enter team ID" required />
+                  <select name="team_id" id="addPlayerSeason_team_id_a" class="form-select">
+                    <option disabled selected>Choose Team</option>
+                    {% for team in teams %}
+                      <option value="{{ team['team_id'] }}">{{ team['team_name'] }}</option>
+                    {% endfor %}
+                  </select>
                 </div>
               </div>
               
@@ -355,13 +361,6 @@
                   <input type="number" step="0.01" class="form-control" name="valuation_per_game" id="addPlayerSeason_valuation_per_game" placeholder="Enter valuation per game" required />
                 </div>
               </div>
-              
-              <div class="row mb-2">
-                <div class="col-6">
-                  <label>Plus/Minus Per Game</label>
-                  <input type="number" step="0.01" class="form-control" name="plus_minus_per_game" id="addPlayerSeason_plus_minus_per_game" placeholder="Enter plus/minus per game" required />
-                </div>
-              </div>
         </form>
       </div>
       <div class="modal-footer">
@@ -385,8 +384,8 @@
           <input type="hidden" class="form-control" name="season_player_id" id="updatePlayerSeason_season_player_id" />
           <div class="row mb-2">
             <div class="col-6">
-              <label>Season Player ID</label>
-              <input type="text" class="form-control" name="season_player_id" id="updatePlayerSeason_season_player_id" placeholder="Enter season player ID" required />
+              <label>Plus/Minus Per Game</label>
+              <input type="number" step="0.01" class="form-control" name="plus_minus_per_game" id="updatePlayerSeason_plus_minus_per_game" placeholder="Enter plus/minus per game" required />
             </div>
             <div class="col-6">
               <label>Season Code</label>
@@ -402,7 +401,12 @@
             </div>
             <div class="col-6">
               <label>Team ID</label>
-              <input type="text" class="form-control" name="team_id" id="updatePlayerSeason_team_id" placeholder="Enter team ID" required />
+              <select name="team_id" id="updatePlayerSeason_team_id_a" class="form-select">
+                <option disabled selected>Choose Team</option>
+                {% for team in teams %}
+                  <option value="{{ team['team_id'] }}">{{ team['team_name'] }}</option>
+                {% endfor %}
+              </select>
             </div>
           </div>
           
@@ -645,14 +649,7 @@
               <label>Valuation Per Game</label>
               <input type="number" step="0.01" class="form-control" name="valuation_per_game" id="updatePlayerSeason_valuation_per_game" placeholder="Enter valuation per game" required />
             </div>
-          </div>
-          
-          <div class="row mb-2">
-            <div class="col-6">
-              <label>Plus/Minus Per Game</label>
-              <input type="number" step="0.01" class="form-control" name="plus_minus_per_game" id="updatePlayerSeason_plus_minus_per_game" placeholder="Enter plus/minus per game" required />
-            </div>
-          </div>                
+          </div>             
         </form>
       </div>
       <div class="modal-footer">
