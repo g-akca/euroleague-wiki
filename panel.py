@@ -736,3 +736,175 @@ def panel_comparisons_page():
         page_num=page_num,
         page_count=page_count,
         end_page = min(page_num + page_button, page_count))
+
+@admin_required
+def panel_players_page():
+    page_limit = 25
+    page_num = int(request.args.get('page', 1))
+    page_button = 4
+
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("SELECT COUNT(*) as total FROM euroleague_player_names")
+    entry_count = cursor.fetchone()['total']
+    page_count = (entry_count + page_limit - 1) // page_limit
+    cursor.execute("SELECT euroleague_player_names.player_id AS player_id, euroleague_player_names.player_name AS player_name, GROUP_CONCAT(euroleague_players.season_code ORDER BY euroleague_players.season_code ASC SEPARATOR ', ') AS seasons FROM euroleague_player_names LEFT JOIN euroleague_players ON euroleague_player_names.player_id = euroleague_players.player_id GROUP BY euroleague_player_names.player_id, euroleague_player_names.player_name LIMIT %s OFFSET %s", (page_limit, (page_num-1) * page_limit ))
+    player_names = cursor.fetchall()
+    cursor.close()
+    connection.close()
+
+    return render_template("panel_players.html", 
+        player_names=player_names,
+        page_num=page_num,
+        page_count=page_count,
+        end_page = min(page_num + page_button, page_count))
+
+@admin_required
+def panel_players_add():
+    player_id = request.form['player_id']
+    player_name = request.form['player_name']
+
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("INSERT INTO euroleague_player_names VALUES (%s, %s)", (player_id, player_name))
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+    flash("Player added successfully!", "success")
+    return redirect(url_for('panel_players_page'))
+
+@admin_required
+def panel_players_update():
+    old_player_id = request.form['old_player_id']
+    player_id = request.form['player_id']
+    player_name = request.form['player_name']
+
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("UPDATE euroleague_player_names SET player_id = %s, player_name = %s WHERE player_id = %s", (player_id, player_name, old_player_id))
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+    flash("Player updated successfully!", "success")
+    return redirect(url_for('panel_players_page'))
+
+@admin_required
+def panel_players_delete():
+    player_id = request.form['player_id']
+
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("DELETE FROM euroleague_player_names WHERE player_id = %s", (player_id, ))
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+    flash("Player deleted successfully!", "success")
+    return redirect(url_for('panel_players_page'))
+
+@admin_required
+def panel_player_seasons_page(player_id):
+    page_limit = 25
+    page_num = int(request.args.get('page', 1))
+    page_button = 4
+
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("SELECT COUNT(player_id) AS season_count FROM euroleague_players WHERE player_id = %s", (player_id, ))
+    season_count = cursor.fetchone()
+    page_count = (season_count['season_count'] + page_limit - 1) // page_limit
+    cursor.execute("SELECT *, euroleague_players.player_id AS player_id, euroleague_player_names.player_name AS player_name FROM euroleague_players LEFT JOIN euroleague_player_names ON euroleague_players.player_id = euroleague_player_names.player_id WHERE euroleague_players.player_id = %s LIMIT %s OFFSET %s", (player_id, page_limit, (page_num-1) * page_limit ))
+    player_seasons = cursor.fetchall()
+
+    for ts in player_seasons:
+        ts['data_attributes'] = ' '.join([f'data-{key}={urllib.parse.quote(str(value))}' for key, value in ts.items()])
+
+    cursor.close()
+    connection.close()
+
+    return render_template("panel_player_seasons.html", 
+        player_seasons=player_seasons, 
+        player_id=player_id, 
+        season_count=season_count,
+        page_num=page_num,
+        page_count=page_count,
+        end_page = min(page_num + page_button, page_count))
+
+@admin_required
+def panel_player_seasons_add(player_id):
+    form_data = request.form.to_dict()
+    season_code = request.form['season_code']
+    season_player_id = f"{season_code}_{player_id}"
+
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM euroleague_players WHERE season_player_id = %s", (season_player_id, ))
+    ts_existing = cursor.fetchone()
+    if ts_existing:
+        flash("This player season already exists!", "danger")
+        cursor.close()
+        connection.close()
+        return redirect(url_for("panel_player_seasons_page", player_id=player_id))
+    
+    cursor.execute("DESCRIBE euroleague_players")
+    columns = [column['Field'] for column in cursor.fetchall()]
+    filtered_data = {key: form_data[key] for key in form_data if key in columns}
+    filtered_data['season_player_id'] = season_player_id
+    value_placeholders = ', '.join([f'%({key})s' for key in filtered_data])
+    columns_str = ', '.join(filtered_data.keys())
+    sql = f"""INSERT INTO euroleague_players ({columns_str}) VALUES ({value_placeholders})"""
+    cursor.execute(sql, filtered_data)
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+    flash("Player season added successfully!", "success")
+    return redirect(url_for("panel_player_seasons_page", player_id=player_id))
+
+@admin_required
+def panel_player_seasons_update(player_id):
+    form_data = request.form.to_dict()
+    season_code = request.form['season_code']
+    season_player_id = request.form['season_player_id']
+    new_season_player_id = f"{season_code}_{player_id}"
+
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM euroleague_players WHERE season_player_id = %s", (new_season_player_id, ))
+    ts_existing = cursor.fetchone()
+    if ts_existing and season_player_id != new_season_player_id:
+        flash("That season for this player already exists!", "danger")
+        cursor.close()
+        connection.close()
+        return redirect(url_for("panel_player_seasons_page", player_id=player_id))
+
+    cursor.execute("DESCRIBE euroleague_players")
+    columns = [column['Field'] for column in cursor.fetchall()]
+    filtered_data = {key: form_data[key] for key in form_data if key in columns}
+    filtered_data['season_player_id'] = new_season_player_id
+    filtered_data['old_season_player_id'] = season_player_id
+    set_str = ', '.join([f"{key} = %({key})s" for key in filtered_data if key != 'old_season_player_id'])
+    sql = f"""UPDATE euroleague_players SET {set_str} WHERE season_player_id = %(old_season_player_id)s"""
+    cursor.execute(sql, filtered_data)
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+    flash("Player season updated successfully!", "success")
+    return redirect(url_for("panel_player_seasons_page", player_id=player_id))
+
+@admin_required
+def panel_player_seasons_delete(player_id):
+    season_player_id = request.form['season_player_id']
+
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("DELETE FROM euroleague_players WHERE season_player_id = %s", (season_player_id, ))
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+    flash("Player season deleted successfully!", "success")
+    return redirect(url_for("panel_player_seasons_page", player_id=player_id))

@@ -58,6 +58,14 @@ def create_app():
     app.add_url_rule("/panel/plays/add", view_func=panel.panel_plays_add, methods=['POST'])
     app.add_url_rule("/panel/plays/update", view_func=panel.panel_plays_update, methods=['POST'])
     app.add_url_rule("/panel/plays/delete", view_func=panel.panel_plays_delete, methods=['POST'])
+    app.add_url_rule("/panel/players", view_func=panel.panel_players_page)
+    app.add_url_rule("/panel/players/add", view_func=panel.panel_players_add, methods=['POST'])
+    app.add_url_rule("/panel/players/update", view_func=panel.panel_players_update, methods=['POST'])
+    app.add_url_rule("/panel/players/delete", view_func=panel.panel_players_delete, methods=['POST'])
+    app.add_url_rule("/panel/players/<string:player_id>", view_func=panel.panel_player_seasons_page)
+    app.add_url_rule("/panel/players/<string:player_id>/add", view_func=panel.panel_player_seasons_add, methods=['POST'])
+    app.add_url_rule("/panel/players/<string:player_id>/update", view_func=panel.panel_player_seasons_update, methods=['POST'])
+    app.add_url_rule("/panel/players/<string:player_id>/delete", view_func=panel.panel_player_seasons_delete, methods=['POST'])
 
     @app.before_request
     def refresh_before_request():
