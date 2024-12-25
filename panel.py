@@ -705,37 +705,152 @@ def panel_comparisons_page():
     entry_count = cursor.fetchone()['total']
     page_count = (entry_count + page_limit - 1) // page_limit
     cursor.execute("""
-                   SELECT 
-                    C.*,
-                    H.*,
-                    T1.team_name AS team_name_a,
-                    T2.team_name AS team_name_b
-                    FROM euroleague_comparison AS C
-                    LEFT JOIN euroleague_header AS H ON C.game_id = H.game_id
-                    LEFT JOIN euroleague_team_names T1 ON H.team_id_a = T1.team_id
-                    LEFT JOIN euroleague_team_names T2 ON H.team_id_b = T2.team_id
-                    ORDER BY H.game_id
-                    LIMIT %s OFFSET %s;"""
-                   ,(page_limit, (page_num-1) * page_limit ))
+        SELECT C.*, H.*,
+        T1.team_name AS team_name_a,
+        T2.team_name AS team_name_b
+        FROM euroleague_comparison AS C
+        LEFT JOIN euroleague_header AS H ON C.game_id = H.game_id
+        LEFT JOIN euroleague_team_names T1 ON H.team_id_a = T1.team_id
+        LEFT JOIN euroleague_team_names T2 ON H.team_id_b = T2.team_id
+        ORDER BY H.game_id
+        LIMIT %s OFFSET %s;
+    """,(page_limit, (page_num-1) * page_limit ))
     comparisons = cursor.fetchall()
 
     for comp in comparisons:
         comp['data_attributes'] = ' '.join([f'data-{key}={urllib.parse.quote(str(value))}' for key, value in comp.items()])
 
-    cursor.execute("SELECT * FROM euroleague_header")
-    matches = cursor.fetchall()
-    cursor.execute("SELECT * FROM euroleague_player_names ORDER BY player_name ASC")
-    player_names = cursor.fetchall()
+    cursor.execute("""
+        SELECT H.game_id,
+        T1.team_name AS team_name_a,
+        T2.team_name AS team_name_b   
+        FROM euroleague_header H
+        LEFT JOIN euroleague_team_names T1 ON H.team_id_a = T1.team_id
+        LEFT JOIN euroleague_team_names T2 ON H.team_id_b = T2.team_id
+    """)
+    matches= cursor.fetchall()
     cursor.close()
     connection.close()
 
     return render_template("panel_comparisons.html", 
         comparisons=comparisons,
         matches=matches, 
-        player_names=player_names,
         page_num=page_num,
         page_count=page_count,
         end_page = min(page_num + page_button, page_count))
+
+@admin_required
+def get_playing_teams(game_id):
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    
+    cursor.execute("""
+        SELECT 
+            T1.team_name AS team_name_a,
+            T2.team_name AS team_name_b
+        FROM euroleague_header H
+        LEFT JOIN euroleague_team_names T1 ON H.team_id_a = T1.team_id
+        LEFT JOIN euroleague_team_names T2 ON H.team_id_b = T2.team_id
+        WHERE H.game_id = %s
+    """, (game_id,))
+    
+    team_data = cursor.fetchone()
+    cursor.close()
+    connection.close()
+    
+    if team_data:
+        return jsonify(team_data)
+    else:
+        return jsonify({"team_name_a": None, "team_name_b": None})
+
+@admin_required
+def panel_comparisons_add():
+    form_data = request.form.to_dict()
+    game_id = request.form['game_id']
+
+    for key, value in form_data.items():
+        if value == "" or value == "None":
+            form_data[key] = None
+
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+
+    cursor.execute("SELECT * FROM euroleague_comparison WHERE game_id = %s", (game_id,))
+    comparison_existing = cursor.fetchone()
+    if comparison_existing:
+        flash("This comparison already exists!", "danger")
+        cursor.close()
+        connection.close()
+        return redirect(url_for('panel_comparisons_page'))
+    
+    cursor.execute("DESCRIBE euroleague_comparison")
+    columns = [column['Field'] for column in cursor.fetchall()]
+    filtered_data = {key: form_data[key] for key in form_data if key in columns}
+    filtered_data['game_id'] = game_id
+    value_placeholders = ', '.join([f'%({key})s' for key in filtered_data])
+    columns_str = ', '.join(filtered_data.keys())
+    #TO:DO Some of the varchar columns are missing
+    sql = f"""INSERT INTO euroleague_comparison ({columns_str}) VALUES ({value_placeholders})"""
+    cursor.execute(sql, filtered_data)
+    connection.commit()
+    connection.close()
+    cursor.close()
+
+    flash("Comparison added successfully!", "success")
+    return redirect(url_for('panel_comparisons_page'))
+
+@admin_required
+def panel_comparisons_update():
+    form_data = request.form.to_dict()
+    game_id = request.form['game_id']
+
+    for key, value in form_data.items():
+        if value == "" or value == "None":
+            form_data[key] = None
+
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM euroleague_comparison WHERE game_id = %s", (game_id,))
+    original_data = cursor.fetchone()
+
+    if not original_data:
+        flash('Comparison record not found.', 'danger')
+        return redirect(url_for('panel_comparisons_page'))
+    
+    has_changed = any(str(original_data[key]) != form_data[key] for key in original_data if key in form_data)
+    if not has_changed:
+        flash('No changes were made. Update canceled.', 'warning')
+        return redirect(url_for('panel_comparisons_page'))
+
+    cursor.execute("DESCRIBE euroleague_comparison")
+    columns = [column['Field'] for column in cursor.fetchall()]
+    filtered_data = {key: form_data[key] for key in form_data if key in columns}
+    
+    set_str = ', '.join([f"{key} = %({key})s" for key in filtered_data])
+    sql = f"""UPDATE euroleague_box_score SET {set_str} WHERE game_id = %(game_id)s"""
+
+    cursor.execute(sql, filtered_data)
+    connection.commit()
+
+    cursor.close()
+    connection.close()
+
+    flash("Comparison updated successfully!", "success")
+    return redirect(url_for('panel_comparisons_page'))
+
+@admin_required
+def panel_comparisons_delete():
+    game_id = request.form['game_id']
+
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("DELETE FROM euroleague_comparison WHERE game_id = %s", (game_id, ))
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+    flash("Comparison deleted successfully!", "success")
+    return redirect(url_for('panel_comparisons_page'))
 
 @admin_required
 def panel_players_page():
