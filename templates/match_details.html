@@ -687,55 +687,69 @@
     <div class="tab-pane fade px-3" id="play-tab-content" role="tabpanel" tabindex="3">
       {% for play in play_by_play %}
         {% if play['team_id'] == match['team_id_a'] %}
-          <div class="d-flex justify-content-around align-items-center mb-2">
-            <div class="card" style="width: 25%;">
+          <div class="d-flex justify-content-around align-items-center mb-3">
+            <div class="card shadow-sm" style="width: 25%;">
               <h6 class="card-header fw-bold text-bg-primary">{{ play['team_name'] }}</h6>
               {% if play['points'] and play['points'] > 0 %}
                 <div class="card-body text-bg-warning">
-                  <h6 class="card-subtitle mb-2 text-body-secondary">{{ play['player_name'] }}</h6>
+                  <h6 class="card-subtitle mb-2 text-body-secondary"><strong>{{ play['player_name'] }}</strong> · Play: {{ play['player_total_plays'] }}</h6>
                   <p class="card-text">{{ play['play_info'] }}</p>
                 </div>
               {% else %}
                 <div class="card-body">
-                  <h6 class="card-subtitle mb-2 text-body-secondary">{{ play['player_name'] }}</h6>
+                  <h6 class="card-subtitle mb-2 text-body-secondary"><strong>{{ play['player_name'] }}</strong> · Play: {{ play['player_total_plays'] }}</h6>
                   <p class="card-text">{{ play['play_info'] }}</p>
                 </div>
               {% endif %}
             </div>
             <div class="flex-grow-1 d-flex align-items-center">
               <hr class="w-100 my-0">
-              <h3 class="mx-3"><span class="badge text-bg-secondary">{{ play['minute'] }}:00</span></h3>
+              {% if play['points'] and play['points'] > 0 %}
+                <div class="d-flex flex-column align-items-center justify-content-center">
+                  <h3 class="mx-3"><span class="badge text-bg-secondary shadow">{{ play['minute'] }}:00</span></h3>
+                  <h1 class="mx-3"><span class="badge text-bg-primary shadow-lg">{{ play['points_a'] }} - {{ play['points_b'] }}</span></h3>
+                </div>
+              {% else %}
+                <h3 class="mx-3"><span class="badge text-bg-secondary shadow">{{ play['minute'] }}:00</span></h3>
+              {% endif %}
               <div class="w-100 my-0"></div>
             </div>
             <h4 style="width: 25%;"></h4>
           </div>
         {% elif play['team_id'] == match['team_id_b'] %}
-          <div class="d-flex justify-content-around align-items-center mb-2">
+          <div class="d-flex justify-content-around align-items-center mb-3">
             <h4 style="width: 25%;"></h4>
             <div class="flex-grow-1 d-flex align-items-center">
               <div class="w-100 my-0"></div>
-              <h3 class="mx-3"><span class="badge text-bg-secondary">{{ play['minute'] }}:00</span></h3>
+              {% if play['points'] and play['points'] > 0 %}
+                <div class="d-flex flex-column align-items-center justify-content-center">
+                  <h3 class="mx-3"><span class="badge text-bg-secondary shadow">{{ play['minute'] }}:00</span></h3>
+                  <h1 class="mx-3"><span class="badge text-bg-danger shadow-lg">{{ play['points_a'] }} - {{ play['points_b'] }}</span></h3>
+                </div>
+              {% else %}
+                <h3 class="mx-3"><span class="badge text-bg-secondary shadow">{{ play['minute'] }}:00</span></h3>
+              {% endif %}
               <hr class="w-100 my-0">
             </div>
-            <div class="card" style="width: 25%;">
+            <div class="card shadow-sm" style="width: 25%;">
               <h6 class="card-header fw-bold text-bg-danger">{{ play['team_name'] }}</h6>
               {% if play['points'] and play['points'] > 0 %}
                 <div class="card-body text-bg-warning">
-                  <h6 class="card-subtitle mb-2 text-body-secondary">{{ play['player_name'] }}</h6>
+                  <h6 class="card-subtitle mb-2 text-body-secondary"><strong>{{ play['player_name'] }}</strong> · Play: {{ play['player_total_plays'] }}</h6>
                   <p class="card-text">{{ play['play_info'] }}</p>
                 </div>
               {% else %}
                 <div class="card-body">
-                  <h6 class="card-subtitle mb-2 text-body-secondary">{{ play['player_name'] }}</h6>
+                  <h6 class="card-subtitle mb-2 text-body-secondary"><strong>{{ play['player_name'] }}</strong> · Play: {{ play['player_total_plays'] }}</h6>
                   <p class="card-text">{{ play['play_info'] }}</p>
                 </div>
               {% endif %}
             </div>
           </div>
         {% else %}
-          <div class="d-flex justify-content-center align-items-center mb-2">
+          <div class="d-flex justify-content-center align-items-center mb-3">
             <hr class="w-100 my-0">
-            <h3 class="mx-3"><span class="badge text-bg-warning">{{ play['minute'] }}:00<br/>END OF QUARTER {{ play['quarter'] }}</span></h3>
+            <h3 class="mx-3"><span class="badge text-bg-warning shadow-lg">{{ play['minute'] }}:00<br/>END OF {{ play['quarter_detailed'] }}</span></h3>
             <hr class="w-100 my-0">
           </div>
         {% endif %}

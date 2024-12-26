@@ -184,7 +184,32 @@ def match_details_page(game_id):
     box_score = cursor.fetchall()
     cursor.execute("SELECT * FROM euroleague_comparison WHERE game_id = %s", (game_id, ))
     comparison = cursor.fetchone()
-    cursor.execute("SELECT *, euroleague_team_names.team_name AS team_name, euroleague_player_names.player_name AS player_name FROM euroleague_play_by_play LEFT JOIN euroleague_player_names ON euroleague_play_by_play.player_id = euroleague_player_names.player_id LEFT JOIN euroleague_team_names ON euroleague_play_by_play.team_id = euroleague_team_names.team_id LEFT JOIN euroleague_points ON euroleague_play_by_play.game_play_id = euroleague_points.game_play_id WHERE game_id = %s", (game_id, ))
+    cursor.execute("""SELECT *, 
+                        tn.team_name AS team_name, 
+                        CASE 
+                            WHEN pn.player_name IS NOT NULL THEN pn.player_name
+                            ELSE 'TECHNICAL'
+                        END AS player_name,
+                        CASE 
+                            WHEN plays.quarter = 'q1' THEN 'QUARTER 1'
+                            WHEN plays.quarter = 'q2' THEN 'QUARTER 2'
+                            WHEN plays.quarter = 'q3' THEN 'QUARTER 3'
+                            WHEN plays.quarter = 'q4' THEN 'QUARTER 4'
+                            WHEN plays.quarter = 'extra_time' THEN 'OVERTIME'
+                        END AS quarter_detailed,
+                        (
+                            SELECT COUNT(*) 
+                            FROM euroleague_play_by_play plays2 
+                            WHERE plays2.player_id = plays.player_id 
+                            AND plays2.number_of_play <= plays.number_of_play 
+                            AND plays2.game_id = plays.game_id
+                        ) AS player_total_plays
+                    FROM euroleague_play_by_play plays
+                    LEFT JOIN euroleague_player_names pn ON plays.player_id = pn.player_id
+                    LEFT JOIN euroleague_team_names tn ON plays.team_id = tn.team_id
+                    LEFT JOIN euroleague_points p ON plays.game_play_id = p.game_play_id
+                    WHERE game_id = %s
+                    ORDER BY minute ASC, number_of_play ASC""", (game_id, ))
     play_by_play = cursor.fetchall()
     cursor.close()
     connection.close()
