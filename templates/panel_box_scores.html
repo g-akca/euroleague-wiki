@@ -95,8 +95,8 @@
           <div class="row mb-2">
             <div class="col-6">
               <label>Game ID</label>
-              <select name="game_id" id="addBoxScore_game_id" class="form-select">
-                <option disabled selected>Select a Match</option>
+              <select name="game_id" id="addBoxScore_game_id" class="form-select" required>
+                <option disabled selected value="">Select a Match</option>
                 {% for match in matches %}
                   <option value="{{ match['game_id'] }}">{{ match['game_id'] }}</option>
                 {% endfor %}
@@ -104,8 +104,8 @@
             </div>
             <div class="col-6">
               <label>Team</label>
-              <select name="team_id" id="addBoxScore_team_id" class="form-select">
-                <option disabled selected>Select a Team</option>
+              <select name="team_id" id="addBoxScore_team_id" class="form-select" required>
+                <option disabled selected value="">Select a Team</option>
               </select>
             </div>
           </div>
@@ -113,8 +113,8 @@
           <div class="row mb-2">
             <div class="col-6">
               <label>Player</label>
-              <select name="player_id" id="addBoxScore_player_id" class="form-select">
-                <option disabled selected>Select a Player</option>
+              <select name="player_id" id="addBoxScore_player_id" class="form-select" required>
+                <option disabled selected value="">Select a Player</option>
               </select>
             </div>
             <div class="col-6">
@@ -285,8 +285,8 @@
           <div class="row mb-2">
             <div class="col-6">
               <label>Game ID</label>
-              <select name="game_id" id="updateBoxScore_game_id" class="form-select">
-                <option disabled selected>Select a Match</option>
+              <select name="game_id" id="updateBoxScore_game_id" class="form-select" required>
+                <option disabled selected value="">Select a Match</option>
                 {% for match in matches %}
                   <option value="{{ match['game_id'] }}">{{ match['game_id'] }}</option>
                 {% endfor %}
@@ -294,8 +294,8 @@
             </div>
             <div class="col-6">
               <label>Team</label>
-              <select name="team_id" id="updateBoxScore_team_id" class="form-select">
-                <option disabled selected>Select a Team</option>
+              <select name="team_id" id="updateBoxScore_team_id" class="form-select" required>
+                <option disabled selected value="">Select a Team</option>
               </select>
             </div>
           </div>
@@ -303,8 +303,8 @@
           <div class="row mb-2">
             <div class="col-6">
               <label>Player</label>
-              <select name="player_id" id="updateBoxScore_player_id" class="form-select">
-                <option disabled selected>Select a Player</option>
+              <select name="player_id" id="updateBoxScore_player_id" class="form-select" required>
+                <option disabled selected value="">Select a Player</option>
               </select>
             </div>
             <div class="col-6">

@@ -101,7 +101,7 @@
               <div class="col-6">
                 <label>Game ID</label>
                 <select name="game_id" id="addComparison_game_id" class="form-select" required>
-                  <option disabled selected>Select a Game</option>
+                  <option disabled selected value="">Select a Game</option>
                   {% for match in matches %}
                     <option value="{{ match['game_id'] }}">{{ match['game_id'] }}</option>
                   {% endfor %}

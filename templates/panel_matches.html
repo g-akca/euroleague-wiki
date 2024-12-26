@@ -113,8 +113,8 @@
           <div class="row mb-2">
             <div class="col-6">
               <label>Phase</label>
-              <select name="phase" id="addMatch_phase" class="form-select">
-                <option disabled selected>Select Phase</option>
+              <select name="phase" id="addMatch_phase" class="form-select" required>
+                <option disabled selected value="">Select Phase</option>
                 <option value="REGULAR SEASON">REGULAR SEASON</option>
                 <option value="TOP 16">TOP 16</option>
                 <option value="PLAYOFFS">PLAYOFFS</option>
@@ -132,8 +132,8 @@
           <div class="row mb-2">
             <div class="col-6">
               <label>Team A</label>
-              <select name="team_id_a" id="addMatch_team_id_a" class="form-select">
-                <option disabled selected>Choose Team A</option>
+              <select name="team_id_a" id="addMatch_team_id_a" class="form-select" required>
+                <option disabled selected value="">Choose Team A</option>
                 {% for team in teams %}
                   <option value="{{ team['team_id'] }}">{{ team['team_name'] }}</option>
                 {% endfor %}
@@ -141,8 +141,8 @@
             </div>
             <div class="col-6">
               <label>Team B</label>
-              <select name="team_id_b" id="addMatch_team_id_b" class="form-select">
-                <option disabled selected>Choose Team B</option>
+              <select name="team_id_b" id="addMatch_team_id_b" class="form-select" required>
+                <option disabled selected value="">Choose Team B</option>
                 {% for team in teams %}
                   <option value="{{ team['team_id'] }}">{{ team['team_name'] }}</option>
                 {% endfor %}
@@ -416,8 +416,8 @@
           <div class="row mb-2">
             <div class="col-6">
               <label>Phase</label>
-              <select name="phase" id="updateMatch_phase" class="form-select">
-                <option disabled selected>Select Phase</option>
+              <select name="phase" id="updateMatch_phase" class="form-select" required>
+                <option disabled selected value="">Select Phase</option>
                 <option value="REGULAR SEASON">REGULAR SEASON</option>
                 <option value="TOP 16">TOP 16</option>
                 <option value="PLAYOFFS">PLAYOFFS</option>
@@ -435,8 +435,8 @@
           <div class="row mb-2">
             <div class="col-6">
               <label>Team A</label>
-              <select name="team_id_a" id="updateMatch_team_id_a" class="form-select">
-                <option disabled selected>Choose Team A</option>
+              <select name="team_id_a" id="updateMatch_team_id_a" class="form-select" required>
+                <option disabled selected value="">Choose Team A</option>
                 {% for team in teams %}
                   <option value="{{ team['team_id'] }}">{{ team['team_name'] }}</option>
                 {% endfor %}
@@ -444,8 +444,8 @@
             </div>
             <div class="col-6">
               <label>Team B</label>
-              <select name="team_id_b" id="updateMatch_team_id_b" class="form-select">
-                <option disabled selected>Choose Team B</option>
+              <select name="team_id_b" id="updateMatch_team_id_b" class="form-select" required>
+                <option disabled selected value="">Choose Team B</option>
                 {% for team in teams %}
                   <option value="{{ team['team_id'] }}">{{ team['team_name'] }}</option>
                 {% endfor %}

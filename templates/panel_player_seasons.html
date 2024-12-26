@@ -112,8 +112,8 @@
                 </div>
                 <div class="col-6">
                   <label>Team ID</label>
-                  <select name="team_id" id="addPlayerSeason_team_id" class="form-select">
-                    <option disabled selected>Choose Team</option>
+                  <select name="team_id" id="addPlayerSeason_team_id" class="form-select" required>
+                    <option disabled selected value="">Choose Team</option>
                     {% for team in teams %}
                       <option value="{{ team['team_id'] }}">{{ team['team_name'] }}</option>
                     {% endfor %}
@@ -401,8 +401,8 @@
             </div>
             <div class="col-6">
               <label>Team ID</label>
-              <select name="team_id" id="updatePlayerSeason_team_id" class="form-select">
-                <option disabled selected>Choose Team</option>
+              <select name="team_id" id="updatePlayerSeason_team_id" class="form-select" required>
+                <option disabled selected value="">Choose Team</option>
                 {% for team in teams %}
                   <option value="{{ team['team_id'] }}">{{ team['team_name'] }}</option>
                 {% endfor %}

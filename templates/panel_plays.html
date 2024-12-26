@@ -101,8 +101,8 @@
             <div class="row mb-2">
               <div class="col-6">
                 <label>Game ID</label>
-                <select name="game_id" id="addPlay_game_id" class="form-select">
-                  <option disabled selected>Select a Game</option>
+                <select name="game_id" id="addPlay_game_id" class="form-select" required>
+                  <option disabled selected value="">Select a Game</option>
                   {% for match in matches %}
                     <option value="{{ match['game_id'] }}">{{ match['game_id'] }}</option>
                   {% endfor %}
@@ -110,8 +110,8 @@
               </div>
               <div class="col-6">
                 <label>Team</label>
-                <select name="team_id" id="addPlay_team_id" class="form-select">
-                  <option disabled selected>Select a Team</option>
+                <select name="team_id" id="addPlay_team_id" class="form-select" required>
+                  <option disabled selected value="">Select a Team</option>
                 </select>
               </div>
             </div>
@@ -119,14 +119,14 @@
             <div class="row mb-2">
               <div class="col-6">
                 <label>Player</label>
-                <select name="player_id" id="addPlay_player_id" class="form-select">
-                  <option disabled selected>Select a Player</option>
+                <select name="player_id" id="addPlay_player_id" class="form-select" required>
+                  <option disabled selected value="">Select a Player</option>
                 </select>
               </div>
               <div class="col-6">
                 <label>Quarter</label>
-                <select name="quarter" id="addPlay_quarter" class="form-select">
-                  <option disabled selected>Select Quarter</option>
+                <select name="quarter" id="addPlay_quarter" class="form-select" required>
+                  <option disabled selected value="">Select Quarter</option>
                   <option value="q1">1st Quarter</option>
                   <option value="q2">2nd Quarter</option>
                   <option value="q3">3rd Quarter</option>
@@ -192,8 +192,8 @@
             <div class="row mb-2">
               <div class="col-6">
                 <label>Game ID</label>
-                <select name="game_id" id="updatePlay_game_id" class="form-select">
-                  <option disabled selected>Select a Match</option>
+                <select name="game_id" id="updatePlay_game_id" class="form-select" required>
+                  <option disabled selected value="">Select a Match</option>
                   {% for match in matches %}
                     <option value="{{ match['game_id'] }}">{{ match['game_id'] }}</option>
                   {% endfor %}
@@ -201,8 +201,8 @@
               </div>
               <div class="col-6">
                 <label>Team</label>
-                <select name="team_id" id="updatePlay_team_id" class="form-select">
-                  <option disabled selected>Select a Team</option>
+                <select name="team_id" id="updatePlay_team_id" class="form-select" required>
+                  <option disabled selected value="">Select a Team</option>
                 </select>
               </div>
             </div>
@@ -210,14 +210,14 @@
             <div class="row mb-2">
               <div class="col-6">
                 <label>Player</label>
-                <select name="player_id" id="updatePlay_player_id" class="form-select">
-                  <option disabled selected>Select a Player</option>
+                <select name="player_id" id="updatePlay_player_id" class="form-select" required>
+                  <option disabled selected value="">Select a Player</option>
                 </select>
               </div>
               <div class="col-6">
                 <label>Quarter</label>
-                <select name="quarter" id="updatePlay_quarter" class="form-select">
-                  <option disabled selected>Select Quarter</option>
+                <select name="quarter" id="updatePlay_quarter" class="form-select" required>
+                  <option disabled selected value="">Select Quarter</option>
                   <option value="q1">1st Quarter</option>
                   <option value="q2">2nd Quarter</option>
                   <option value="q3">3rd Quarter</option>
