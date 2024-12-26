@@ -33,6 +33,7 @@ def create_app():
     app.add_url_rule("/panel", view_func=panel.panel_users_page)
     app.add_url_rule("/panel/get_counts", view_func=panel.get_counts)
     app.add_url_rule("/panel/get_playing_teams/<string:game_id>", view_func=panel.get_playing_teams,methods=['GET'])
+    app.add_url_rule("/panel/get_plays_by_game/<string:game_id>", view_func=panel.get_plays_by_game,methods=['GET'])
     app.add_url_rule("/panel/get_teams_by_match/<string:game_id>", view_func=panel.get_teams_by_match)
     app.add_url_rule("/panel/get_players_by_team_season/<string:team_id>/<string:season_code>", view_func=panel.get_players_by_team_season)
     app.add_url_rule("/panel/users", view_func=panel.panel_users_page)
@@ -71,7 +72,8 @@ def create_app():
     app.add_url_rule("/panel/comparisons/add", view_func=panel.panel_comparisons_add, methods=['POST'])
     app.add_url_rule("/panel/comparisons/update", view_func=panel.panel_comparisons_update, methods=['POST'])
     app.add_url_rule("/panel/comparisons/delete", view_func=panel.panel_comparisons_delete, methods=['POST'])
-
+    app.add_url_rule("/panel/points", view_func=panel.panel_points_page)
+    app.add_url_rule("/panel/points/add", view_func=panel.panel_points_add, methods=['POST'])
 
     @app.before_request
     def refresh_before_request():

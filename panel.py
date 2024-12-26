@@ -1026,3 +1026,101 @@ def panel_player_seasons_delete(player_id):
 
     flash("Player season deleted successfully!", "success")
     return redirect(url_for("panel_player_seasons_page", player_id=player_id))
+
+#Points Panel
+@admin_required
+def panel_points_page():
+    page_limit = 25
+    page_num = int(request.args.get('page', 1))
+    page_button = 4
+
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("SELECT COUNT(*) as total FROM euroleague_points")
+    entry_count = cursor.fetchone()['total']
+    page_count = (entry_count + page_limit - 1) // page_limit
+    cursor.execute("""
+        SELECT *
+        FROM euroleague_points AS points
+        LEFT JOIN euroleague_play_by_play AS plays ON points.game_play_id = plays.game_play_id
+        LEFT JOIN euroleague_player_names AS player_names ON plays.player_id = player_names.player_id
+        ORDER BY points.primary_point_id   
+        LIMIT %s OFFSET %s;
+    """,(page_limit, (page_num-1) * page_limit ))
+    points = cursor.fetchall()
+
+    for point in points:
+        point['data_attributes'] = ' '.join([f'data-{key}={urllib.parse.quote(str(value))}' for key, value in point.items()])
+
+    cursor.execute("""
+        SELECT game_id
+        FROM euroleague_header
+    """)
+    games = cursor.fetchall()
+    cursor.close()
+    connection.close()
+
+    return render_template("panel_points.html", 
+        points=points,
+        games=games, 
+        page_num=page_num,
+        page_count=page_count,
+        end_page = min(page_num + page_button, page_count))
+
+
+@admin_required
+def get_plays_by_game(game_id):
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    
+    cursor.execute("""
+        SELECT game_id, game_play_id
+        FROM euroleague_play_by_play
+        WHERE game_id = %s
+    """, (game_id,))
+    
+    plays_data = cursor.fetchall()
+    cursor.close()
+    connection.close()
+    
+    return jsonify({"game_plays": plays_data or []})
+
+
+@admin_required
+def panel_points_add():
+    form_data = request.form.to_dict()
+    game_play_id = request.form['game_play_id']
+
+    for key, value in form_data.items():
+        if value == "" or value == "None":
+            form_data[key] = None
+
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+
+    cursor.execute("SELECT * FROM euroleague_points WHERE game_play_id = %s", (game_play_id,))
+    points_existing = cursor.fetchone()
+    if points_existing:
+        flash("This point already exists!", "danger")
+        cursor.close()
+        connection.close()
+        return redirect(url_for('panel_points_page'))
+    
+    cursor.execute("DESCRIBE euroleague_points")
+    columns = [column['Field'] for column in cursor.fetchall()]
+    filtered_data = {key: form_data[key] for key in form_data if key in columns}
+    
+    value_placeholders = ', '.join([f'%({key})s' for key in filtered_data])
+    columns_str = ', '.join(filtered_data.keys())
+    
+    sql = f"""INSERT INTO euroleague_points ({columns_str}) VALUES ({value_placeholders})"""
+    cursor.execute(sql, filtered_data)
+    connection.commit()
+    connection.close()
+    cursor.close()
+
+    flash("Comparison added successfully!", "success")
+    return redirect(url_for('panel_points_page'))
+    
+
+   
