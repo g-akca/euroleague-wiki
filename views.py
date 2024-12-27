@@ -91,9 +91,6 @@ def player_details_page(player_id, season_code=None):
 
     return render_template("player_details.html", player_name=player_name, all_seasons_data=all_seasons_data, specific_season_data=specific_season_data)
 
-
-
-
 def teams_page():
     sort_by = request.args.get('sort_by', 'team_id asc')
     page_limit = 25

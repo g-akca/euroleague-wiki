@@ -9,9 +9,13 @@
   </div>
   <div class="d-flex justify-content-around align-items-center mb-5">
     {% if match['team_id_a'] == session['team_supported'] %}
-    <h1 class="supported-team-hl fw-bold text-center" style="width: 25%;">⭐ {{ match['team_a'] }}</h1>
+    <h1 class="supported-team-hl fw-bold text-center" style="width: 25%;">
+      <a class="text-decoration-none text-light" href="/team/{{ match['team_id_a'] }}/{{ match['season_code'] }}">⭐ {{ match['team_a'] }}</a>
+    </h1>
     {% else %}
-    <h1 class="text-center" style="width: 25%;">{{ match['team_a'] }}</h1>
+    <h1 class="text-center" style="width: 25%;">
+      <a class="text-decoration-none text-black" href="/team/{{ match['team_id_a'] }}/{{ match['season_code'] }}">{{ match['team_a'] }}</a>
+    </h1>
     {% endif %}
     <div class="d-flex flex-column justify-content-center align-items-center">
       <div class="d-flex text-center flex-grow-1">
@@ -28,9 +32,13 @@
       <span class="badge bg-primary">Round {{ match['round'] }} · {{ match['phase'] }}</span>
     </div>
     {% if match['team_id_b'] == session['team_supported'] %}
-    <h1 class="supported-team-hl fw-bold text-center" style="width: 25%;">{{ match['team_b'] }} ⭐</h1>
+    <h1 class="supported-team-hl fw-bold text-center" style="width: 25%;">
+      <a class="text-decoration-none text-light" href="/team/{{ match['team_id_b'] }}/{{ match['season_code'] }}">{{ match['team_b'] }} ⭐</a>
+    </h1>
     {% else %}
-    <h1 class="text-center" style="width: 25%;">{{ match['team_b'] }}</h1>
+    <h1 class="text-center" style="width: 25%;">
+      <a class="text-decoration-none text-black" href="/team/{{ match['team_id_b'] }}/{{ match['season_code'] }}">{{ match['team_b'] }}</a>
+    </h1>
     {% endif %}
   </div>
 
@@ -526,7 +534,7 @@
               {% if bx['player_id'] == bx['team_id'] and bx['team_id'] == match['team_id_a'] %}
               <tr class="table-primary table-group-divider">
                 <td></td>
-                <td class="fw-bold player-column">{{ bx['team_name'] }}</td>
+                <td class="fw-bold player-column"><a class="nav-link" href="/team/{{ bx['team_id'] }}/{{ match['season_code'] }}">{{ bx['team_name'] }}</a></td>
                 <td></td>
                 <td>{{ bx['minutes'] }}</td>
                 <td>{{ bx['points'] }}</td>
@@ -552,7 +560,7 @@
               {% elif bx['team_id'] == match['team_id_a'] %}
               <tr>
                 <td>{{ bx['dorsal'] }}</td>
-                <td class="player-column">{{ bx['player_name'] }}</td>
+                <td class="player-column"><a class="nav-link" href="/player/{{ bx['player_id'] }}">{{ bx['player_name'] }}</a></td>
                 <td>
                   {% if bx['is_starter'] == 1 %}
                     Yes
@@ -621,7 +629,7 @@
               {% if bx['player_id'] == bx['team_id'] and bx['team_id'] == match['team_id_b'] %}
               <tr class="table-danger table-group-divider">
                 <td></td>
-                <td class="fw-bold player-column">{{ bx['team_name'] }}</td>
+                <td class="fw-bold player-column"><a class="nav-link" href="/team/{{ bx['team_id'] }}/{{ match['season_code'] }}">{{ bx['team_name'] }}</a></td>
                 <td></td>
                 <td>{{ bx['minutes'] }}</td>
                 <td>{{ bx['points'] }}</td>
@@ -647,7 +655,7 @@
               {% elif bx['team_id'] == match['team_id_b'] %}
               <tr>
                 <td>{{ bx['dorsal'] }}</td>
-                <td class="player-column">{{ bx['player_name'] }}</td>
+                <td class="player-column"><a class="nav-link" href="/player/{{ bx['player_id'] }}">{{ bx['player_name'] }}</a></td>
                 <td>
                   {% if bx['is_starter'] == 1 %}
                     Yes
@@ -689,18 +697,18 @@
         {% if play['team_id'] == match['team_id_a'] %}
           <div class="d-flex justify-content-around align-items-center mb-3">
             <div class="card shadow-sm" style="width: 25%;">
-              <h6 class="card-header fw-bold text-bg-primary">{{ play['team_name'] }}</h6>
+              <h6 class="card-header fw-bold text-bg-primary"><a class="text-decoration-none text-light" href="/team/{{ play['team_id'] }}/{{ match['season_code'] }}">{{ play['team_name'] }}</a></h6>
               {% if play['points'] and play['points'] > 0 %}
-                <div class="card-body text-bg-warning">
-                  <h6 class="card-subtitle mb-2 text-body-secondary"><strong>{{ play['player_name'] }}</strong> · Play: {{ play['player_total_plays'] }}</h6>
-                  <p class="card-text">{{ play['play_info'] }}</p>
-                </div>
+              <div class="card-body text-bg-warning">
               {% else %}
-                <div class="card-body">
-                  <h6 class="card-subtitle mb-2 text-body-secondary"><strong>{{ play['player_name'] }}</strong> · Play: {{ play['player_total_plays'] }}</h6>
-                  <p class="card-text">{{ play['play_info'] }}</p>
-                </div>
+              <div class="card-body">
               {% endif %}
+                <h6 class="card-subtitle mb-2 text-body-secondary">
+                  <strong><a class="text-decoration-none text-primary" href="/player/{{ play['player_id'] }}">{{ play['player_name'] }}</a></strong> 
+                  {% if play['player_name'] != 'TECHNICAL' %} · Play: {{ play['player_total_plays'] }} {% endif %}
+                </h6>
+                <p class="card-text">{{ play['play_info'] }}</p>
+              </div>
             </div>
             <div class="flex-grow-1 d-flex align-items-center">
               <hr class="w-100 my-0">
@@ -732,18 +740,18 @@
               <hr class="w-100 my-0">
             </div>
             <div class="card shadow-sm" style="width: 25%;">
-              <h6 class="card-header fw-bold text-bg-danger">{{ play['team_name'] }}</h6>
+              <h6 class="card-header fw-bold text-bg-danger"><a class="text-decoration-none text-light" href="/team/{{ play['team_id'] }}/{{ match['season_code'] }}">{{ play['team_name'] }}</a></h6>
               {% if play['points'] and play['points'] > 0 %}
-                <div class="card-body text-bg-warning">
-                  <h6 class="card-subtitle mb-2 text-body-secondary"><strong>{{ play['player_name'] }}</strong> · Play: {{ play['player_total_plays'] }}</h6>
-                  <p class="card-text">{{ play['play_info'] }}</p>
-                </div>
+              <div class="card-body text-bg-warning">
               {% else %}
-                <div class="card-body">
-                  <h6 class="card-subtitle mb-2 text-body-secondary"><strong>{{ play['player_name'] }}</strong> · Play: {{ play['player_total_plays'] }}</h6>
-                  <p class="card-text">{{ play['play_info'] }}</p>
-                </div>
+              <div class="card-body">
               {% endif %}
+                <h6 class="card-subtitle mb-2 text-body-secondary">
+                  <strong><a class="text-decoration-none text-danger" href="/player/{{ play['player_id'] }}">{{ play['player_name'] }}</a></strong> 
+                  {% if play['player_name'] != 'TECHNICAL' %} · Play: {{ play['player_total_plays'] }} {% endif %}
+                </h6>
+                <p class="card-text">{{ play['play_info'] }}</p>
+              </div>
             </div>
           </div>
         {% else %}

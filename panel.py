@@ -74,7 +74,7 @@ def panel_users_page():
     cursor.execute("SELECT COUNT(*) as total FROM users")
     entry_count = cursor.fetchone()['total']
     page_count = (entry_count + page_limit - 1) // page_limit
-    cursor.execute("SELECT *, CASE WHEN role = 'U' THEN 'User' WHEN role = 'A' THEN 'Admin' ELSE 'Unknown' END AS role_detailed FROM users LIMIT %s OFFSET %s", (page_limit, (page_num-1) * page_limit ))
+    cursor.execute("SELECT *, CASE WHEN role = 'U' THEN 'User' WHEN role = 'A' THEN 'Admin' ELSE 'Unknown' END AS role_detailed FROM users LEFT JOIN euroleague_team_names ON users.team_supported = euroleague_team_names.team_id LIMIT %s OFFSET %s", (page_limit, (page_num-1) * page_limit ))
     users = cursor.fetchall()
 
     for user in users:

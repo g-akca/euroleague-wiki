@@ -41,7 +41,7 @@
           <td>{{ user['email'] }}</td>
           <td>{{ user['role_detailed'] }}</td>
           <td>{{ user['register_time'] }}</td>
-          <td>{{ user['team_supported'] }}</td>
+          <td>{{ user['team_name'] }}</td>
           <td><button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#updateUserModal" {{ user['data_attributes'] }}>Update</button></td>
           <td><button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteUserModal" data-userid="{{ user['user_id'] }}" data-username="{{ user['username'] }}">Delete</button></td>
         </tr>
