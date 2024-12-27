@@ -7,30 +7,35 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form action="{{ url_for('update_account') }}" method="post" id="settingsForm">
+        <form action="{{ url_for('update_account') }}" method="post" id="settingsForm" enctype="multipart/form-data">
           <div class="mb-2">
-              <label>New Username</label>
-              <input type="text" class="form-control" name="username" id="username" value="{{ session['username'] }}" placeholder="Enter username" required />
+            <label>New Username</label>
+            <input type="text" class="form-control" name="username" id="username" value="{{ session['username'] }}" placeholder="Enter username" required />
           </div>
 
           <div class="mb-2">
-              <label>New Email Address</label>
-              <input type="email" class="form-control" name="email" id="email" value="{{ session['email'] }}" placeholder="example@email.com" required />
+            <label>New Email Address</label>
+            <input type="email" class="form-control" name="email" id="email" value="{{ session['email'] }}" placeholder="example@email.com" required />
           </div>
 
           <div class="mb-2">
-              <label>Current Password</label>
-              <input type="password" class="form-control" name="password" id="password" placeholder="Enter current password" required />
+            <label>Current Password</label>
+            <input type="password" class="form-control" name="password" id="password" placeholder="Enter current password" required />
           </div>
 
           <div class="mb-2">
-              <label>New Password (Optional, 4 to 20 characters)</label>
-              <input type="password" class="form-control" name="passwordNew" id="passwordNew" placeholder="Enter new password" pattern=".{4,20}" />
+            <label>New Password (Optional, 4 to 20 characters)</label>
+            <input type="password" class="form-control" name="passwordNew" id="passwordNew" placeholder="Enter new password" pattern=".{4,20}" />
+          </div>
+
+          <div class="mb-2">
+            <label>Supported Team (Optional)</label>
+            <select name="team_supported" id="team_supported" class="form-select"></select>
           </div>
 
           <div>
-              <label>Do you support a team? (Optional)</label>
-              <select name="team_supported" id="team_supported" class="form-select"></select>
+            <label>User Image (Optional)</label>
+            <input type="file" class="form-control" name="user_image" id="user_image"></input>
           </div>
         </form>
       </div>

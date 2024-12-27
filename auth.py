@@ -4,6 +4,7 @@ from markupsafe import Markup
 from functools import wraps
 from datetime import timedelta
 import bcrypt
+import base64
 
 def admin_required(f):
     @wraps(f)
@@ -30,6 +31,21 @@ def refresh_session_data():
             session['team_supported'] = user['team_supported']
         else:
             session.clear()
+
+def get_user_image():
+    if session.get('loggedin') == True:
+        connection = get_db_connection()
+        cursor = connection.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM users WHERE user_id = %s", (session['user_id'], ))
+        user = cursor.fetchone()
+        cursor.close()
+        connection.close()
+
+        if user and user['user_image']:
+            user_image = base64.b64encode(user['user_image']).decode('utf-8')
+            return jsonify({"image": user_image})
+        else:
+            return jsonify({"image": None})
 
 def login():
     if request.method == 'POST':
@@ -165,6 +181,13 @@ def update_account():
     newEmail = request.form['email']
     currentPw = request.form['password']
     newPw = request.form['passwordNew']
+    user_image = request.files['user_image']
+
+    if user_image == "":
+        user_image_blob = None
+    else:
+        user_image_blob = user_image.read()
+    
     team_supported = request.form['team_supported']
 
     if team_supported == "":
@@ -183,9 +206,9 @@ def update_account():
 
         if newPw != '':
             hashed_newPw = bcrypt.hashpw(newPw.encode('UTF-8'), bcrypt.gensalt())
-            cursor.execute('UPDATE users SET username = %s, email = %s, hashed_password = %s, team_supported = %s WHERE user_id = %s', (newUsername, newEmail, hashed_newPw, team_supported, user_id))
+            cursor.execute('UPDATE users SET username = %s, email = %s, hashed_password = %s, team_supported = %s, user_image = %s WHERE user_id = %s', (newUsername, newEmail, hashed_newPw, team_supported, user_image_blob, user_id))
         else:
-            cursor.execute('UPDATE users SET username = %s, email = %s, team_supported = %s WHERE user_id = %s', (newUsername, newEmail, team_supported, user_id))
+            cursor.execute('UPDATE users SET username = %s, email = %s, team_supported = %s, user_image = %s WHERE user_id = %s', (newUsername, newEmail, team_supported, user_image_blob, user_id))
 
         connection.commit()
         cursor.close()

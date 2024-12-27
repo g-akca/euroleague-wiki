@@ -245,7 +245,8 @@ CREATE TABLE `euro`.`euroleague_box_score` (
 	valuation               INTEGER  NOT NULL,
 	plus_minus              INTEGER  NOT NULL,
 	PRIMARY KEY (game_player_id),
-	FOREIGN KEY (game_id) REFERENCES euroleague_header(game_id) ON DELETE CASCADE ON UPDATE CASCADE
+	FOREIGN KEY (game_id) REFERENCES euroleague_header(game_id) ON DELETE CASCADE ON UPDATE CASCADE,
+	FOREIGN KEY (team_id) REFERENCES euroleague_team_names(team_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE `euro`.`euroleague_comparison` (
@@ -304,6 +305,7 @@ CREATE TABLE `euro`.`users` (
 	role            CHAR(1) DEFAULT 'U',
 	register_time   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	team_supported  VARCHAR(10),
+	user_image		MEDIUMBLOB,
 	PRIMARY KEY (user_id),
 	FOREIGN KEY (team_supported) REFERENCES euroleague_team_names(team_id) ON DELETE CASCADE ON UPDATE CASCADE
 );

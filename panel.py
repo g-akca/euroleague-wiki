@@ -3,6 +3,7 @@ from db import get_db_connection
 from auth import admin_required
 import bcrypt
 import urllib.parse
+import base64
 
 # Needed for panel sidemenu
 @admin_required
@@ -79,6 +80,9 @@ def panel_users_page():
 
     for user in users:
         user['data_attributes'] = ' '.join([f'data-{key}={urllib.parse.quote(str(value))}' for key, value in user.items()])
+        if user and user['user_image']:
+            user_image = base64.b64encode(user['user_image']).decode('utf-8')
+            user['user_image'] = user_image
 
     cursor.execute("SELECT * FROM euroleague_team_names ORDER BY team_name ASC")
     team_names = cursor.fetchall()
@@ -104,9 +108,16 @@ def panel_users_add():
     if team_supported == "":
         team_supported = None
 
+    user_image = request.files['user_image']
+
+    if user_image == "":
+        user_image_blob = None
+    else:
+        user_image_blob = user_image.read()
+
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
-    cursor.execute("INSERT INTO users (username, email, hashed_password, role, team_supported) VALUES (%s, %s, %s, %s, %s)", (username, email, hashed_pw, role, team_supported))
+    cursor.execute("INSERT INTO users (username, email, hashed_password, role, team_supported, user_image) VALUES (%s, %s, %s, %s, %s, %s)", (username, email, hashed_pw, role, team_supported, user_image_blob))
     connection.commit()
     cursor.close()
     connection.close()
@@ -125,14 +136,21 @@ def panel_users_update():
 
     if team_supported == "":
         team_supported = None
+    
+    user_image = request.files['user_image']
+
+    if user_image == "":
+        user_image_blob = None
+    else:
+        user_image_blob = user_image.read()
 
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
     if password != "":
         hashed_pw = bcrypt.hashpw(password.encode('UTF-8'), bcrypt.gensalt())
-        cursor.execute("UPDATE users SET username = %s, email = %s, hashed_password = %s, role = %s, team_supported = %s WHERE user_id = %s", (username, email, hashed_pw, role, team_supported, user_id))
+        cursor.execute("UPDATE users SET username = %s, email = %s, hashed_password = %s, role = %s, team_supported = %s, user_image = %s WHERE user_id = %s", (username, email, hashed_pw, role, team_supported, user_image_blob, user_id))
     else:
-        cursor.execute("UPDATE users SET username = %s, email = %s, role = %s, team_supported = %s WHERE user_id = %s", (username, email, role, team_supported, user_id))
+        cursor.execute("UPDATE users SET username = %s, email = %s, role = %s, team_supported = %s, user_image = %s WHERE user_id = %s", (username, email, role, team_supported, user_image_blob, user_id))
 
     connection.commit()
     cursor.close()
@@ -692,7 +710,7 @@ def panel_plays_delete():
     flash("Play deleted successfully!", "success")
     return redirect(url_for('panel_plays_page'))
 
-#Comparisons Panel
+# Comparisons Panel
 @admin_required
 def panel_comparisons_page():
     page_limit = 25
@@ -852,6 +870,7 @@ def panel_comparisons_delete():
     flash("Comparison deleted successfully!", "success")
     return redirect(url_for('panel_comparisons_page'))
 
+# Players Panel
 @admin_required
 def panel_players_page():
     page_limit = 25
@@ -919,6 +938,7 @@ def panel_players_delete():
     flash("Player deleted successfully!", "success")
     return redirect(url_for('panel_players_page'))
 
+# Player Seasons Panel
 @admin_required
 def panel_player_seasons_page(player_id):
     page_limit = 25
@@ -1027,7 +1047,7 @@ def panel_player_seasons_delete(player_id):
     flash("Player season deleted successfully!", "success")
     return redirect(url_for("panel_player_seasons_page", player_id=player_id))
 
-#Points Panel
+# Points Panel
 @admin_required
 def panel_points_page():
     page_limit = 25
@@ -1067,7 +1087,6 @@ def panel_points_page():
         page_count=page_count,
         end_page = min(page_num + page_button, page_count))
 
-
 @admin_required
 def get_plays_by_game(game_id):
     connection = get_db_connection()
@@ -1084,7 +1103,6 @@ def get_plays_by_game(game_id):
     connection.close()
     
     return jsonify({"game_plays": plays_data or []})
-
 
 @admin_required
 def panel_points_add():
@@ -1206,5 +1224,3 @@ def panel_points_delete():
     flash("Point deleted successfully!", "success")
     return redirect(url_for('panel_points_page'))
     
-
-   

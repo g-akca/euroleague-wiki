@@ -8,6 +8,9 @@
     5. Modify some wrong data.
     6. Output the finalized tables.
 
+	If you want to create the finalized versions of the tables, please take a look at the create_db_final.sql file
+	that uses the final CSVs (which were obtained from here and uploaded to Google Drive).
+
     Initial CSV Files: https://drive.google.com/drive/folders/1cwxjZTqi8oKMayqhWs41CYwQMZiY_XJp
     Second Edition CSV Files: https://drive.google.com/drive/folders/1_8eVw5Yf7VwxuABZ3lNeoWhVFbj1GIlA
 */
@@ -768,6 +771,7 @@ CREATE TABLE `euro`.`users` (
 	role            CHAR(1) DEFAULT 'U',
 	register_time   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	team_supported  VARCHAR(10),
+	user_image		MEDIUMBLOB,
 	PRIMARY KEY (user_id),
 	FOREIGN KEY (team_supported) REFERENCES euroleague_team_names(team_id)
 );

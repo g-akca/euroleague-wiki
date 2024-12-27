@@ -10,7 +10,7 @@
   <div class="d-flex justify-content-around align-items-center mb-5">
     {% if match['team_id_a'] == session['team_supported'] %}
     <h1 class="supported-team-hl fw-bold text-center" style="width: 25%;">
-      <a class="text-decoration-none text-light" href="/team/{{ match['team_id_a'] }}/{{ match['season_code'] }}">⭐ {{ match['team_a'] }}</a>
+      <a class="text-decoration-none text-light" href="/team/{{ match['team_id_a'] }}/{{ match['season_code'] }}">{{ match['team_a'] }}</a>
     </h1>
     {% else %}
     <h1 class="text-center" style="width: 25%;">
@@ -33,7 +33,7 @@
     </div>
     {% if match['team_id_b'] == session['team_supported'] %}
     <h1 class="supported-team-hl fw-bold text-center" style="width: 25%;">
-      <a class="text-decoration-none text-light" href="/team/{{ match['team_id_b'] }}/{{ match['season_code'] }}">{{ match['team_b'] }} ⭐</a>
+      <a class="text-decoration-none text-light" href="/team/{{ match['team_id_b'] }}/{{ match['season_code'] }}">{{ match['team_b'] }}</a>
     </h1>
     {% else %}
     <h1 class="text-center" style="width: 25%;">

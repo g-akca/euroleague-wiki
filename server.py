@@ -14,6 +14,7 @@ def create_app():
     app.add_url_rule("/logout", view_func=auth.logout)
     app.add_url_rule("/update_account", view_func=auth.update_account, methods=['POST'])
     app.add_url_rule("/settings/get_teams", view_func=auth.get_teams)
+    app.add_url_rule("/get_user_image", view_func=auth.get_user_image)
     app.add_url_rule("/403", view_func=auth.restricted)
     app.add_url_rule("/404", view_func=auth.not_found)
 

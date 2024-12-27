@@ -21,7 +21,9 @@
       
           {% if session.get('loggedin') == True %}
           <div class="dropdown">
-            <button type="button" class="btn btn-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            <button type="button" class="btn btn-light dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-person-circle avatar-placeholder me-2"></i>
+              <img alt="User Image" class="rounded-circle me-2 user-image">
               Hey there, {{ session['username'] }}!
             </button>
             <ul class="dropdown-menu dropdown-menu-end w-100">
@@ -61,5 +63,25 @@
     </footer>
 
     {% block scripts %}{% endblock %}
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        fetch('/get_user_image')
+          .then(response => response.json())
+          .then(data => {
+            const user_img = document.querySelector('.user-image');
+            const placeholder = document.querySelector('.avatar-placeholder');
+
+            if (data.image) {
+              user_img.src = `data:image/jpeg;base64,${data.image}`;
+              user_img.style.display = 'inline';
+              placeholder.style.display = 'none';
+            }
+            else {
+              user_img.style.display = 'none'
+              placeholder.style.display = 'inline'
+            }
+          })
+      })
+    </script>
   </body>
 </html>
