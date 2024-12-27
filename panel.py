@@ -827,7 +827,7 @@ def panel_comparisons_update():
     filtered_data = {key: form_data[key] for key in form_data if key in columns}
     
     set_str = ', '.join([f"{key} = %({key})s" for key in filtered_data])
-    sql = f"""UPDATE euroleague_box_score SET {set_str} WHERE game_id = %(game_id)s"""
+    sql = f"""UPDATE euroleague_comparison SET {set_str} WHERE game_id = %(game_id)s"""
 
     cursor.execute(sql, filtered_data)
     connection.commit()
@@ -1090,6 +1090,20 @@ def get_plays_by_game(game_id):
 def panel_points_add():
     form_data = request.form.to_dict()
     game_play_id = request.form['game_play_id']
+    action = form_data.get('action')
+
+    points_map = {
+        "Missed Two Pointer": '0',
+        "Two Pointer": '2',
+        "Missed Three Pointer": '0',
+        "Three Pointer": '3',
+        "Free Throw In": '1',
+        "Missed Layup": '0',
+        "Layup Made": '2',
+        "Dunk": '2',
+    }
+
+    form_data['points'] = points_map.get(action, 0)
 
     for key, value in form_data.items():
         if value == "" or value == "None":
@@ -1119,7 +1133,77 @@ def panel_points_add():
     connection.close()
     cursor.close()
 
-    flash("Comparison added successfully!", "success")
+    flash("Points added successfully!", "success")
+    return redirect(url_for('panel_points_page'))
+
+@admin_required
+def panel_points_update():
+    form_data = request.form.to_dict()
+    game_play_id = request.form['game_play_id']
+    action = form_data.get('action')
+
+    points_map = {
+        "Missed Two Pointer": '0',
+        "Two Pointer": '2',
+        "Missed Three Pointer": '0',
+        "Three Pointer": '3',
+        "Free Throw In": '1',
+        "Missed Layup": '0',
+        "Layup Made": '2',
+        "Dunk": '2',
+    }
+
+    form_data['points'] = points_map.get(action, 0)
+
+    for key, value in form_data.items():
+        if value == "" or value == "None":
+            form_data[key] = None
+
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM euroleague_points WHERE game_play_id = %s", (game_play_id,))
+    original_data = cursor.fetchone()
+
+    if not original_data:
+        flash('Point record not found.', 'danger')
+        return redirect(url_for('panel_points_page'))
+    
+    has_changed = any(str(original_data[key]) != form_data[key] for key in original_data if key in form_data)
+    if not has_changed:
+        flash('No changes were made. Update canceled.', 'warning')
+        return redirect(url_for('panel_points_page'))
+
+    form_data['fastbreak'] = form_data.get('fastbreak', None)
+    form_data['second_chance'] = form_data.get('second_chance', None)
+    form_data['points_off_turnover'] = form_data.get('points_off_turnover', None)
+
+    cursor.execute("DESCRIBE euroleague_points")
+    columns = [column['Field'] for column in cursor.fetchall()]
+    filtered_data = {key: form_data[key] for key in form_data if key in columns}
+    
+    set_str = ', '.join([f"{key} = %({key})s" for key in filtered_data])
+    sql = f"""UPDATE euroleague_points SET {set_str} WHERE game_play_id = %(game_play_id)s"""
+
+    cursor.execute(sql, filtered_data)
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+    flash("Point updated successfully!", "success")
+    return redirect(url_for('panel_points_page'))
+
+@admin_required
+def panel_points_delete():
+    game_play_id = request.form['game_play_id']
+
+    connection = get_db_connection()
+    cursor = connection.cursor(dictionary=True)
+    cursor.execute("DELETE FROM euroleague_points WHERE game_play_id = %s", (game_play_id, ))
+    connection.commit()
+    cursor.close()
+    connection.close()
+
+    flash("Point deleted successfully!", "success")
     return redirect(url_for('panel_points_page'))
     
 

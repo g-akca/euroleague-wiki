@@ -74,6 +74,8 @@ def create_app():
     app.add_url_rule("/panel/comparisons/delete", view_func=panel.panel_comparisons_delete, methods=['POST'])
     app.add_url_rule("/panel/points", view_func=panel.panel_points_page)
     app.add_url_rule("/panel/points/add", view_func=panel.panel_points_add, methods=['POST'])
+    app.add_url_rule("/panel/points/update", view_func=panel.panel_points_update, methods=['POST'])
+    app.add_url_rule("/panel/points/delete", view_func=panel.panel_points_delete, methods=['POST'])
 
     @app.before_request
     def refresh_before_request():
