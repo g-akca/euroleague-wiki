@@ -66,7 +66,7 @@ def players_page():
         player_stats=player_stats
     )
 
-def player_details_page(player_id, season_code=None):
+def player_details_page(player_id):
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
 
@@ -239,10 +239,12 @@ def match_details_page(game_id):
                     WHERE h.game_id = %s
                     GROUP BY h.game_id""", (game_id, ))
     match = cursor.fetchone()
+
     cursor.execute("SELECT *, euroleague_box_score.player_id AS player_id, euroleague_box_score.team_id AS team_id, CAST(euroleague_box_score.dorsal AS UNSIGNED) AS dorsal_int FROM euroleague_box_score LEFT JOIN euroleague_player_names ON euroleague_box_score.player_id = euroleague_player_names.player_id LEFT JOIN euroleague_team_names ON euroleague_box_score.team_id = euroleague_team_names.team_id WHERE game_id = %s ORDER BY euroleague_box_score.team_id ASC, dorsal_int ASC", (game_id, ))
     box_score = cursor.fetchall()
     cursor.execute("SELECT * FROM euroleague_comparison WHERE game_id = %s", (game_id, ))
     comparison = cursor.fetchone()
+
     cursor.execute("""SELECT *, 
                         tn.team_name AS team_name, 
                         CASE 
