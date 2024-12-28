@@ -29,23 +29,42 @@ def players_page():
     else:
         where = ""
 
-    cursor.execute(query_returner_per_page(sort_by, "euroleague_player_names", page_limit, (page_num - 1) * page_limit, where))
-    player_names = cursor.fetchall()
+    offset = (page_num - 1) * page_limit
+    cursor.execute(f"""
+    SELECT 
+    a.player_id,
+    b.player_name,
+    SUM(a.games_played) AS total_games_played,
+    SUM(a.games_started) AS total_games_started,
+    ROUND(SUM(a.points) / NULLIF(SUM(a.games_played), 0), 2) AS points_per_game,
+    SUM(a.points) AS total_points,
+    ROUND(SUM(a.total_rebounds) / NULLIF(SUM(a.games_played), 0), 2) AS rebounds_per_game,
+    SUM(a.total_rebounds) AS total_rebounds,
+    ROUND(SUM(a.assists) / NULLIF(SUM(a.games_played), 0), 2) AS assists_per_game,
+    SUM(a.assists) AS total_assists,
+    SUM(a.steals) AS total_steals,
+    ROUND(SUM(a.steals) / NULLIF(SUM(a.games_played), 0), 2) AS steals_per_game,
+    ROUND(SUM(a.blocks_favour) / NULLIF(SUM(a.games_played), 0), 2) AS blocks_per_game,
+    SUM(a.blocks_favour) AS total_blocks
+    FROM euro.euroleague_players a
+    JOIN euro.euroleague_player_names b ON a.player_id = b.player_id
+    {where}
+    GROUP BY a.player_id, b.player_name
+    ORDER BY {sort_by} LIMIT {page_limit} OFFSET {offset};;
+    """)
+    player_stats=cursor.fetchall()
+
     cursor.close()
     connection.close()
 
     return render_template(
         "players.html",
-        player_names=player_names,
         sort_by=sort_by,
         page_num=page_num,
         page_count=page_count,
-        end_page=min(page_num + page_button, page_count)
+        end_page=min(page_num + page_button, page_count),
+        player_stats=player_stats
     )
-
-
-def query_returner_per_page(x, y, z, u, s):
-    return f"SELECT * FROM {y} {s} ORDER BY {x} LIMIT {z} OFFSET {u};"
 
 def player_details_page(player_id, season_code=None):
     connection = get_db_connection()
@@ -109,7 +128,9 @@ def teams_page():
     cursor.execute("SELECT COUNT(*) as total FROM euroleague_team_names")
     entry_count = cursor.fetchone()['total']
     page_count = (entry_count + page_limit - 1) // page_limit
-    cursor.execute(query_returner_per_page(sort_by, "euroleague_team_names", page_limit, (page_num-1) * page_limit, where))
+    offset = (page_num - 1) * page_limit
+    query = f"SELECT * FROM euroleague_team_names {where} ORDER BY {sort_by} LIMIT {page_limit} OFFSET {offset};"
+    cursor.execute(query)
     team_names = cursor.fetchall()
     cursor.close()
     connection.close()

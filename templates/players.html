@@ -16,34 +16,164 @@
   <caption>Data until 2024.10.11</caption>
   <thead class="table-dark">
     <tr>
-      <th class="col-3">
-        <a class="text-decoration-none text-white" href="?sort_by=player_id {{ 'desc' if sort_by == 'player_id asc' else 'asc' }}&page=1">
-          Player ID
-          {% if 'player_id' in sort_by %}
-          <span>{{ '▲' if 'asc' in sort_by else '▼' }}</span>
-          {% endif %}
-        </a>
-      </th>
-      <th>
-        <a class="text-decoration-none text-white" href="?sort_by=player_name {{ 'desc' if sort_by == 'player_name asc' else 'asc' }}&page=1">
-          Player Name
-          {% if 'player_name' in sort_by %}
-          <span>{{ '▲' if 'asc' in sort_by else '▼' }}</span>
-          {% endif %}
-        </a>
-      </th>
-    </tr>
+  <th>
+    <a class="text-decoration-none text-white" 
+       href="?sort_by=player_name {{ 'desc' if sort_by == 'player_name asc' else 'asc' }}&page=1">
+      Player Name
+      {% if 'player_name' in sort_by %}
+        <span>{{ '▲' if 'asc' in sort_by else '▼' }}</span>
+      {% endif %}
+    </a>
+  </th>
+
+  <th>
+    <a class="text-decoration-none text-white" 
+       href="?sort_by=total_games_played {{ 'desc' if sort_by == 'total_games_played asc' else 'asc' }}&page=1">
+      Total Games Played
+      {% if 'total_games_played' in sort_by %}
+        <span>{{ '▲' if 'asc' in sort_by else '▼' }}</span>
+      {% endif %}
+    </a>
+  </th>
+
+  <th>
+    <a class="text-decoration-none text-white" 
+       href="?sort_by=total_games_started {{ 'desc' if sort_by == 'total_games_started asc' else 'asc' }}&page=1">
+      Total Games Started
+      {% if 'total_games_started' in sort_by %}
+        <span>{{ '▲' if 'asc' in sort_by else '▼' }}</span>
+      {% endif %}
+    </a>
+  </th>
+
+  <th>
+    <a class="text-decoration-none text-white" 
+       href="?sort_by=points_per_game {{ 'desc' if sort_by == 'points_per_game asc' else 'asc' }}&page=1">
+      Points Per Game
+      {% if 'points_per_game' in sort_by %}
+        <span>{{ '▲' if 'asc' in sort_by else '▼' }}</span>
+      {% endif %}
+    </a>
+  </th>
+
+  <th>
+    <a class="text-decoration-none text-white" 
+       href="?sort_by=total_points {{ 'desc' if sort_by == 'total_points asc' else 'asc' }}&page=1">
+      Total Points
+      {% if 'total_points' in sort_by %}
+        <span>{{ '▲' if 'asc' in sort_by else '▼' }}</span>
+      {% endif %}
+    </a>
+  </th>
+
+  <th>
+    <a class="text-decoration-none text-white" 
+       href="?sort_by=rebounds_per_game {{ 'desc' if sort_by == 'rebounds_per_game asc' else 'asc' }}&page=1">
+      Rebounds Per Game
+      {% if 'rebounds_per_game' in sort_by %}
+        <span>{{ '▲' if 'asc' in sort_by else '▼' }}</span>
+      {% endif %}
+    </a>
+  </th>
+
+  <th>
+    <a class="text-decoration-none text-white" 
+       href="?sort_by=total_rebounds {{ 'desc' if sort_by == 'total_rebounds asc' else 'asc' }}&page=1">
+      Total Rebounds
+      {% if 'total_rebounds' in sort_by %}
+        <span>{{ '▲' if 'asc' in sort_by else '▼' }}</span>
+      {% endif %}
+    </a>
+  </th>
+
+  <th>
+    <a class="text-decoration-none text-white" 
+       href="?sort_by=assists_per_game {{ 'desc' if sort_by == 'assists_per_game asc' else 'asc' }}&page=1">
+      Assists Per Game
+      {% if 'assists_per_game' in sort_by %}
+        <span>{{ '▲' if 'asc' in sort_by else '▼' }}</span>
+      {% endif %}
+    </a>
+  </th>
+
+  <th>
+    <a class="text-decoration-none text-white" 
+       href="?sort_by=total_assists {{ 'desc' if sort_by == 'total_assists asc' else 'asc' }}&page=1">
+      Total Assists
+      {% if 'total_assists' in sort_by %}
+        <span>{{ '▲' if 'asc' in sort_by else '▼' }}</span>
+      {% endif %}
+    </a>
+  </th>
+
+  <th>
+    <a class="text-decoration-none text-white" 
+       href="?sort_by=steals_per_game {{ 'desc' if sort_by == 'steals_per_game asc' else 'asc' }}&page=1">
+      Steals Per Game
+      {% if 'steals_per_game' in sort_by %}
+        <span>{{ '▲' if 'asc' in sort_by else '▼' }}</span>
+      {% endif %}
+    </a>
+  </th>
+
+  <th>
+    <a class="text-decoration-none text-white" 
+       href="?sort_by=total_steals {{ 'desc' if sort_by == 'total_steals asc' else 'asc' }}&page=1">
+      Total Steals
+      {% if 'total_steals' in sort_by %}
+        <span>{{ '▲' if 'asc' in sort_by else '▼' }}</span>
+      {% endif %}
+    </a>
+  </th>
+
+  <th>
+    <a class="text-decoration-none text-white" 
+       href="?sort_by=blocks_per_game {{ 'desc' if sort_by == 'blocks_per_game asc' else 'asc' }}&page=1">
+      Blocks Per Game
+      {% if 'blocks_per_game' in sort_by %}
+        <span>{{ '▲' if 'asc' in sort_by else '▼' }}</span>
+      {% endif %}
+    </a>
+  </th>
+
+  <th>
+    <a class="text-decoration-none text-white" 
+       href="?sort_by=total_blocks {{ 'desc' if sort_by == 'total_blocks asc' else 'asc' }}&page=1">
+      Total Blocks
+      {% if 'total_blocks' in sort_by %}
+        <span>{{ '▲' if 'asc' in sort_by else '▼' }}</span>
+      {% endif %}
+    </a>
+  </th>
+</tr>
+
   </thead>
 
   <tbody class="table-group-divider">
-    {% for player in player_names %}
-    <tr onclick="window.location='/player/{{ player['player_id'] }}';" style="cursor: pointer;">
-      <td>{{ player['player_id'] }}</td>
-      <td>{{ player['player_name'] }}</td>
-    </tr>
+    {% for player in player_stats %}
+      <tr onclick="window.location='/player/{{ player['player_id'] }}';" style="cursor: pointer;">
+        <td>{{ player['player_name'] }}</td>
+        {% for stat in player_stats %}
+          {% if stat['player_id'] == player['player_id'] %}
+            <td>{{ stat['total_games_played'] }}</td>
+            <td>{{ stat['total_games_started'] }}</td>
+            <td>{{ stat['points_per_game'] }}</td>
+            <td>{{ stat['total_points'] }}</td>
+            <td>{{ stat['rebounds_per_game'] }}</td>
+            <td>{{ stat['total_rebounds'] }}</td>
+            <td>{{ stat['assists_per_game'] }}</td>
+            <td>{{ stat['total_assists'] }}</td>
+            <td>{{ stat['steals_per_game'] }}</td>
+            <td>{{ stat['total_steals'] }}</td>
+            <td>{{ stat['blocks_per_game'] }}</td>
+            <td>{{ stat['total_blocks'] }}</td>
+          {% endif %}
+        {% endfor %}
+      </tr>
     {% endfor %}
   </tbody>
 </table>
+
 
 <nav aria-label="Page navigation">
   {% if not request.args.get('search', '') %}
