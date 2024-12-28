@@ -182,12 +182,13 @@ def update_account():
     currentPw = request.form['password']
     newPw = request.form['passwordNew']
     user_image = request.files['user_image']
+    default_image = request.form.get('default_image')
 
     if user_image == "":
         user_image_blob = None
     else:
         user_image_blob = user_image.read()
-    
+
     team_supported = request.form['team_supported']
 
     if team_supported == "":
@@ -195,30 +196,56 @@ def update_account():
 
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
-    cursor.execute('SELECT * FROM users WHERE user_id = %s', (user_id, ))
-    current_user = cursor.fetchone()
-    cursor.close()
-    connection.close()
-
-    if bcrypt.checkpw(currentPw.encode('UTF-8'), current_user['hashed_password'].encode('UTF-8')):
-        connection = get_db_connection()
-        cursor = connection.cursor(dictionary=True)
-
-        if newPw != '':
-            hashed_newPw = bcrypt.hashpw(newPw.encode('UTF-8'), bcrypt.gensalt())
-            cursor.execute('UPDATE users SET username = %s, email = %s, hashed_password = %s, team_supported = %s, user_image = %s WHERE user_id = %s', (newUsername, newEmail, hashed_newPw, team_supported, user_image_blob, user_id))
-        else:
-            cursor.execute('UPDATE users SET username = %s, email = %s, team_supported = %s, user_image = %s WHERE user_id = %s', (newUsername, newEmail, team_supported, user_image_blob, user_id))
-
-        connection.commit()
+    cursor.execute('SELECT * FROM users WHERE (username = %s OR email = %s) AND user_id != %s', (newUsername, newEmail, user_id))
+    user_existing = cursor.fetchone()
+    
+    if user_existing:
+        cursor.execute('SELECT * FROM users WHERE username = %s AND user_id != %s', (newUsername, user_id))
+        found_username = cursor.fetchone()
         cursor.close()
         connection.close()
 
-        flash("Account details updated successfully!", "success")
-        return redirect(url_for("home_page"))
+        if found_username:
+            flash("This username is already in use!", "danger")
+            return redirect(url_for('home_page'))
+        else:
+            flash("This email address is already in use!", "danger")
+            return redirect(url_for('home_page'))
     else:
-        flash("You have entered your current password wrong, please try again!", "danger")
-        return redirect(url_for("home_page"))
+        cursor.execute('SELECT * FROM users WHERE user_id = %s', (user_id, ))
+        current_user = cursor.fetchone()
+        cursor.close()
+        connection.close()
+
+        if bcrypt.checkpw(currentPw.encode('UTF-8'), current_user['hashed_password'].encode('UTF-8')):
+            connection = get_db_connection()
+            cursor = connection.cursor(dictionary=True)
+
+            if newPw != '':
+                hashed_newPw = bcrypt.hashpw(newPw.encode('UTF-8'), bcrypt.gensalt())
+                if default_image == 'True':
+                    cursor.execute('UPDATE users SET username = %s, email = %s, hashed_password = %s, team_supported = %s, user_image = NULL WHERE user_id = %s', (newUsername, newEmail, hashed_newPw, team_supported, user_id))
+                elif user_image_blob:
+                    cursor.execute('UPDATE users SET username = %s, email = %s, hashed_password = %s, team_supported = %s, user_image = %s WHERE user_id = %s', (newUsername, newEmail, hashed_newPw, team_supported, user_image_blob, user_id))
+                else:
+                    cursor.execute('UPDATE users SET username = %s, email = %s, hashed_password = %s, team_supported = %s WHERE user_id = %s', (newUsername, newEmail, hashed_newPw, team_supported, user_id))
+            else:
+                if default_image == 'True':
+                    cursor.execute('UPDATE users SET username = %s, email = %s, team_supported = %s, user_image = NULL WHERE user_id = %s', (newUsername, newEmail, team_supported, user_id))
+                elif user_image_blob:
+                    cursor.execute('UPDATE users SET username = %s, email = %s, team_supported = %s, user_image = %s WHERE user_id = %s', (newUsername, newEmail, team_supported, user_image_blob, user_id))
+                else:
+                    cursor.execute('UPDATE users SET username = %s, email = %s, team_supported = %s WHERE user_id = %s', (newUsername, newEmail, team_supported, user_id))
+
+            connection.commit()
+            cursor.close()
+            connection.close()
+
+            flash("Account details updated successfully!", "success")
+            return redirect(url_for("home_page"))
+        else:
+            flash("You have entered your current password wrong, please try again!", "danger")
+            return redirect(url_for("home_page"))
 
 def restricted():
     return render_template("403.html")

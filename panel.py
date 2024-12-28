@@ -103,7 +103,7 @@ def panel_users_add():
     password = request.form['password']
     team_supported = request.form['team_supported']
     role = request.form['role']
-    hashed_pw = bcrypt.hashpw(password.encode('UTF-8'), bcrypt.gensalt())
+    default_image = request.form.get('default_image')
 
     if team_supported == "":
         team_supported = None
@@ -117,13 +117,35 @@ def panel_users_add():
 
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
-    cursor.execute("INSERT INTO users (username, email, hashed_password, role, team_supported, user_image) VALUES (%s, %s, %s, %s, %s, %s)", (username, email, hashed_pw, role, team_supported, user_image_blob))
-    connection.commit()
-    cursor.close()
-    connection.close()
+    cursor.execute('SELECT * FROM users WHERE username = %s OR email = %s', (username, email))
+    user_existing = cursor.fetchone()
 
-    flash("User created successfully!", "success")
-    return redirect(url_for('panel_users_page'))
+    if user_existing:
+        cursor.execute('SELECT * FROM users WHERE username = %s', (username, ))
+        found_username = cursor.fetchone()
+        cursor.close()
+        connection.close()
+
+        if found_username:
+            flash("This username is already in use!", "danger")
+            return redirect(url_for('panel_users_page'))
+        else:
+            flash("This email address is already in use!", "danger")
+            return redirect(url_for('panel_users_page'))
+    else:
+        hashed_pw = bcrypt.hashpw(password.encode('UTF-8'), bcrypt.gensalt())
+        if default_image == 'True':
+            cursor.execute("INSERT INTO users (username, email, hashed_password, role, team_supported, user_image) VALUES (%s, %s, %s, %s, %s, NULL)", (username, email, hashed_pw, role, team_supported))
+        elif user_image_blob:
+            cursor.execute("INSERT INTO users (username, email, hashed_password, role, team_supported, user_image) VALUES (%s, %s, %s, %s, %s, %s)", (username, email, hashed_pw, role, team_supported, user_image_blob))
+        else:
+            cursor.execute("INSERT INTO users (username, email, hashed_password, role, team_supported) VALUES (%s, %s, %s, %s, %s)", (username, email, hashed_pw, role, team_supported))
+        connection.commit()
+        cursor.close()
+        connection.close()
+
+        flash("User created successfully!", "success")
+        return redirect(url_for('panel_users_page'))
 
 @admin_required
 def panel_users_update():
@@ -133,6 +155,7 @@ def panel_users_update():
     password = request.form['password']
     team_supported = request.form['team_supported']
     role = request.form['role']
+    default_image = request.form.get('default_image')
 
     if team_supported == "":
         team_supported = None
@@ -146,17 +169,43 @@ def panel_users_update():
 
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
-    if password != "":
-        hashed_pw = bcrypt.hashpw(password.encode('UTF-8'), bcrypt.gensalt())
-        cursor.execute("UPDATE users SET username = %s, email = %s, hashed_password = %s, role = %s, team_supported = %s, user_image = %s WHERE user_id = %s", (username, email, hashed_pw, role, team_supported, user_image_blob, user_id))
-    else:
-        cursor.execute("UPDATE users SET username = %s, email = %s, role = %s, team_supported = %s, user_image = %s WHERE user_id = %s", (username, email, role, team_supported, user_image_blob, user_id))
+    cursor.execute('SELECT * FROM users WHERE (username = %s OR email = %s) AND user_id != %s', (username, email, user_id))
+    user_existing = cursor.fetchone()
+    
+    if user_existing:
+        cursor.execute('SELECT * FROM users WHERE username = %s AND user_id != %s', (username, user_id))
+        found_username = cursor.fetchone()
+        cursor.close()
+        connection.close()
 
-    connection.commit()
-    cursor.close()
-    connection.close()
-    flash("User updated successfully!", "success")
-    return redirect(url_for('panel_users_page'))
+        if found_username:
+            flash("This username is already in use!", "danger")
+            return redirect(url_for('panel_users_page'))
+        else:
+            flash("This email address is already in use!", "danger")
+            return redirect(url_for('panel_users_page'))
+    else:
+        if password != "":
+            hashed_pw = bcrypt.hashpw(password.encode('UTF-8'), bcrypt.gensalt())
+            if default_image == 'True':
+                cursor.execute("UPDATE users SET username = %s, email = %s, hashed_password = %s, role = %s, team_supported = %s, user_image = NULL WHERE user_id = %s", (username, email, hashed_pw, role, team_supported, user_id))
+            elif user_image_blob:
+                cursor.execute("UPDATE users SET username = %s, email = %s, hashed_password = %s, role = %s, team_supported = %s, user_image = %s WHERE user_id = %s", (username, email, hashed_pw, role, team_supported, user_image_blob, user_id))
+            else:
+                cursor.execute("UPDATE users SET username = %s, email = %s, hashed_password = %s, role = %s, team_supported = %s WHERE user_id = %s", (username, email, hashed_pw, role, team_supported, user_id))
+        else:
+            if default_image == 'True':
+                cursor.execute("UPDATE users SET username = %s, email = %s, role = %s, team_supported = %s, user_image = NULL WHERE user_id = %s", (username, email, role, team_supported, user_id))
+            elif user_image_blob:
+                cursor.execute("UPDATE users SET username = %s, email = %s, role = %s, team_supported = %s, user_image = %s WHERE user_id = %s", (username, email, role, team_supported, user_image_blob, user_id))
+            else:
+                cursor.execute("UPDATE users SET username = %s, email = %s, role = %s, team_supported = %s WHERE user_id = %s", (username, email, role, team_supported, user_id))
+
+            connection.commit()
+            cursor.close()
+            connection.close()
+            flash("User updated successfully!", "success")
+            return redirect(url_for('panel_users_page'))
 
 @admin_required
 def panel_users_delete():

@@ -33,9 +33,11 @@
             <select name="team_supported" id="team_supported" class="form-select"></select>
           </div>
 
-          <div>
-            <label>User Image (Optional)</label>
-            <input type="file" class="form-control" name="user_image" id="user_image"></input>
+          <label>New User Image (Optional)</label>
+          <div class="input-group">
+            <input type="file" class="form-control" name="user_image" id="user_image" accept="image/*"></input>
+            <input type="checkbox" class="btn-check" value="True" name="default_image" id="default_image" />
+            <label class="btn btn-outline-danger" for="default_image">Use Default Img</label>
           </div>
         </form>
       </div>

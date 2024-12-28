@@ -24,7 +24,7 @@
             <button type="button" class="btn btn-light dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown" aria-expanded="false">
               <i class="bi bi-person-circle avatar-placeholder me-2"></i>
               <img alt="User Image" class="rounded-circle me-2 user-image">
-              Hey there, {{ session['username'] }}!
+              {{ session['username'] }}
             </button>
             <ul class="dropdown-menu dropdown-menu-end w-100">
               <li><h6 class="dropdown-header">{{ session['username'] }}</h6></li>
