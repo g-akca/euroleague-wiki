@@ -79,12 +79,13 @@ def player_details_page(player_id, season_code=None):
     """, (player_id,))
     all_seasons_data = cursor.fetchall()
 
-    specific_season_data = None
-    if season_code:
+    specific_season_data = {}
+    
+    for season_detail in all_seasons_data:
         cursor.execute("""
-            select * from euro.euroleague_players where player_id = %s and season_code = %s;
-        """, (player_id, season_code))
-        specific_season_data = cursor.fetchall()
+            SELECT a.*, b.team_name FROM euro.euroleague_players a LEFT JOIN euro.euroleague_team_names b ON a.team_id = b.team_id WHERE a.player_id = %s AND a.season_code = %s;
+        """, (player_id, season_detail['season']))
+        specific_season_data[season_detail['season']] = cursor.fetchall()
 
     cursor.close()
     connection.close()
@@ -212,7 +213,6 @@ def match_details_page(game_id):
     connection.close()
     return render_template("match_details.html", match=match, box_score=box_score, comparison=comparison, play_by_play=play_by_play)
 
-#sort'lar, search'ler ve pagination bozuk, düzeltilecek. overall nasıl olmalı gibi bir bakıştayız şu anda
 def seasons_page():
     sort_by = request.args.get('sort_by', 'season_code asc')
     page_limit = 25

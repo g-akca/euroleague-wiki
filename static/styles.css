@@ -246,7 +246,6 @@ footer {
     max-width: 300px;
 }
 
-/* Player Details */
 .centered-title {
     color: #333;
     font-weight: bold;
@@ -265,27 +264,65 @@ footer {
 .player-stat-list {
     list-style: none;
     padding: 0;
-    margin: 250px auto; 
+    margin: 250px auto;
     max-width: 1600px;
     position: relative;
-    background-color: #f8f9fa; 
-    border-radius: 8px; 
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
-    overflow: hidden; 
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
     font-size: 18px;
+}
+
+.header-row {
+    display: flex;
+    padding: 20px;
+    align-items: center;
+    background-color: #e9ecef;
+    border-bottom: 2px solid #ccc;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #333;
+}
+
+.header-row .season-code {
+    flex: 0 0 20%;
+    text-align: center;
+    padding: 10px;
+    font-weight: 700;
+    color: #333;
+    border-right: 1px solid #ccc;
+    background-color: #dee2e6;
+}
+
+.header-row .rest-of-stats {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #e9ecef;
+}
+
+.header-row .rest-of-stats span {
+    flex: 1;
+    text-align: center;
+    font-weight: 700;
+    color: #333;
+    padding: 0 10px;
+    text-transform: uppercase;
 }
 
 .player-row {
     display: flex;
-    border-bottom: 1px solid #ddd; 
-    padding: 20px; 
+    border-bottom: 1px solid #ddd;
+    padding: 20px;
     align-items: center;
-    background-color: #ffffff; 
-    transition: background-color 0.3s ease; 
+    background-color: #ffffff;
+    transition: background-color 0.3s ease;
 }
 
 .player-row:hover {
-    background-color: #f1f3f5; 
+    background-color: #f1f3f5;
 }
 
 .season-code {
@@ -295,7 +332,7 @@ footer {
     font-weight: 600;
     color: #555;
     border-right: 1px solid #ddd;
-    background-color: #f8f9fa; 
+    background-color: #f8f9fa;
 }
 
 .rest-of-stats {
@@ -303,7 +340,7 @@ footer {
     display: flex;
     justify-content: space-between;
     padding: 10px;
-    background-color: #ffffff; 
+    background-color: #ffffff;
 }
 
 .rest-of-stats span {
@@ -315,12 +352,165 @@ footer {
 }
 
 .rest-of-stats span:first-child {
-    border-left: 1px solid #ddd; 
+    border-left: 1px solid #ddd;
 }
 
 .rest-of-stats span:not(:last-child) {
     border-right: 1px solid #ddd;
 }
 
+.centered-title {
+    color: #5c4b3c;
+    font-weight: bold;
+    font-size: 4rem;
+    text-shadow: 2px 2px 4px rgba(92, 75, 60, 0.2);
+    border: 2px solid transparent;
+    text-align: center;
+    width: 100%;
+    margin: 2rem auto;
+    padding: 1rem 0;
+}
 
-  
+.player-stat-list {
+    list-style: none;
+    padding: 0;
+    margin: 250px auto;
+    max-width: 1600px;
+    position: relative;
+    background-color: #f9f6f1;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(92, 75, 60, 0.1);
+    overflow: hidden;
+    font-size: 18px;
+}
+
+.header-row {
+    display: flex;
+    padding: 20px;
+    align-items: center;
+    background-color: #e8e0d5;
+    border-bottom: 2px solid #d4c5b5;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #5c4b3c;
+}
+
+.header-row .season-code {
+    flex: 0 0 20%;
+    text-align: center;
+    padding: 10px;
+    font-weight: 700;
+    color: #5c4b3c;
+    border-right: 1px solid #d4c5b5;
+    background-color: #e8e0d5;
+}
+
+.header-row .rest-of-stats {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #e8e0d5;
+}
+
+.header-row .rest-of-stats span {
+    flex: 1;
+    text-align: center;
+    font-weight: 700;
+    color: #5c4b3c;
+    padding: 0 10px;
+    text-transform: uppercase;
+}
+
+.player-row {
+    display: flex;
+    border-bottom: 1px solid #e8e0d5;
+    padding: 20px;
+    align-items: center;
+    background-color: #fdfaf5;
+    transition: background-color 0.3s ease;
+}
+
+.player-row:hover {
+    background-color: #f5efe6;
+}
+
+.season-code {
+    flex: 0 0 20%;
+    text-align: center;
+    padding: 10px;
+    font-weight: 600;
+    color: #6b584a;
+    border-right: 1px solid #e8e0d5;
+    background-color: #f9f6f1;
+}
+
+.rest-of-stats {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #fdfaf5;
+}
+
+.rest-of-stats span {
+    flex: 1;
+    text-align: center;
+    font-weight: 500;
+    color: #6b584a;
+    padding: 0 10px;
+}
+
+.rest-of-stats span:first-child {
+    border-left: 1px solid #e8e0d5;
+}
+
+.rest-of-stats span:not(:last-child) {
+    border-right: 1px solid #e8e0d5;
+}
+
+.additional-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+    background: linear-gradient(145deg, #f9f6f1, #f5efe6);
+    border-radius: 15px;
+    margin-top: 20px;
+    border: 1px solid rgba(92, 75, 60, 0.2);
+    box-shadow: 0 4px 8px rgba(92, 75, 60, 0.1); 
+}
+
+.additional-details p {
+    margin: 0;
+    padding: 15px;
+    background: linear-gradient(145deg, #fdfaf5, #f9f6f1);
+    border: 1px solid rgba(92, 75, 60, 0.2);
+    border-radius: 10px;
+    color: #5c4b3c;
+    font-family: 'Arial', sans-serif;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(92, 75, 60, 0.1);
+}
+
+.additional-details p::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(180deg, #d4c5b5, #b5a492);
+    opacity: 0.7;
+}
+
+.additional-details p:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(92, 75, 60, 0.15);
+    border-color: rgba(92, 75, 60, 0.3);
+    background: linear-gradient(145deg, #f5efe6, #f0e8dc);
+}
+
+
