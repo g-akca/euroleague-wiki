@@ -23,6 +23,27 @@
         <span>Total Blocks</span>
       </div>
     </li>
+  
+  {% if playeralltimedata %}
+  <li class="player-row-career">
+      <div class="season-code">Career</div>
+      <div class="rest-of-stats">
+           <span>{{ playeralltimedata['total_games_played'] }}</span>
+          <span>{{ playeralltimedata['total_games_started'] }}</span>
+          <span>{{ playeralltimedata['points_per_game'] }}</span>
+          <span>{{ playeralltimedata['total_points'] }}</span>
+          <span>{{ playeralltimedata['rebounds_per_game'] }}</span>
+          <span>{{ playeralltimedata['total_rebounds'] }}</span>
+          <span>{{ playeralltimedata['assists_per_game'] }}</span>
+          <span>{{ playeralltimedata['total_assists'] }}</span>
+          <span>{{ playeralltimedata['total_steals'] }}</span>
+          <span>{{ playeralltimedata['steals_per_game'] }}</span>
+          <span>{{ playeralltimedata['blocks_per_game'] }}</span>
+          <span>{{ playeralltimedata['total_blocks'] }}</span>
+      </div>
+  </li>
+  {% endif %}
+
     {% for player in all_seasons_data %}
     <li class="player-row" id="season-{{ player['season'] }}" onclick="toggleDetails('{{ player['season'] }}')">
       <div class="season-code">{{ player['season'] }}</div>

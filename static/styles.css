@@ -515,3 +515,16 @@ footer {
     border-color: rgba(92, 75, 60, 0.3);
     background: linear-gradient(145deg, #f5efe6, #f0e8dc);
 }
+
+.player-row-career {
+    display: flex;
+    border-bottom: 1px solid #ddd;
+    padding: 20px;
+    align-items: center;
+    background-color: #fff000;
+    transition: background-color 0.3s ease;
+}
+
+.player-row-career:hover {
+    background-color: #f1f3f5;
+}

@@ -98,6 +98,27 @@ def player_details_page(player_id, season_code=None):
     """, (player_id,))
     all_seasons_data = cursor.fetchall()
 
+    cursor.execute("""SELECT 
+    a.player_id,
+    b.player_name,
+    SUM(a.games_played) AS total_games_played,
+    SUM(a.games_started) AS total_games_started,
+    ROUND(SUM(a.points) / NULLIF(SUM(a.games_played), 0), 2) AS points_per_game,
+    SUM(a.points) AS total_points,
+    ROUND(SUM(a.total_rebounds) / NULLIF(SUM(a.games_played), 0), 2) AS rebounds_per_game,
+    SUM(a.total_rebounds) AS total_rebounds,
+    ROUND(SUM(a.assists) / NULLIF(SUM(a.games_played), 0), 2) AS assists_per_game,
+    SUM(a.assists) AS total_assists,
+    SUM(a.steals) AS total_steals,
+    ROUND(SUM(a.steals) / NULLIF(SUM(a.games_played), 0), 2) AS steals_per_game,
+    ROUND(SUM(a.blocks_favour) / NULLIF(SUM(a.games_played), 0), 2) AS blocks_per_game,
+    SUM(a.blocks_favour) AS total_blocks
+    FROM euro.euroleague_players a
+    JOIN euro.euroleague_player_names b ON a.player_id = b.player_id
+    WHERE a.player_id = %s
+    GROUP BY a.player_id, b.player_name""",(player_id,))
+    playeralltimedata=cursor.fetchone()
+
     specific_season_data = {}
     
     for season_detail in all_seasons_data:
@@ -109,7 +130,7 @@ def player_details_page(player_id, season_code=None):
     cursor.close()
     connection.close()
 
-    return render_template("player_details.html", player_name=player_name, all_seasons_data=all_seasons_data, specific_season_data=specific_season_data)
+    return render_template("player_details.html", playeralltimedata=playeralltimedata, player_name=player_name, all_seasons_data=all_seasons_data, specific_season_data=specific_season_data)
 
 def teams_page():
     sort_by = request.args.get('sort_by', 'team_id asc')
