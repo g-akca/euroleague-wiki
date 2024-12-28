@@ -6,6 +6,23 @@
 <h1 class="centered-title">{{ player_name['player_name'] }} Career Stats</h1>
 <div class="player-stat-list">
   <ul>
+    <li class="header-row">
+      <div class="season-code">Season</div>
+      <div class="rest-of-stats">
+        <span>Total Games Played</span>
+        <span>Total Games Started</span>
+        <span>Points Per Game</span>
+        <span>Total Points</span>
+        <span>Rebounds Per Game</span>
+        <span>Total Rebounds</span>
+        <span>Assists Per Game</span>
+        <span>Total Assists</span>
+        <span>Total Steals</span>
+        <span>Steals Per Game</span>
+        <span>Blocks Per Game</span>
+        <span>Total Blocks</span>
+      </div>
+    </li>
     {% for player in all_seasons_data %}
     <li class="player-row" id="season-{{ player['season'] }}" onclick="toggleDetails('{{ player['season'] }}')">
       <div class="season-code">{{ player['season'] }}</div>
@@ -26,12 +43,58 @@
     </li>
 
     <li id="details-{{ player['season'] }}" class="season-details" style="display: none;">
-      {% if specific_season_data %}
-        <div class="additional-details">
-          {% for seasonplayer in specific_season_data %}
-            <p>Team ID: {{ seasonplayer['team_id'] }}</p>
-          {% endfor %}
+      {% if specific_season_data[player['season']] %}
+      {% for seasonplayer in specific_season_data[player['season']] %}
+      <div class="additional-details">
+            <p>Team Played For: {{ seasonplayer['team_name'] }}</p>
+            <p>Games Played: {{ seasonplayer['games_played'] }}</p>
+            <p>Games Started: {{ seasonplayer['games_started'] }}</p>
+            <p>Minutes: {{ seasonplayer['minutes'] }}</p>
+            <p>Points: {{ seasonplayer['points'] }}</p>
+            <p>Two Points Made: {{ seasonplayer['two_points_made'] }}</p>
+            <p>Two Points Attempted: {{ seasonplayer['two_points_attempted'] }}</p>
+            <p>Three Points Made: {{ seasonplayer['three_points_made'] }}</p>
+            <p>Three Points Attempted: {{ seasonplayer['three_points_attempted'] }}</p>
+            <p>Free Throws Made: {{ seasonplayer['free_throws_made'] }}</p>
+            <p>Free Throws Attempted: {{ seasonplayer['free_throws_attempted'] }}</p>
+            <p>Offensive Rebounds: {{ seasonplayer['offensive_rebounds'] }}</p>
+            <p>Defensive Rebounds: {{ seasonplayer['defensive_rebounds'] }}</p>
+            <p>Total Rebounds: {{ seasonplayer['total_rebounds'] }}</p>
+            <p>Assists: {{ seasonplayer['assists'] }}</p>
+            <p>Steals: {{ seasonplayer['steals'] }}</p>
+            <p>Turnovers: {{ seasonplayer['turnovers'] }}</p>
+            <p>Blocks Favor: {{ seasonplayer['blocks_favour'] }}</p>
+            <p>Blocks Against: {{ seasonplayer['blocks_against'] }}</p>
+            <p>Fouls Committed: {{ seasonplayer['fouls_committed'] }}</p>
+            <p>Fouls Received: {{ seasonplayer['fouls_received'] }}</p>
+            <p>Valuation: {{ seasonplayer['valuation'] }}</p>
+            <p>Plus/Minus: {{ seasonplayer['plus_minus'] }}</p>
+            <p>Minutes Per Game: {{ seasonplayer['minutes_per_game'] }}</p>
+            <p>Points Per Game: {{ seasonplayer['points_per_game'] }}</p>
+            <p>Two Points Made Per Game: {{ seasonplayer['two_points_made_per_game'] }}</p>
+            <p>Two Points Attempted Per Game: {{ seasonplayer['two_points_attempted_per_game'] }}</p>
+            <p>Two Points Percentage: {{ seasonplayer['two_points_percentage'] }}</p>
+            <p>Three Points Made Per Game: {{ seasonplayer['three_points_made_per_game'] }}</p>
+            <p>Three Points Attempted Per Game: {{ seasonplayer['three_points_attempted_per_game'] }}</p>
+            <p>Three Points Percentage: {{ seasonplayer['three_points_percentage'] }}</p>
+            <p>Free Throws Made Per Game: {{ seasonplayer['free_throws_made_per_game'] }}</p>
+            <p>Free Throws Attempted Per Game: {{ seasonplayer['free_throws_attempted_per_game'] }}</p>
+            <p>Free Throws Percentage: {{ seasonplayer['free_throws_percentage'] }}</p>
+            <p>Offensive Rebounds Per Game: {{ seasonplayer['offensive_rebounds_per_game'] }}</p>
+            <p>Defensive Rebounds Per Game: {{ seasonplayer['defensive_rebounds_per_game'] }}</p>
+            <p>Total Rebounds Per Game: {{ seasonplayer['total_rebounds_per_game'] }}</p>
+            <p>Assists Per Game: {{ seasonplayer['assists_per_game'] }}</p>
+            <p>Steals Per Game: {{ seasonplayer['steals_per_game'] }}</p>
+            <p>Turnovers Per Game: {{ seasonplayer['turnovers_per_game'] }}</p>
+            <p>Blocks Favor Per Game: {{ seasonplayer['blocks_favour_per_game'] }}</p>
+            <p>Blocks Against Per Game: {{ seasonplayer['blocks_against_per_game'] }}</p>
+            <p>Fouls Committed Per Game: {{ seasonplayer['fouls_committed_per_game'] }}</p>
+            <p>Fouls Received Per Game: {{ seasonplayer['fouls_received_per_game'] }}</p>
+            <p>Valuation Per Game: {{ seasonplayer['valuation_per_game'] }}</p>
+            <p>Plus/Minus Per Game: {{ seasonplayer['plus_minus_per_game'] }}</p>
+        
         </div>
+        {% endfor %}
       {% else %}
         <div class="additional-details">
           <p>No data for this season</p>
