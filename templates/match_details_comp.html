@@ -1,0 +1,227 @@
+{% block content %}
+<div class="tab-pane fade" id="comparison-tab-content" role="tabpanel" tabindex="1">
+  <div class="table-responsive">
+    <table class="table table-bordered text-center">
+      <thead class="table-dark">
+        <tr>
+          <th class="col-4">{{ match['team_a'] }}</th>
+          <th>VS</th>
+          <th class="col-4">{{ match['team_b'] }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          {% if comparison['fast_break_points_a'] > comparison['fast_break_points_b'] %}
+            <td class="table-primary"><strong>{{ comparison['fast_break_points_a'] }}</strong></td>
+            <td><strong>Fast Break Points</strong></td>
+            <td>{{ comparison['fast_break_points_b'] }}</td>
+          {% elif comparison['fast_break_points_b'] > comparison['fast_break_points_a'] %}
+            <td>{{ comparison['fast_break_points_a'] }}</td>
+            <td><strong>Fast Break Points</strong></td>
+            <td class="table-danger"><strong>{{ comparison['fast_break_points_b'] }}</strong></td>
+          {% else %}
+            <td>{{ comparison['fast_break_points_a'] }}</td>
+            <td><strong>Fast Break Points</strong></td>
+            <td>{{ comparison['fast_break_points_b'] }}</td>
+          {% endif %}
+        </tr>
+        <tr>
+          {% if comparison['turnover_points_a'] > comparison['turnover_points_b'] %}
+            <td class="table-primary"><strong>{{ comparison['turnover_points_a'] }}</strong></td>
+            <td><strong>Turnover Points</strong></td>
+            <td>{{ comparison['turnover_points_b'] }}</td>
+          {% elif comparison['turnover_points_b'] > comparison['turnover_points_a'] %}
+            <td>{{ comparison['turnover_points_a'] }}</td>
+            <td><strong>Turnover Points</strong></td>
+            <td class="table-danger"><strong>{{ comparison['turnover_points_b'] }}</strong></td>
+          {% else %}
+            <td>{{ comparison['turnover_points_a'] }}</td>
+            <td><strong>Turnover Points</strong></td>
+            <td>{{ comparison['turnover_points_b'] }}</td>
+          {% endif %}
+        </tr>
+        <tr>
+          {% if comparison['second_chance_points_a'] > comparison['second_chance_points_b'] %}
+            <td class="table-primary"><strong>{{ comparison['second_chance_points_a'] }}</strong></td>
+            <td><strong>Second Chance Points</strong></td>
+            <td>{{ comparison['second_chance_points_b'] }}</td>
+          {% elif comparison['second_chance_points_b'] > comparison['second_chance_points_a'] %}
+            <td>{{ comparison['second_chance_points_a'] }}</td>
+            <td><strong>Second Chance Points</strong></td>
+            <td class="table-danger"><strong>{{ comparison['second_chance_points_b'] }}</strong></td>
+          {% else %}
+            <td>{{ comparison['second_chance_points_a'] }}</td>
+            <td><strong>Second Chance Points</strong></td>
+            <td>{{ comparison['second_chance_points_b'] }}</td>
+          {% endif %}
+        </tr>
+        <tr>
+          {% if comparison['defensive_rebounds_a'] + comparison['offensive_rebounds_a'] > comparison['defensive_rebounds_b'] + comparison['offensive_rebounds_b'] %}
+            <td class="table-primary"><strong>{{ comparison['defensive_rebounds_a'] + comparison['offensive_rebounds_a'] }}</strong></td>
+            <td><strong>Rebounds</strong></td>
+            <td>{{ comparison['defensive_rebounds_b'] + comparison['offensive_rebounds_b'] }}</td>
+          {% elif comparison['defensive_rebounds_b'] + comparison['offensive_rebounds_b'] > comparison['defensive_rebounds_a'] + comparison['offensive_rebounds_a'] %}
+            <td>{{ comparison['defensive_rebounds_a'] + comparison['offensive_rebounds_a'] }}</td>
+            <td><strong>Rebounds</strong></td>
+            <td class="table-danger"><strong>{{ comparison['defensive_rebounds_b'] + comparison['offensive_rebounds_b'] }}</strong></td>
+          {% else %}
+            <td>{{ comparison['defensive_rebounds_a'] + comparison['offensive_rebounds_a'] }}</td>
+            <td><strong>Rebounds</strong></td>
+            <td>{{ comparison['defensive_rebounds_b'] + comparison['offensive_rebounds_b'] }}</td>
+          {% endif %}
+        </tr>
+        <tr>
+          {% if comparison['turnovers_starters_a'] > comparison['turnovers_starters_b'] %}
+            <td class="table-primary"><strong>{{ comparison['turnovers_starters_a'] }}</strong></td>
+            <td><strong>Turnovers (Starters)</strong></td>
+            <td>{{ comparison['turnovers_starters_b'] }}</td>
+          {% elif comparison['turnovers_starters_b'] > comparison['turnovers_starters_a'] %}
+            <td>{{ comparison['turnovers_starters_a'] }}</td>
+            <td><strong>Turnovers (Starters)</strong></td>
+            <td class="table-danger"><strong>{{ comparison['turnovers_starters_b'] }}</strong></td>
+          {% else %}
+            <td>{{ comparison['turnovers_starters_a'] }}</td>
+            <td><strong>Turnovers (Starters)</strong></td>
+            <td>{{ comparison['turnovers_starters_b'] }}</td>
+          {% endif %}
+        </tr>
+        <tr>
+          {% if comparison['turnovers_bench_a'] > comparison['turnovers_bench_b'] %}
+            <td class="table-primary"><strong>{{ comparison['turnovers_bench_a'] }}</strong></td>
+            <td><strong>Turnovers (Bench)</strong></td>
+            <td>{{ comparison['turnovers_bench_b'] }}</td>
+          {% elif comparison['turnovers_bench_b'] > comparison['turnovers_bench_a'] %}
+            <td>{{ comparison['turnovers_bench_a'] }}</td>
+            <td><strong>Turnovers (Bench)</strong></td>
+            <td class="table-danger"><strong>{{ comparison['turnovers_bench_b'] }}</strong></td>
+          {% else %}
+            <td>{{ comparison['turnovers_bench_a'] }}</td>
+            <td><strong>Turnovers (Bench)</strong></td>
+            <td>{{ comparison['turnovers_bench_b'] }}</td>
+          {% endif %}
+        </tr>
+        <tr>
+          {% if comparison['steals_starters_a'] > comparison['steals_starters_b'] %}
+            <td class="table-primary"><strong>{{ comparison['steals_starters_a'] }}</strong></td>
+            <td><strong>Steals (Starters)</strong></td>
+            <td>{{ comparison['steals_starters_b'] }}</td>
+          {% elif comparison['steals_starters_b'] > comparison['steals_starters_a'] %}
+            <td>{{ comparison['steals_starters_a'] }}</td>
+            <td><strong>Steals (Starters)</strong></td>
+            <td class="table-danger"><strong>{{ comparison['steals_starters_b'] }}</strong></td>
+          {% else %}
+            <td>{{ comparison['steals_starters_a'] }}</td>
+            <td><strong>Steals (Starters)</strong></td>
+            <td>{{ comparison['steals_starters_b'] }}</td>
+          {% endif %}
+        </tr>
+        <tr>
+          {% if comparison['steals_bench_a'] > comparison['steals_bench_b'] %}
+            <td class="table-primary"><strong>{{ comparison['steals_bench_a'] }}</strong></td>
+            <td><strong>Steals (Bench)</strong></td>
+            <td>{{ comparison['steals_bench_b'] }}</td>
+          {% elif comparison['steals_bench_b'] > comparison['steals_bench_a'] %}
+            <td>{{ comparison['steals_bench_a'] }}</td>
+            <td><strong>Steals (Bench)</strong></td>
+            <td class="table-danger"><strong>{{ comparison['steals_bench_b'] }}</strong></td>
+          {% else %}
+            <td>{{ comparison['steals_bench_a'] }}</td>
+            <td><strong>Steals (Bench)</strong></td>
+            <td>{{ comparison['steals_bench_b'] }}</td>
+          {% endif %}
+        </tr>
+        <tr>
+          {% if comparison['assists_starters_a'] > comparison['assists_starters_b'] %}
+            <td class="table-primary"><strong>{{ comparison['assists_starters_a'] }}</strong></td>
+            <td><strong>Assists (Starters)</strong></td>
+            <td>{{ comparison['assists_starters_b'] }}</td>
+          {% elif comparison['assists_starters_b'] > comparison['assists_starters_a'] %}
+            <td>{{ comparison['assists_starters_a'] }}</td>
+            <td><strong>Assists (Starters)</strong></td>
+            <td class="table-danger"><strong>{{ comparison['assists_starters_b'] }}</strong></td>
+          {% else %}
+            <td>{{ comparison['assists_starters_a'] }}</td>
+            <td><strong>Assists (Starters)</strong></td>
+            <td>{{ comparison['assists_starters_b'] }}</td>
+          {% endif %}
+        </tr>
+        <tr>
+          {% if comparison['assists_bench_a'] > comparison['assists_bench_b'] %}
+            <td class="table-primary"><strong>{{ comparison['assists_bench_a'] }}</strong></td>
+            <td><strong>Assists (Bench)</strong></td>
+            <td>{{ comparison['assists_bench_b'] }}</td>
+          {% elif comparison['assists_bench_b'] > comparison['assists_bench_a'] %}
+            <td>{{ comparison['assists_bench_a'] }}</td>
+            <td><strong>Assists (Bench)</strong></td>
+            <td class="table-danger"><strong>{{ comparison['assists_bench_b'] }}</strong></td>
+          {% else %}
+            <td>{{ comparison['assists_bench_a'] }}</td>
+            <td><strong>Assists (Bench)</strong></td>
+            <td>{{ comparison['assists_bench_b'] }}</td>
+          {% endif %}
+        </tr>
+        <tr>
+          {% if comparison['points_starters_a'] > comparison['points_starters_b'] %}
+            <td class="table-primary"><strong>{{ comparison['points_starters_a'] }}</strong></td>
+            <td><strong>Points (Starters)</strong></td>
+            <td>{{ comparison['points_starters_b'] }}</td>
+          {% elif comparison['points_starters_b'] > comparison['points_starters_a'] %}
+            <td>{{ comparison['points_starters_a'] }}</td>
+            <td><strong>Points (Starters)</strong></td>
+            <td class="table-danger"><strong>{{ comparison['points_starters_b'] }}</strong></td>
+          {% else %}
+            <td>{{ comparison['points_starters_a'] }}</td>
+            <td><strong>Points (Starters)</strong></td>
+            <td>{{ comparison['points_starters_b'] }}</td>
+          {% endif %}
+        </tr>
+        <tr>
+          {% if comparison['points_bench_a'] > comparison['points_bench_b'] %}
+            <td class="table-primary"><strong>{{ comparison['points_bench_a'] }}</strong></td>
+            <td><strong>Points (Bench)</strong></td>
+            <td>{{ comparison['points_bench_b'] }}</td>
+          {% elif comparison['points_bench_b'] > comparison['points_bench_a'] %}
+            <td>{{ comparison['points_bench_a'] }}</td>
+            <td><strong>Points (Bench)</strong></td>
+            <td class="table-danger"><strong>{{ comparison['points_bench_b'] }}</strong></td>
+          {% else %}
+            <td>{{ comparison['points_bench_a'] }}</td>
+            <td><strong>Points (Bench)</strong></td>
+            <td>{{ comparison['points_bench_b'] }}</td>
+          {% endif %}
+        </tr>
+        <tr>
+          {% if comparison['max_lead_a'] > comparison['max_lead_b'] %}
+            <td class="table-primary"><strong>{{ comparison['max_lead_a'] }}</strong></td>
+            <td><strong>Max Points Lead</strong></td>
+            <td>{{ comparison['max_lead_b'] }}</td>
+          {% elif comparison['max_lead_b'] > comparison['max_lead_a'] %}
+            <td>{{ comparison['max_lead_a'] }}</td>
+            <td><strong>Max Points Lead</strong></td>
+            <td class="table-danger"><strong>{{ comparison['max_lead_b'] }}</strong></td>
+          {% else %}
+            <td>{{ comparison['max_lead_a'] }}</td>
+            <td><strong>Max Points Lead</strong></td>
+            <td>{{ comparison['max_lead_b'] }}</td>
+          {% endif %}
+        </tr>
+        <tr>
+          {% if comparison['minute_max_lead_a'] > comparison['minute_max_lead_b'] %}
+            <td class="table-primary"><strong>{{ comparison['minute_max_lead_a'] }}</strong></td>
+            <td><strong>Max Minutes Lead</strong></td>
+            <td>{{ comparison['minute_max_lead_b'] }}</td>
+          {% elif comparison['minute_max_lead_b'] > comparison['minute_max_lead_a'] %}
+            <td>{{ comparison['minute_max_lead_a'] }}</td>
+            <td><strong>Max Minutes Lead</strong></td>
+            <td class="table-danger"><strong>{{ comparison['minute_max_lead_b'] }}</strong></td>
+          {% else %}
+            <td>{{ comparison['minute_max_lead_a'] }}</td>
+            <td><strong>Max Minutes Lead</strong></td>
+            <td>{{ comparison['minute_max_lead_b'] }}</td>
+          {% endif %}
+        </tr>
+      </tbody>          
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -249,6 +249,16 @@ footer {
     max-width: 300px;
 }
 
+.nav-pills .nav-link.quarter-btn {
+    font-weight: bold;
+    color: #000000;
+}
+
+.nav-pills .nav-link.quarter-btn.active {
+    background-color: #ffbc03;
+}
+
+/* Player Details */
 .centered-title {
     color: #333;
     font-weight: bold;

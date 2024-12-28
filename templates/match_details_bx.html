@@ -1,0 +1,193 @@
+{% block content %}
+<div class="tab-pane fade" id="box-score-tab-content" role="tabpanel" tabindex="2">
+  <div class="table-responsive mb-4">
+    <table class="table table-striped table-hover box-score-table">
+      <thead class="table-dark">
+        <tr>
+          <th>Dorsal</th>
+          <th class="player-column">Player</th>
+          <th>Starter</th>
+          <th>Min</th>
+          <th>PTS</th>
+          <th>FG</th>
+          <th>FGA</th>
+          <th>3P</th>
+          <th>3PA</th>
+          <th>FT</th>
+          <th>FTA</th>
+          <th>ORB</th>
+          <th>DRB</th>
+          <th>TRB</th>
+          <th>AST</th>
+          <th>STL</th>
+          <th>TOV</th>
+          <th>BF</th>
+          <th>BA</th>
+          <th>FC</th>
+          <th>FD</th>
+          <th>PIR</th>
+          <th>+/-</th>
+        </tr>
+      </thead>
+      <tbody class="table-group-divider">
+        {% for bx in box_score %}
+          {% if bx['player_id'] == bx['team_id'] and bx['team_id'] == match['team_id_a'] %}
+          <tr class="table-primary table-group-divider">
+            <td></td>
+            <td class="fw-bold player-column"><a class="nav-link" href="/team/{{ bx['team_id'] }}/{{ match['season_code'] }}">{{ bx['team_name'] }}</a></td>
+            <td></td>
+            <td>{{ bx['minutes'] }}</td>
+            <td>{{ bx['points'] }}</td>
+            <td>{{ bx['two_points_made'] }}</td>
+            <td>{{ bx['two_points_attempted'] }}</td>
+            <td>{{ bx['three_points_made'] }}</td>
+            <td>{{ bx['three_points_attempted'] }}</td>
+            <td>{{ bx['free_throws_made'] }}</td>
+            <td>{{ bx['free_throws_attempted'] }}</td>
+            <td>{{ bx['offensive_rebounds'] }}</td>
+            <td>{{ bx['defensive_rebounds'] }}</td>
+            <td>{{ bx['total_rebounds'] }}</td>
+            <td>{{ bx['assists'] }}</td>
+            <td>{{ bx['steals'] }}</td>
+            <td>{{ bx['turnovers'] }}</td>
+            <td>{{ bx['blocks_favour'] }}</td>
+            <td>{{ bx['blocks_against'] }}</td>
+            <td>{{ bx['fouls_committed'] }}</td>
+            <td>{{ bx['fouls_received'] }}</td>
+            <td>{{ bx['valuation'] }}</td>
+            <td>{{ bx['plus_minus'] }}</td>
+          </tr>
+          {% elif bx['team_id'] == match['team_id_a'] %}
+          <tr>
+            <td>{{ bx['dorsal'] }}</td>
+            <td class="player-column"><a class="nav-link" href="/player/{{ bx['player_id'] }}">{{ bx['player_name'] }}</a></td>
+            <td>
+              {% if bx['is_starter'] == 1 %}
+                Yes
+              {% else %}
+                No
+              {% endif %}
+            </td>
+            <td>{{ bx['minutes'] }}</td>
+            <td>{{ bx['points'] }}</td>
+            <td>{{ bx['two_points_made'] }}</td>
+            <td>{{ bx['two_points_attempted'] }}</td>
+            <td>{{ bx['three_points_made'] }}</td>
+            <td>{{ bx['three_points_attempted'] }}</td>
+            <td>{{ bx['free_throws_made'] }}</td>
+            <td>{{ bx['free_throws_attempted'] }}</td>
+            <td>{{ bx['offensive_rebounds'] }}</td>
+            <td>{{ bx['defensive_rebounds'] }}</td>
+            <td>{{ bx['total_rebounds'] }}</td>
+            <td>{{ bx['assists'] }}</td>
+            <td>{{ bx['steals'] }}</td>
+            <td>{{ bx['turnovers'] }}</td>
+            <td>{{ bx['blocks_favour'] }}</td>
+            <td>{{ bx['blocks_against'] }}</td>
+            <td>{{ bx['fouls_committed'] }}</td>
+            <td>{{ bx['fouls_received'] }}</td>
+            <td>{{ bx['valuation'] }}</td>
+            <td>{{ bx['plus_minus'] }}</td>
+          </tr>
+          {% endif %}
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="table-responsive mb-4">
+    <table class="table table-striped table-hover box-score-table">
+      <thead class="table-dark">
+        <tr>
+          <th>Dorsal</th>
+          <th class="player-column">Player</th>
+          <th>Starter</th>
+          <th>Min</th>
+          <th>PTS</th>
+          <th>FG</th>
+          <th>FGA</th>
+          <th>3P</th>
+          <th>3PA</th>
+          <th>FT</th>
+          <th>FTA</th>
+          <th>ORB</th>
+          <th>DRB</th>
+          <th>TRB</th>
+          <th>AST</th>
+          <th>STL</th>
+          <th>TOV</th>
+          <th>BF</th>
+          <th>BA</th>
+          <th>FC</th>
+          <th>FD</th>
+          <th>PIR</th>
+          <th>+/-</th>
+        </tr>
+      </thead>
+      <tbody class="table-group-divider">
+        {% for bx in box_score %}
+          {% if bx['player_id'] == bx['team_id'] and bx['team_id'] == match['team_id_b'] %}
+          <tr class="table-danger table-group-divider">
+            <td></td>
+            <td class="fw-bold player-column"><a class="nav-link" href="/team/{{ bx['team_id'] }}/{{ match['season_code'] }}">{{ bx['team_name'] }}</a></td>
+            <td></td>
+            <td>{{ bx['minutes'] }}</td>
+            <td>{{ bx['points'] }}</td>
+            <td>{{ bx['two_points_made'] }}</td>
+            <td>{{ bx['two_points_attempted'] }}</td>
+            <td>{{ bx['three_points_made'] }}</td>
+            <td>{{ bx['three_points_attempted'] }}</td>
+            <td>{{ bx['free_throws_made'] }}</td>
+            <td>{{ bx['free_throws_attempted'] }}</td>
+            <td>{{ bx['offensive_rebounds'] }}</td>
+            <td>{{ bx['defensive_rebounds'] }}</td>
+            <td>{{ bx['total_rebounds'] }}</td>
+            <td>{{ bx['assists'] }}</td>
+            <td>{{ bx['steals'] }}</td>
+            <td>{{ bx['turnovers'] }}</td>
+            <td>{{ bx['blocks_favour'] }}</td>
+            <td>{{ bx['blocks_against'] }}</td>
+            <td>{{ bx['fouls_committed'] }}</td>
+            <td>{{ bx['fouls_received'] }}</td>
+            <td>{{ bx['valuation'] }}</td>
+            <td>{{ bx['plus_minus'] }}</td>
+          </tr>
+          {% elif bx['team_id'] == match['team_id_b'] %}
+          <tr>
+            <td>{{ bx['dorsal'] }}</td>
+            <td class="player-column"><a class="nav-link" href="/player/{{ bx['player_id'] }}">{{ bx['player_name'] }}</a></td>
+            <td>
+              {% if bx['is_starter'] == 1 %}
+                Yes
+              {% else %}
+                No
+              {% endif %}
+            </td>
+            <td>{{ bx['minutes'] }}</td>
+            <td>{{ bx['points'] }}</td>
+            <td>{{ bx['two_points_made'] }}</td>
+            <td>{{ bx['two_points_attempted'] }}</td>
+            <td>{{ bx['three_points_made'] }}</td>
+            <td>{{ bx['three_points_attempted'] }}</td>
+            <td>{{ bx['free_throws_made'] }}</td>
+            <td>{{ bx['free_throws_attempted'] }}</td>
+            <td>{{ bx['offensive_rebounds'] }}</td>
+            <td>{{ bx['defensive_rebounds'] }}</td>
+            <td>{{ bx['total_rebounds'] }}</td>
+            <td>{{ bx['assists'] }}</td>
+            <td>{{ bx['steals'] }}</td>
+            <td>{{ bx['turnovers'] }}</td>
+            <td>{{ bx['blocks_favour'] }}</td>
+            <td>{{ bx['blocks_against'] }}</td>
+            <td>{{ bx['fouls_committed'] }}</td>
+            <td>{{ bx['fouls_received'] }}</td>
+            <td>{{ bx['valuation'] }}</td>
+            <td>{{ bx['plus_minus'] }}</td>
+          </tr>
+          {% endif %}
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
