@@ -80,6 +80,12 @@
     <li class="page-item disabled"><a class="page-link" disabled>Next</a></li>
     {% endif %}
   </ul>
+
+  <div class="d-flex justify-content-center">
+    <form action="" method="GET">
+      <input type="number" name="page" min="1" max="{{ page_count }}" class="form-control form-control-sm page-input" placeholder="Go to page" required>
+    </form>
+  </div>
 </nav>
 
 <!-- Add Box Score Modal -->
@@ -104,7 +110,7 @@
             </div>
             <div class="col-6">
               <label>Team</label>
-              <select name="team_id" id="addBoxScore_team_id" class="form-select" required>
+              <select name="team_id" id="addBoxScore_team_id" class="form-select" required disabled>
                 <option disabled selected value="">Select a Team</option>
               </select>
             </div>
@@ -113,7 +119,7 @@
           <div class="row mb-2">
             <div class="col-6">
               <label>Player</label>
-              <select name="player_id" id="addBoxScore_player_id" class="form-select" required>
+              <select name="player_id" id="addBoxScore_player_id" class="form-select" required disabled>
                 <option disabled selected value="">Select a Player</option>
               </select>
             </div>
@@ -575,6 +581,9 @@
         option.textContent = data.team.team_b;
         if (data.team.team_id_b == team_id) option.selected = true;
         teamSelect.appendChild(option);
+
+        teamSelect.disabled = false;
+        playerSelect.disabled = true;
       })
   }
 
@@ -599,6 +608,8 @@
           if (player.player_id == player_id) option.selected = true;
           playerSelect.appendChild(option);
         });
+
+        playerSelect.disabled = false;
       })
   }
 </script>

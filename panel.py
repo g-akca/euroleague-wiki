@@ -75,6 +75,12 @@ def panel_users_page():
     cursor.execute("SELECT COUNT(*) as total FROM users")
     entry_count = cursor.fetchone()['total']
     page_count = (entry_count + page_limit - 1) // page_limit
+
+    if page_num < 1:
+        page_num = 1
+    elif page_num > page_count:
+        page_num = page_count
+
     cursor.execute("SELECT *, CASE WHEN role = 'U' THEN 'User' WHEN role = 'A' THEN 'Admin' ELSE 'Unknown' END AS role_detailed FROM users LEFT JOIN euroleague_team_names ON users.team_supported = euroleague_team_names.team_id LIMIT %s OFFSET %s", (page_limit, (page_num-1) * page_limit ))
     users = cursor.fetchall()
 
@@ -238,6 +244,12 @@ def panel_teams_page():
     cursor.execute("SELECT COUNT(*) as total FROM euroleague_team_names")
     entry_count = cursor.fetchone()['total']
     page_count = (entry_count + page_limit - 1) // page_limit
+
+    if page_num < 1:
+        page_num = 1
+    elif page_num > page_count:
+        page_num = page_count
+
     cursor.execute("SELECT euroleague_team_names.team_id AS team_id, euroleague_team_names.team_name AS team_name, GROUP_CONCAT(euroleague_teams.season_code ORDER BY euroleague_teams.season_code ASC SEPARATOR ', ') AS seasons FROM euroleague_team_names LEFT JOIN euroleague_teams ON euroleague_team_names.team_id = euroleague_teams.team_id GROUP BY euroleague_team_names.team_id, euroleague_team_names.team_name LIMIT %s OFFSET %s", (page_limit, (page_num-1) * page_limit ))
     team_names = cursor.fetchall()
     cursor.close()
@@ -306,6 +318,12 @@ def panel_team_seasons_page(team_id):
     cursor.execute("SELECT COUNT(team_id) AS season_count FROM euroleague_teams WHERE team_id = %s", (team_id, ))
     season_count = cursor.fetchone()
     page_count = (season_count['season_count'] + page_limit - 1) // page_limit
+
+    if page_num < 1:
+        page_num = 1
+    elif page_num > page_count:
+        page_num = page_count
+
     cursor.execute("SELECT *, euroleague_teams.team_id AS team_id, euroleague_team_names.team_name AS team_name FROM euroleague_teams LEFT JOIN euroleague_team_names ON euroleague_teams.team_id = euroleague_team_names.team_id WHERE euroleague_teams.team_id = %s LIMIT %s OFFSET %s", (team_id, page_limit, (page_num-1) * page_limit ))
     team_seasons = cursor.fetchall()
 
@@ -412,6 +430,12 @@ def panel_box_scores_page():
     cursor.execute("SELECT COUNT(*) as total FROM euroleague_box_score")
     entry_count = cursor.fetchone()['total']
     page_count = (entry_count + page_limit - 1) // page_limit
+
+    if page_num < 1:
+        page_num = 1
+    elif page_num > page_count:
+        page_num = page_count
+
     cursor.execute("SELECT *, euroleague_box_score.player_id AS player_id, euroleague_box_score.team_id AS team_id FROM euroleague_box_score LEFT JOIN euroleague_player_names ON euroleague_box_score.player_id = euroleague_player_names.player_id LEFT JOIN euroleague_team_names ON euroleague_box_score.team_id = euroleague_team_names.team_id ORDER BY game_id ASC, euroleague_box_score.team_id ASC, points DESC LIMIT %s OFFSET %s", (page_limit, (page_num-1) * page_limit ))
     box_scores = cursor.fetchall()
 
@@ -529,6 +553,12 @@ def panel_matches_page():
     cursor.execute("SELECT COUNT(*) as total FROM euroleague_header")
     entry_count = cursor.fetchone()['total']
     page_count = (entry_count + page_limit - 1) // page_limit
+
+    if page_num < 1:
+        page_num = 1
+    elif page_num > page_count:
+        page_num = page_count
+
     cursor.execute("SELECT *, concat(score_a, ' - ', score_b) as result FROM euro.euroleague_header LIMIT %s OFFSET %s", (page_limit, (page_num-1) * page_limit))
     matches = cursor.fetchall()
 
@@ -637,6 +667,12 @@ def panel_plays_page():
     cursor.execute("SELECT COUNT(*) as total FROM euroleague_play_by_play")
     entry_count = cursor.fetchone()['total']
     page_count = (entry_count + page_limit - 1) // page_limit
+
+    if page_num < 1:
+        page_num = 1
+    elif page_num > page_count:
+        page_num = page_count
+
     cursor.execute("SELECT *, play.player_id AS player_id, play.team_id AS team_id, CASE WHEN play.quarter = 'q1' THEN 'Quarter 1' WHEN play.quarter = 'q2' THEN 'Quarter 2' WHEN play.quarter = 'q3' THEN 'Quarter 3' WHEN play.quarter = 'q4' THEN 'Quarter 4' WHEN play.quarter = 'extra_time' THEN 'Overtime' ELSE 'Unknown' END AS quarter_description FROM euroleague_play_by_play as play LEFT JOIN euroleague_player_names ON play.player_id = euroleague_player_names.player_id LEFT JOIN euroleague_team_names ON play.team_id = euroleague_team_names.team_id ORDER BY game_id, number_of_play ASC LIMIT %s OFFSET %s", (page_limit, (page_num-1) * page_limit))
     plays = cursor.fetchall()
 
@@ -771,6 +807,12 @@ def panel_comparisons_page():
     cursor.execute("SELECT COUNT(*) as total FROM euroleague_comparison")
     entry_count = cursor.fetchone()['total']
     page_count = (entry_count + page_limit - 1) // page_limit
+
+    if page_num < 1:
+        page_num = 1
+    elif page_num > page_count:
+        page_num = page_count
+
     cursor.execute("""
         SELECT C.*, H.*,
         T1.team_name AS team_name_a,
@@ -931,6 +973,12 @@ def panel_players_page():
     cursor.execute("SELECT COUNT(*) as total FROM euroleague_player_names")
     entry_count = cursor.fetchone()['total']
     page_count = (entry_count + page_limit - 1) // page_limit
+
+    if page_num < 1:
+        page_num = 1
+    elif page_num > page_count:
+        page_num = page_count
+
     cursor.execute("SELECT euroleague_player_names.player_id AS player_id, euroleague_player_names.player_name AS player_name, GROUP_CONCAT(euroleague_players.season_code ORDER BY euroleague_players.season_code ASC SEPARATOR ', ') AS seasons FROM euroleague_player_names LEFT JOIN euroleague_players ON euroleague_player_names.player_id = euroleague_players.player_id GROUP BY euroleague_player_names.player_id, euroleague_player_names.player_name LIMIT %s OFFSET %s", (page_limit, (page_num-1) * page_limit ))
     player_names = cursor.fetchall()
     cursor.close()
@@ -1001,6 +1049,12 @@ def panel_player_seasons_page(player_id):
     cursor.execute("SELECT COUNT(player_id) AS season_count FROM euroleague_players WHERE player_id = %s", (player_id, ))
     season_count = cursor.fetchone()
     page_count = (season_count['season_count'] + page_limit - 1) // page_limit
+
+    if page_num < 1:
+        page_num = 1
+    elif page_num > page_count:
+        page_num = page_count
+
     cursor.execute("SELECT *, euroleague_players.player_id AS player_id, euroleague_player_names.player_name AS player_name FROM euroleague_players LEFT JOIN euroleague_player_names ON euroleague_players.player_id = euroleague_player_names.player_id WHERE euroleague_players.player_id = %s LIMIT %s OFFSET %s", (player_id, page_limit, (page_num-1) * page_limit ))
     player_seasons = cursor.fetchall()
 
@@ -1108,6 +1162,12 @@ def panel_points_page():
     cursor.execute("SELECT COUNT(*) as total FROM euroleague_points")
     entry_count = cursor.fetchone()['total']
     page_count = (entry_count + page_limit - 1) // page_limit
+
+    if page_num < 1:
+        page_num = 1
+    elif page_num > page_count:
+        page_num = page_count
+        
     cursor.execute("""
         SELECT *
         FROM euroleague_points AS points

@@ -150,6 +150,12 @@ def teams_page():
     entry_count = cursor.fetchone()['total']
     page_count = (entry_count + page_limit - 1) // page_limit
     offset = (page_num - 1) * page_limit
+
+    if page_num < 1:
+        page_num = 1
+    elif page_num > page_count:
+        page_num = page_count
+    
     query = f"SELECT * FROM euroleague_team_names {where} ORDER BY {sort_by} LIMIT {page_limit} OFFSET {offset};"
     cursor.execute(query)
     team_names = cursor.fetchall()
