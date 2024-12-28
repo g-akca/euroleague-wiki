@@ -10,20 +10,10 @@
   <thead class="table-dark">
     <tr>
       <th class="col-3">
-        <a class="text-decoration-none text-white" href="?sort_by=season_code {{ 'desc' if sort_by == 'season_code asc' else 'asc' }}&page=1">
-          Team ID
-          {% if 'season_code' in sort_by %}
-          <span>{{ '▲' if 'asc' in sort_by else '▼' }}</span>
-          {% endif %}
-        </a>
+        Team Name
       </th>
       <th class="col-3">
-        <a class="text-decoration-none text-white" href="?sort_by=season_code {{ 'desc' if sort_by == 'season_code asc' else 'asc' }}&page=1">
-          Matches Played
-          {% if 'season_code' in sort_by %}
-          <span>{{ '▲' if 'asc' in sort_by else '▼' }}</span>
-          {% endif %}
-        </a>
+        Matches Played
       </th>
       <th> Wins </th>
       <th> Losses </th>
@@ -33,7 +23,11 @@
   <tbody class="table-group-divider">
     {% for season in season_detail %}
     <tr onclick="window.location='/team/{{ season['team_id'] }}/{{ season['season_code'] }}';" style="cursor: pointer;">
-      <td>{{ season['team_id'] }}</td>
+      {% if season['team_name'] == champion['champion'] %}
+        <td style="font-weight: bold; color: #28a745;">{{ season['team_name'] }} 👑</td>
+      {% else %}
+        <td>{{ season['team_name'] }}</td>
+      {% endif %}
       <td>{{ season['games_played'] }}</td>
       <td>{{ season['wins'] }}</td>
       <td>{{ season['losses'] }}</td>
