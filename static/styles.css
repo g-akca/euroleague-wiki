@@ -222,18 +222,21 @@ footer {
 }
 
 .page-input {
-    max-width: 100px;
+    width: 110px;
     color: #fff;
     background-color: #414141;
     border: 1px solid #6d6d6d;
 }   
 
 .page-input:focus {
-    max-width: 100px;
-    justify-content: center;
+    width: 110px;
     color: #fff;
     background-color: #414141;
     border: 1px solid #6d6d6d;
+}
+
+.page-input::placeholder {
+    color: #fff;
 }
 
 /* Match Details */
@@ -512,5 +515,3 @@ footer {
     border-color: rgba(92, 75, 60, 0.3);
     background: linear-gradient(145deg, #f5efe6, #f0e8dc);
 }
-
-
