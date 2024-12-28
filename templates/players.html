@@ -69,12 +69,9 @@
     {% endif %}
   </ul>
   
-  <div class="pagination-bottom">
-    <form action="" method="get" style="margin: 0;">
-      <input type="hidden" name="sort_by" value="{{ sort_by }}">
-      <input type="number" name="page" min="1" max="{{ page_count }}" 
-             class="form-control form-control-sm page-input" 
-             placeholder="Go to page" required>
+  <div class="d-flex justify-content-center">
+    <form action="" method="GET">
+      <input type="number" name="page" min="1" max="{{ page_count }}" class="form-control form-control-sm page-input" placeholder="Go to page" required>
     </form>
   </div>
   

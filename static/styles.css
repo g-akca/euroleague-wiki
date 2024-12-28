@@ -222,18 +222,21 @@ footer {
 }
 
 .page-input {
-    max-width: 100px;
+    width: 110px;
     color: #fff;
     background-color: #414141;
     border: 1px solid #6d6d6d;
 }   
 
 .page-input:focus {
-    max-width: 100px;
-    justify-content: center;
+    width: 110px;
     color: #fff;
     background-color: #414141;
     border: 1px solid #6d6d6d;
+}
+
+.page-input::placeholder {
+    color: #fff;
 }
 
 /* Match Details */
@@ -321,6 +324,3 @@ footer {
 .rest-of-stats span:not(:last-child) {
     border-right: 1px solid #ddd;
 }
-
-
-  
