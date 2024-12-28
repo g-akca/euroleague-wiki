@@ -251,11 +251,15 @@ footer {
 
 .nav-pills .nav-link.quarter-btn {
     font-weight: bold;
-    color: #000000;
+    color: black;
 }
 
 .nav-pills .nav-link.quarter-btn.active {
     background-color: #ffbc03;
+}
+
+.nav-pills .nav-link.quarter-btn.disabled {
+    color: gray;
 }
 
 /* Player Details */

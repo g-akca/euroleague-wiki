@@ -224,7 +224,20 @@ def matches_page():
 def match_details_page(game_id):
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
-    cursor.execute("SELECT h.*, t1.team_name AS team_a, t2.team_name AS team_b FROM euroleague_header h LEFT JOIN euroleague_team_names t1 ON h.team_id_a = t1.team_id LEFT JOIN euroleague_team_names t2 ON h.team_id_b = t2.team_id WHERE game_id = %s", (game_id, ))
+    cursor.execute("""SELECT h.*, 
+                        t1.team_name AS team_a, 
+                        t2.team_name AS team_b,
+                        MAX(CASE WHEN plays.quarter = 'q1' THEN 1 ELSE 0 END) AS q1_exists,
+                        MAX(CASE WHEN plays.quarter = 'q2' THEN 1 ELSE 0 END) AS q2_exists,
+                        MAX(CASE WHEN plays.quarter = 'q3' THEN 1 ELSE 0 END) AS q3_exists,
+                        MAX(CASE WHEN plays.quarter = 'q4' THEN 1 ELSE 0 END) AS q4_exists,
+                        MAX(CASE WHEN plays.quarter = 'extra_time' THEN 1 ELSE 0 END) AS extra_time_exists
+                    FROM euroleague_header h
+                    LEFT JOIN euroleague_team_names t1 ON h.team_id_a = t1.team_id
+                    LEFT JOIN euroleague_team_names t2 ON h.team_id_b = t2.team_id
+                    LEFT JOIN euroleague_play_by_play plays ON h.game_id = plays.game_id
+                    WHERE h.game_id = %s
+                    GROUP BY h.game_id""", (game_id, ))
     match = cursor.fetchone()
     cursor.execute("SELECT *, euroleague_box_score.player_id AS player_id, euroleague_box_score.team_id AS team_id, CAST(euroleague_box_score.dorsal AS UNSIGNED) AS dorsal_int FROM euroleague_box_score LEFT JOIN euroleague_player_names ON euroleague_box_score.player_id = euroleague_player_names.player_id LEFT JOIN euroleague_team_names ON euroleague_box_score.team_id = euroleague_team_names.team_id WHERE game_id = %s ORDER BY euroleague_box_score.team_id ASC, dorsal_int ASC", (game_id, ))
     box_score = cursor.fetchall()
