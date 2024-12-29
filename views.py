@@ -1,7 +1,6 @@
 from flask import render_template, request, jsonify
 from db import get_db_connection
 import os
-from pathlib import Path
 import json
 import random
 
@@ -213,6 +212,7 @@ def team_details_page(team_id, season_code=None):
         "stadium": "N/A",
         "capacity": "N/A"
     }
+
     default_logo_path = "/static/team_logos/default.png"
 
     if not team_seasons:
@@ -267,7 +267,8 @@ def team_details_page(team_id, season_code=None):
     except (ValueError, TypeError):
         pass
 
-    logo_directory = os.path.join("static", "team_logos")
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    logo_directory = os.path.join(base_dir,"static", "team_logos")
     svg_path = os.path.join(logo_directory, f"{team_id}.svg")
     png_path = os.path.join(logo_directory, f"{team_id}.png")
 
@@ -278,7 +279,7 @@ def team_details_page(team_id, season_code=None):
     else:
         logo_path = default_logo_path
 
-    json_file_path = Path("static") / "team_details.json"
+    json_file_path = os.path.join(base_dir, "static", "team_details.json")
     with open(json_file_path, "r") as f:
         team_details_json = json.load(f)
 
