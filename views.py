@@ -205,13 +205,6 @@ def team_details_page(team_id, season_code=None):
         """,(team_id, )
     )
     team_seasons = cursor.fetchall()
-    default_team_details = {
-        "team_name": "Unknown Team",
-        "description": "No details available.",
-        "established_year": "N/A",
-        "stadium": "N/A",
-        "capacity": "N/A"
-    }
 
     default_logo_path = "/static/team_logos/default.png"
 
@@ -223,8 +216,7 @@ def team_details_page(team_id, season_code=None):
         team_seasons=[],
         season_data={},
         roster=[],
-        logo_path=default_logo_path,
-        team_details=default_team_details
+        logo_path=default_logo_path
     )
 
     team_name = team_seasons[0].get('team_name', 'Team')
@@ -279,12 +271,6 @@ def team_details_page(team_id, season_code=None):
     else:
         logo_path = default_logo_path
 
-    json_file_path = os.path.join(base_dir, "static", "team_details.json")
-    with open(json_file_path, "r") as f:
-        team_details_json = json.load(f)
-
-    team_details = team_details_json.get(team_id, default_team_details)
-
     return render_template(
         "team_details.html",
         team_id=team_id,
@@ -292,8 +278,7 @@ def team_details_page(team_id, season_code=None):
         team_seasons=team_seasons,
         season_data=season_data,
         roster=roster,
-        logo_path=logo_path,
-        team_details=team_details
+        logo_path=logo_path
     )
 
 def matches_page():

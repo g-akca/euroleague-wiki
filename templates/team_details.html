@@ -10,19 +10,6 @@
         <img src="{{ logo_path }}" alt="{{ team_name }} Logo" style="max-width: 200px; max-height: 200px;">
     </div>
 
-    <div class="card shadow mb-4">
-      <div class="card-header bg-dark text-white">
-          <h4 class="card-title mb-0">{{ team_details.team_name }}</h4>
-      </div>
-      <div class="card-body">
-          <p>{{ team_details.description }}</p>
-          <ul class="list-group list-group-flush">
-              <li class="list-group-item"><strong>Established Year:</strong> {{ team_details.established_year or 'N/A' }}</li>
-              <li class="list-group-item"><strong>Stadium:</strong> {{ team_details.stadium or 'N/A' }}</li>
-              <li class="list-group-item"><strong>Capacity:</strong> {{ team_details.capacity or 'N/A' }}</li>
-          </ul>
-      </div>
-  </div>
 
     <!-- Navigation Tabs -->
     <ul class="nav nav-tabs mb-4 justify-content-center" role="tablist">
