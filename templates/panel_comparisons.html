@@ -25,16 +25,16 @@
     <table class="table table-striped table-hover">
       <thead class="table-dark">
         <tr>
-            <th>Game ID</th>
-            <th>Date</th>
-            <th>Team A</th>
-            <th>Team B</th>
-            <th>Points Starters A</th>
-            <th>Points Starters B</th>
-            <th>Points Bench A</th>
-            <th>Points Bench B</th>
-            <th class="col-1"></th>
-            <th class="col-1"></th>
+          <th>Game ID</th>
+          <th>Date</th>
+          <th>Team A</th>
+          <th>Team B</th>
+          <th>Points Starters A</th>
+          <th>Points Starters B</th>
+          <th>Points Bench A</th>
+          <th>Points Bench B</th>
+          <th class="col-1"></th>
+          <th class="col-1"></th>
         </tr>
       </thead>
       <tbody class="table-group-divider">
@@ -95,426 +95,425 @@
 
 <!-- Add Comparison Modal -->
 <div class="modal fade" id="addComparisonModal" tabindex="-1" aria-labelledby="addComparisonModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3 class="modal-title">Add New Comparison</h3>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form action="/panel/comparisons/add" method="post" id="addComparisonForm">
-            <div class="row mb-2">
-              <div class="col-6">
-                <label>Game ID</label>
-                <select name="game_id" id="addComparison_game_id" class="form-select" required>
-                  <option disabled selected value="">Select a Game</option>
-                  {% for match in matches %}
-                    <option value="{{ match['game_id'] }}">{{ match['game_id'] }}</option>
-                  {% endfor %}
-                </select>
-              </div>
-              <div class="col-6">
-                <label>Teams</label>
-                <p>
-                  Team A: <span id="team_a_name"></span><br>
-                  Team B: <span id="team_b_name"></span>
-                </p>
-              </div>
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Add New Comparison</h3>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/panel/comparisons/add" method="post" id="addComparisonForm">
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Game ID</label>
+              <select name="game_id" id="addComparison_game_id" class="form-select" required>
+                <option disabled selected value="">Select a Game</option>
+                {% for match in matches %}
+                  <option value="{{ match['game_id'] }}">{{ match['game_id'] }}</option>
+                {% endfor %}
+              </select>
             </div>
-  
-            <div class="row mb-2">
-              <div class="col-6">
-                <label>Fast Break Points A</label>
-                <input type="number" class="form-control" name="fast_break_points_a" required />
-              </div>
-              <div class="col-6">
-                <label>Fast Break Points B</label>
-                <input type="number" class="form-control" name="fast_break_points_b" required />
-              </div>
+            <div class="col-6">
+              <label>Teams</label>
+              <p>
+                Team A: <span id="team_a_name"></span><br>
+                Team B: <span id="team_b_name"></span>
+              </p>
             </div>
-  
-            <div class="row mb-2">
-              <div class="col-6">
-                <label>Turnover Points A</label>
-                <input type="number" class="form-control" name="turnover_points_a" required />
-              </div>
-              <div class="col-6">
-                <label>Turnover Points B</label>
-                <input type="number" class="form-control" name="turnover_points_b" required />
-              </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Fast Break Points A</label>
+              <input type="number" class="form-control" name="fast_break_points_a" required />
             </div>
-  
-            <div class="row mb-2">
-              <div class="col-6">
-                <label>Second Chance Points A</label>
-                <input type="number" class="form-control" name="second_chance_points_a" required />
-              </div>
-              <div class="col-6">
-                <label>Second Chance Points B</label>
-                <input type="number" class="form-control" name="second_chance_points_b" required />
-              </div>
+            <div class="col-6">
+              <label>Fast Break Points B</label>
+              <input type="number" class="form-control" name="fast_break_points_b" required />
             </div>
-  
-            <div class="row mb-2">
-              <div class="col-6">
-                <label>Defensive Rebounds A</label>
-                <input type="number" class="form-control" name="defensive_rebounds_a" required />
-              </div>
-              <div class="col-6">
-                <label>Defensive Rebounds B</label>
-                <input type="number" class="form-control" name="defensive_rebounds_b" required />
-              </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Turnover Points A</label>
+              <input type="number" class="form-control" name="turnover_points_a" required />
             </div>
-  
-            <div class="row mb-2">
-              <div class="col-6">
-                <label>Offensive Rebounds A</label>
-                <input type="number" class="form-control" name="offensive_rebounds_a" required />
-              </div>
-              <div class="col-6">
-                <label>Offensive Rebounds B</label>
-                <input type="number" class="form-control" name="offensive_rebounds_b" required />
-              </div>
+            <div class="col-6">
+              <label>Turnover Points B</label>
+              <input type="number" class="form-control" name="turnover_points_b" required />
             </div>
-  
-            <div class="row mb-2">
-              <div class="col-6">
-                <label>Turnovers Starters A</label>
-                <input type="number" class="form-control" name="turnovers_starters_a" required />
-              </div>
-              <div class="col-6">
-                <label>Turnovers Bench A</label>
-                <input type="number" class="form-control" name="turnovers_bench_a" required />
-              </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Second Chance Points A</label>
+              <input type="number" class="form-control" name="second_chance_points_a" required />
             </div>
-  
-            <div class="row mb-2">
-              <div class="col-6">
-                <label>Turnovers Starters B</label>
-                <input type="number" class="form-control" name="turnovers_starters_b" required />
-              </div>
-              <div class="col-6">
-                <label>Turnovers Bench B</label>
-                <input type="number" class="form-control" name="turnovers_bench_b" required />
-              </div>
+            <div class="col-6">
+              <label>Second Chance Points B</label>
+              <input type="number" class="form-control" name="second_chance_points_b" required />
             </div>
-  
-            <div class="row mb-2">
-              <div class="col-6">
-                <label>Steals Starters A</label>
-                <input type="number" class="form-control" name="steals_starters_a" required />
-              </div>
-              <div class="col-6">
-                <label>Steals Bench A</label>
-                <input type="number" class="form-control" name="steals_bench_a" required />
-              </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Defensive Rebounds A</label>
+              <input type="number" class="form-control" name="defensive_rebounds_a" required />
             </div>
-  
-            <div class="row mb-2">
-              <div class="col-6">
-                <label>Steals Starters B</label>
-                <input type="number" class="form-control" name="steals_starters_b" required />
-              </div>
-              <div class="col-6">
-                <label>Steals Bench B</label>
-                <input type="number" class="form-control" name="steals_bench_b" required />
-              </div>
+            <div class="col-6">
+              <label>Defensive Rebounds B</label>
+              <input type="number" class="form-control" name="defensive_rebounds_b" required />
             </div>
-  
-            <div class="row mb-2">
-              <div class="col-6">
-                <label>Max Lead A</label>
-                <input type="number" class="form-control" name="max_lead_a" required />
-              </div>
-              <div class="col-6">
-                <label>Max Lead B</label>
-                <input type="number" class="form-control" name="max_lead_b" required />
-              </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Offensive Rebounds A</label>
+              <input type="number" class="form-control" name="offensive_rebounds_a" required />
             </div>
-  
-            <div class="row mb-2">
-              <div class="col-6">
-                <label>Minute Max Lead A</label>
-                <input type="number" class="form-control" name="minute_max_lead_a" required />
-              </div>
-              <div class="col-6">
-                <label>Minute Max Lead B</label>
-                <input type="number" class="form-control" name="minute_max_lead_b" required />
-              </div>
+            <div class="col-6">
+              <label>Offensive Rebounds B</label>
+              <input type="number" class="form-control" name="offensive_rebounds_b" required />
             </div>
-  
-            <div class="row mb-2">
-              <div class="col-6">
-                <label>Points Max Lead A</label>
-                <input type="text" class="form-control" name="points_max_lead_a" />
-              </div>
-              <div class="col-6">
-                <label>Points Max Lead B</label>
-                <input type="text" class="form-control" name="points_max_lead_b" />
-              </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Turnovers Starters A</label>
+              <input type="number" class="form-control" name="turnovers_starters_a" required />
             </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-success" form="addComparisonForm">Create Comparison</button>
-        </div>
+            <div class="col-6">
+              <label>Turnovers Bench A</label>
+              <input type="number" class="form-control" name="turnovers_bench_a" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Turnovers Starters B</label>
+              <input type="number" class="form-control" name="turnovers_starters_b" required />
+            </div>
+            <div class="col-6">
+              <label>Turnovers Bench B</label>
+              <input type="number" class="form-control" name="turnovers_bench_b" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Steals Starters A</label>
+              <input type="number" class="form-control" name="steals_starters_a" required />
+            </div>
+            <div class="col-6">
+              <label>Steals Bench A</label>
+              <input type="number" class="form-control" name="steals_bench_a" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Steals Starters B</label>
+              <input type="number" class="form-control" name="steals_starters_b" required />
+            </div>
+            <div class="col-6">
+              <label>Steals Bench B</label>
+              <input type="number" class="form-control" name="steals_bench_b" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Max Lead A</label>
+              <input type="number" class="form-control" name="max_lead_a" required />
+            </div>
+            <div class="col-6">
+              <label>Max Lead B</label>
+              <input type="number" class="form-control" name="max_lead_b" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Minute Max Lead A</label>
+              <input type="number" class="form-control" name="minute_max_lead_a" required />
+            </div>
+            <div class="col-6">
+              <label>Minute Max Lead B</label>
+              <input type="number" class="form-control" name="minute_max_lead_b" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Points Max Lead A</label>
+              <input type="text" class="form-control" name="points_max_lead_a" />
+            </div>
+            <div class="col-6">
+              <label>Points Max Lead B</label>
+              <input type="text" class="form-control" name="points_max_lead_b" />
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-success" form="addComparisonForm">Create Comparison</button>
       </div>
     </div>
   </div>
+</div>
 
  <!-- Update Comparison Modal -->
 <div class="modal fade" id="updateComparisonModal" tabindex="-1" aria-labelledby="updateComparisonModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Update Comparison</h3>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Update Comparison</h3>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/panel/comparisons/update" method="post" id="updateComparisonForm">
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Game ID</label>
+              <p id="update_display_game_id" class="form-control-plaintext text-muted"></p>
+              <input type="hidden" name="game_id" id="update_game_id" />
             </div>
-            <div class="modal-body">
-                <form action="/panel/comparisons/update" method="post" id="updateComparisonForm">
-                    <div class="row mb-2">
-                        <div class="col-6">
-                            <label>Game ID</label>
-                            <p id="update_display_game_id" class="form-control-plaintext text-muted"></p>
-                            <input type="hidden" name="game_id" id="update_game_id" />
-                        </div>
-                        <div class="col-6">
-                            <label>Teams</label>
-                            <p>
-                                Team A: <span id="update_team_a_name"></span><br>
-                                Team B: <span id="update_team_b_name"></span>
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="row mb-2">
-                        <div class="col-6">
-                            <label>Fast Break Points A</label>
-                            <input type="number" class="form-control" name="fast_break_points_a" id="update_fast_break_points_a" required />
-                        </div>
-                        <div class="col-6">
-                            <label>Fast Break Points B</label>
-                            <input type="number" class="form-control" name="fast_break_points_b" id="update_fast_break_points_b" required />
-                        </div>
-                    </div>
-
-                    <div class="row mb-2">
-                        <div class="col-6">
-                            <label>Turnover Points A</label>
-                            <input type="number" class="form-control" name="turnover_points_a" id="update_turnover_points_a" required />
-                        </div>
-                        <div class="col-6">
-                            <label>Turnover Points B</label>
-                            <input type="number" class="form-control" name="turnover_points_b" id="update_turnover_points_b" required />
-                        </div>
-                    </div>
-
-                    <div class="row mb-2">
-                        <div class="col-6">
-                            <label>Second Chance Points A</label>
-                            <input type="number" class="form-control" name="second_chance_points_a" id="update_second_chance_points_a" required />
-                        </div>
-                        <div class="col-6">
-                            <label>Second Chance Points B</label>
-                            <input type="number" class="form-control" name="second_chance_points_b" id="update_second_chance_points_b" required />
-                        </div>
-                    </div>
-
-                    <div class="row mb-2">
-                        <div class="col-6">
-                            <label>Defensive Rebounds A</label>
-                            <input type="number" class="form-control" name="defensive_rebounds_a" id="update_defensive_rebounds_a" required />
-                        </div>
-                        <div class="col-6">
-                            <label>Defensive Rebounds B</label>
-                            <input type="number" class="form-control" name="defensive_rebounds_b" id="update_defensive_rebounds_b" required />
-                        </div>
-                    </div>
-
-                    <div class="row mb-2">
-                        <div class="col-6">
-                            <label>Offensive Rebounds A</label>
-                            <input type="number" class="form-control" name="offensive_rebounds_a" id="update_offensive_rebounds_a" required />
-                        </div>
-                        <div class="col-6">
-                            <label>Offensive Rebounds B</label>
-                            <input type="number" class="form-control" name="offensive_rebounds_b" id="update_offensive_rebounds_b" required />
-                        </div>
-                    </div>
-
-                    <div class="row mb-2">
-                        <div class="col-6">
-                            <label>Turnovers Starters A</label>
-                            <input type="number" class="form-control" name="turnovers_starters_a" id="update_turnovers_starters_a" required />
-                        </div>
-                        <div class="col-6">
-                            <label>Turnovers Bench A</label>
-                            <input type="number" class="form-control" name="turnovers_bench_a" id="update_turnovers_bench_a" required />
-                        </div>
-                    </div>
-
-                    <div class="row mb-2">
-                        <div class="col-6">
-                            <label>Turnovers Starters B</label>
-                            <input type="number" class="form-control" name="turnovers_starters_b" id="update_turnovers_starters_b" required />
-                        </div>
-                        <div class="col-6">
-                            <label>Turnovers Bench B</label>
-                            <input type="number" class="form-control" name="turnovers_bench_b" id="update_turnovers_bench_b" required />
-                        </div>
-                    </div>
-
-                    <div class="row mb-2">
-                        <div class="col-6">
-                            <label>Steals Starters A</label>
-                            <input type="number" class="form-control" name="steals_starters_a" id="update_steals_starters_a" required />
-                        </div>
-                        <div class="col-6">
-                            <label>Steals Bench A</label>
-                            <input type="number" class="form-control" name="steals_bench_a" id="update_steals_bench_a" required />
-                        </div>
-                    </div>
-
-                    <div class="row mb-2">
-                        <div class="col-6">
-                            <label>Steals Starters B</label>
-                            <input type="number" class="form-control" name="steals_starters_b" id="update_steals_starters_b" required />
-                        </div>
-                        <div class="col-6">
-                            <label>Steals Bench B</label>
-                            <input type="number" class="form-control" name="steals_bench_b" id="update_steals_bench_b" required />
-                        </div>
-                    </div>
-
-                    <div class="row mb-2">
-                        <div class="col-6">
-                            <label>Max Lead A</label>
-                            <input type="number" class="form-control" name="max_lead_a" id="update_max_lead_a" required />
-                        </div>
-                        <div class="col-6">
-                            <label>Max Lead B</label>
-                            <input type="number" class="form-control" name="max_lead_b" id="update_max_lead_b" required />
-                        </div>
-                    </div>
-
-                    <div class="row mb-2">
-                        <div class="col-6">
-                            <label>Minute Max Lead A</label>
-                            <input type="number" class="form-control" name="minute_max_lead_a" id="update_minute_max_lead_a" required />
-                        </div>
-                        <div class="col-6">
-                            <label>Minute Max Lead B</label>
-                            <input type="number" class="form-control" name="minute_max_lead_b" id="update_minute_max_lead_b" required />
-                        </div>
-                    </div>
-
-                    <div class="row mb-2">
-                        <div class="col-6">
-                            <label>Points Max Lead A</label>
-                            <input type="text" class="form-control" name="points_max_lead_a" id="update_points_max_lead_a" />
-                        </div>
-                        <div class="col-6">
-                            <label>Points Max Lead B</label>
-                            <input type="text" class="form-control" name="points_max_lead_b" id="update_points_max_lead_b" />
-                        </div>
-                    </div>
-                </form>
+            <div class="col-6">
+              <label>Teams</label>
+              <p>
+                Team A: <span id="update_team_a_name"></span><br>
+                Team B: <span id="update_team_b_name"></span>
+              </p>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary" form="updateComparisonForm">Update Comparison</button>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Fast Break Points A</label>
+              <input type="number" class="form-control" name="fast_break_points_a" id="update_fast_break_points_a" required />
             </div>
-        </div>
+            <div class="col-6">
+              <label>Fast Break Points B</label>
+              <input type="number" class="form-control" name="fast_break_points_b" id="update_fast_break_points_b" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Turnover Points A</label>
+              <input type="number" class="form-control" name="turnover_points_a" id="update_turnover_points_a" required />
+            </div>
+            <div class="col-6">
+              <label>Turnover Points B</label>
+              <input type="number" class="form-control" name="turnover_points_b" id="update_turnover_points_b" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Second Chance Points A</label>
+              <input type="number" class="form-control" name="second_chance_points_a" id="update_second_chance_points_a" required />
+            </div>
+            <div class="col-6">
+              <label>Second Chance Points B</label>
+              <input type="number" class="form-control" name="second_chance_points_b" id="update_second_chance_points_b" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Defensive Rebounds A</label>
+              <input type="number" class="form-control" name="defensive_rebounds_a" id="update_defensive_rebounds_a" required />
+            </div>
+            <div class="col-6">
+              <label>Defensive Rebounds B</label>
+              <input type="number" class="form-control" name="defensive_rebounds_b" id="update_defensive_rebounds_b" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Offensive Rebounds A</label>
+              <input type="number" class="form-control" name="offensive_rebounds_a" id="update_offensive_rebounds_a" required />
+            </div>
+            <div class="col-6">
+              <label>Offensive Rebounds B</label>
+              <input type="number" class="form-control" name="offensive_rebounds_b" id="update_offensive_rebounds_b" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Turnovers Starters A</label>
+              <input type="number" class="form-control" name="turnovers_starters_a" id="update_turnovers_starters_a" required />
+            </div>
+            <div class="col-6">
+              <label>Turnovers Bench A</label>
+              <input type="number" class="form-control" name="turnovers_bench_a" id="update_turnovers_bench_a" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Turnovers Starters B</label>
+              <input type="number" class="form-control" name="turnovers_starters_b" id="update_turnovers_starters_b" required />
+            </div>
+            <div class="col-6">
+              <label>Turnovers Bench B</label>
+              <input type="number" class="form-control" name="turnovers_bench_b" id="update_turnovers_bench_b" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Steals Starters A</label>
+              <input type="number" class="form-control" name="steals_starters_a" id="update_steals_starters_a" required />
+            </div>
+            <div class="col-6">
+              <label>Steals Bench A</label>
+              <input type="number" class="form-control" name="steals_bench_a" id="update_steals_bench_a" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Steals Starters B</label>
+              <input type="number" class="form-control" name="steals_starters_b" id="update_steals_starters_b" required />
+            </div>
+            <div class="col-6">
+              <label>Steals Bench B</label>
+              <input type="number" class="form-control" name="steals_bench_b" id="update_steals_bench_b" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Max Lead A</label>
+              <input type="number" class="form-control" name="max_lead_a" id="update_max_lead_a" required />
+            </div>
+            <div class="col-6">
+              <label>Max Lead B</label>
+              <input type="number" class="form-control" name="max_lead_b" id="update_max_lead_b" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Minute Max Lead A</label>
+              <input type="number" class="form-control" name="minute_max_lead_a" id="update_minute_max_lead_a" required />
+            </div>
+            <div class="col-6">
+              <label>Minute Max Lead B</label>
+              <input type="number" class="form-control" name="minute_max_lead_b" id="update_minute_max_lead_b" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Points Max Lead A</label>
+              <input type="text" class="form-control" name="points_max_lead_a" id="update_points_max_lead_a" />
+            </div>
+            <div class="col-6">
+              <label>Points Max Lead B</label>
+              <input type="text" class="form-control" name="points_max_lead_b" id="update_points_max_lead_b" />
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary" form="updateComparisonForm">Update Comparison</button>
+      </div>
     </div>
+  </div>
 </div>
 
 <!-- Delete Comparison Modal -->
 <div class="modal fade" id="deleteComparisonModal" tabindex="-1" aria-labelledby="deleteComparisonModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Delete Comparison</h3>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form action="/panel/comparisons/delete" method="post" id="deleteComparisonForm">
-                    <input type="hidden" class="form-control" name="game_id" id="deleteComparison_game_id" />
-                </form>
-                <div class="mt-1 mb-1" id="deleteComparisonMessage"></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-danger" form="deleteComparisonForm">Delete Comparison</button>
-            </div>
-        </div>
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Delete Comparison</h3>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/panel/comparisons/delete" method="post" id="deleteComparisonForm">
+          <input type="hidden" class="form-control" name="game_id" id="deleteComparison_game_id" />
+        </form>
+        <div class="mt-1 mb-1" id="deleteComparisonMessage"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-danger" form="deleteComparisonForm">Delete Comparison</button>
+      </div>
     </div>
+  </div>
 </div>
 
 {% endblock %}
 
 {% block scripts %}
 <script>
+  const deleteComparisonModal = document.getElementById('deleteComparisonModal');
+  if (deleteComparisonModal) {
+    deleteComparisonModal.addEventListener('show.bs.modal', (event) => {
+      const deleteButton = event.relatedTarget; 
+      const gameId = deleteButton.getAttribute('data-game-id'); 
+      const teamA = deleteButton.getAttribute('data-team-a'); 
+      const teamB = deleteButton.getAttribute('data-team-b'); 
 
-    const deleteComparisonModal = document.getElementById('deleteComparisonModal');
-    if (deleteComparisonModal) {
-        deleteComparisonModal.addEventListener('show.bs.modal', (event) => {
-            const deleteButton = event.relatedTarget; 
-            const gameId = deleteButton.getAttribute('data-game-id'); 
-            const teamA = deleteButton.getAttribute('data-team-a'); 
-            const teamB = deleteButton.getAttribute('data-team-b'); 
+      const message = deleteComparisonModal.querySelector('#deleteComparisonMessage');
+      message.innerHTML = `The comparison for <strong>${teamA}</strong> vs <strong>${teamB}</strong> (Game ID: <strong>${gameId}</strong>) will be deleted. Are you sure?`;
 
-            const message = deleteComparisonModal.querySelector('#deleteComparisonMessage');
-            message.innerHTML = `The comparison for <strong>${teamA}</strong> vs <strong>${teamB}</strong> (Game ID: <strong>${gameId}</strong>) will be deleted. Are you sure?`;
-
-            const gameIdInput = deleteComparisonModal.querySelector('#deleteComparison_game_id');
-            gameIdInput.value = gameId;
-        });
-    }
-
-    const updateComparisonModal = document.getElementById('updateComparisonModal');
-    if (updateComparisonModal) {
-        updateComparisonModal.addEventListener('show.bs.modal', (event) => {
-            const updateButton = event.relatedTarget; 
-            const data = updateButton.dataset; 
-
-            const gameId = decodeURIComponent(data.game_id);
-            const teamA = decodeURIComponent(data.team_name_a || 'Team A');
-            const teamB = decodeURIComponent(data.team_name_b || 'Team B');
-
-            document.getElementById('update_game_id').value = gameId;
-            document.getElementById('update_display_game_id').innerText = gameId;
-            document.getElementById('update_team_a_name').innerText = teamA;
-            document.getElementById('update_team_b_name').innerText = teamB;
-
-            const modalFields = updateComparisonModal.querySelectorAll('[id^="update_"]');
-            modalFields.forEach(field => {
-                const fieldName = field.name;
-                if (data[fieldName] !== undefined) {
-                    field.value = decodeURIComponent(data[fieldName]);
-                }
-            });
-        });
-    }
-
-
-    document.getElementById('addComparison_game_id').addEventListener('change', function (event) {
-        const gameId = event.target.value;
-        
-        fetch(`/panel/get_playing_teams/${gameId}`)
-            .then(response => response.json())
-            .then(data => {
-                const teamA = data.team_name_a || 'Team A'; 
-                const teamB = data.team_name_b || 'Team B'; 
-                
-                document.getElementById('team_a_name').textContent = teamA;
-                document.getElementById('team_b_name').textContent = teamB;
-            })
-            .catch(error => {
-                console.error('Error fetching team names:', error);
-                document.getElementById('team_a_name').textContent = 'Team A';
-                document.getElementById('team_b_name').textContent = 'Team B';
-            });
+      const gameIdInput = deleteComparisonModal.querySelector('#deleteComparison_game_id');
+      gameIdInput.value = gameId;
     });
-  </script>
+  }
+
+  const updateComparisonModal = document.getElementById('updateComparisonModal');
+  if (updateComparisonModal) {
+    updateComparisonModal.addEventListener('show.bs.modal', (event) => {
+      const updateButton = event.relatedTarget; 
+      const data = updateButton.dataset; 
+
+      const gameId = decodeURIComponent(data.game_id);
+      const teamA = decodeURIComponent(data.team_name_a || 'Team A');
+      const teamB = decodeURIComponent(data.team_name_b || 'Team B');
+
+      document.getElementById('update_game_id').value = gameId;
+      document.getElementById('update_display_game_id').innerText = gameId;
+      document.getElementById('update_team_a_name').innerText = teamA;
+      document.getElementById('update_team_b_name').innerText = teamB;
+
+      const modalFields = updateComparisonModal.querySelectorAll('[id^="update_"]');
+      modalFields.forEach(field => {
+        const fieldName = field.name;
+        if (data[fieldName] !== undefined) {
+            field.value = decodeURIComponent(data[fieldName]);
+        }
+      });
+    });
+  }
+
+
+  document.getElementById('addComparison_game_id').addEventListener('change', function (event) {
+    const gameId = event.target.value;
+    
+    fetch(`/panel/get_playing_teams/${gameId}`)
+      .then(response => response.json())
+      .then(data => {
+        const teamA = data.team_name_a || 'Team A'; 
+        const teamB = data.team_name_b || 'Team B'; 
+        
+        document.getElementById('team_a_name').textContent = teamA;
+        document.getElementById('team_b_name').textContent = teamB;
+      })
+      .catch(error => {
+        console.error('Error fetching team names:', error);
+        document.getElementById('team_a_name').textContent = 'Team A';
+        document.getElementById('team_b_name').textContent = 'Team B';
+      });
+  });
+</script>
 {% endblock %}

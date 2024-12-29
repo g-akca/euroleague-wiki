@@ -84,303 +84,304 @@
 
 <!-- Add Points Modal -->
 <div class="modal fade" id="addPointsModal" tabindex="-1" aria-labelledby="addPointsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3 class="modal-title">Add New Point</h3>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form action="/panel/points/add" method="post" id="addPointsForm">
-            <div class="row mb-2">
-              <div class="col-6">
-                <label for="addPoints_game_id">Game ID</label>
-                <select name="game_id" id="addPoints_game_id" class="form-select" required>
-                  <option disabled selected>Select a Game ID</option>
-                  {% for game in games %}
-                    <option value="{{ game['game_id'] }}">{{ game['game_id'] }}</option>
-                  {% endfor %}
-                </select>
-              </div>
-              <div class="col-6">
-                <label for="addPoints_game_play_id">Game Play ID</label>
-                <select name="game_play_id" id="addPoints_game_play_id" class="form-select" required disabled>
-                  <option disabled selected>Select a Game Play ID</option>
-                </select>
-              </div>
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Add New Point</h3>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/panel/points/add" method="post" id="addPointsForm">
+          <div class="row mb-2">
+            <div class="col-6">
+              <label for="addPoints_game_id">Game ID</label>
+              <select name="game_id" id="addPoints_game_id" class="form-select" required>
+                <option disabled selected>Select a Game ID</option>
+                {% for game in games %}
+                  <option value="{{ game['game_id'] }}">{{ game['game_id'] }}</option>
+                {% endfor %}
+              </select>
             </div>
+            <div class="col-6">
+              <label for="addPoints_game_play_id">Game Play ID</label>
+              <select name="game_play_id" id="addPoints_game_play_id" class="form-select" required disabled>
+                <option disabled selected>Select a Game Play ID</option>
+              </select>
+            </div>
+          </div>
 
-            <div class="row mb-2">
-              <div class="col-6">
-                <label>Action</label>
-                <select class="form-select" name="action" required>
-                  <option disabled selected>Select an Action</option>
-                  <option value="Missed Two Pointer">Missed Two Pointer</option>
-                  <option value="Two Pointer">Two Pointer</option>
-                  <option value="Missed Three Pointer">Missed Three Pointer</option>
-                  <option value="Three Pointer">Three Pointer</option>
-                  <option value="Free Throw In">Free Throw In</option>
-                  <option value="Missed Layup">Missed Layup</option>
-                  <option value="Layup Made">Layup Made</option>
-                  <option value="Dunk">Dunk</option>
-                </select>
-              </div>
-              <div class="col-6">
-                <label>Zone</label>
-                <select class="form-select" name="zone">
-                  <option disabled selected>Select a Zone</option>
-                  <option value="A">A</option>
-                  <option value="B">B</option>
-                  <option value="C">C</option>
-                  <option value="D">D</option>
-                  <option value="E">E</option>
-                  <option value="F">F</option>
-                  <option value="G">G</option>
-                  <option value="H">H</option>
-                  <option value="I">I</option>
-                  <option value="J">J</option>
-                </select>
-              </div>
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Action</label>
+              <select class="form-select" name="action" required>
+                <option disabled selected>Select an Action</option>
+                <option value="Missed Two Pointer">Missed Two Pointer</option>
+                <option value="Two Pointer">Two Pointer</option>
+                <option value="Missed Three Pointer">Missed Three Pointer</option>
+                <option value="Three Pointer">Three Pointer</option>
+                <option value="Free Throw In">Free Throw In</option>
+                <option value="Missed Layup">Missed Layup</option>
+                <option value="Layup Made">Layup Made</option>
+                <option value="Dunk">Dunk</option>
+              </select>
             </div>
+            <div class="col-6">
+              <label>Zone</label>
+              <select class="form-select" name="zone">
+                <option disabled selected>Select a Zone</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="D">D</option>
+                <option value="E">E</option>
+                <option value="F">F</option>
+                <option value="G">G</option>
+                <option value="H">H</option>
+                <option value="I">I</option>
+                <option value="J">J</option>
+              </select>
+            </div>
+          </div>
 
-            <div class="row mb-2">
-              <div class="col-6">
-                <label>Coordinate X</label>
-                <input type="number" class="form-control" name="coord_x" required />
-              </div>
-              <div class="col-6">
-                <label>Coordinate Y</label>
-                <input type="number" class="form-control" name="coord_y" required />
-              </div>
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Coordinate X</label>
+              <input type="number" class="form-control" name="coord_x" required />
             </div>
+            <div class="col-6">
+              <label>Coordinate Y</label>
+              <input type="number" class="form-control" name="coord_y" required />
+            </div>
+          </div>
 
-            <div class="row mb-2">
-              <div class="col-6">
-                <label>Points Team A</label>
-                <input type="number" class="form-control" name="points_a" required />
-              </div>
-              <div class="col-6">
-                <label>Points Team B</label>
-                <input type="number" class="form-control" name="points_b" required />
-              </div>
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Points Team A</label>
+              <input type="number" class="form-control" name="points_a" required />
             </div>
+            <div class="col-6">
+              <label>Points Team B</label>
+              <input type="number" class="form-control" name="points_b" required />
+            </div>
+          </div>
 
-            <div class="row mb-2">
-                <div class="col-6">
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="1" id="fastbreak" name="fastbreak">
-                    <label class="form-check-label" for="fastbreak">Fastbreak</label>
-                  </div>
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="1" id="second_chance" name="second_chance">
-                    <label class="form-check-label" for="second_chance">Second Chance</label>
-                  </div>
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="1" id="points_off_turnover" name="points_off_turnover">
-                    <label class="form-check-label" for="points_off_turnover">Points Off Turnover</label>
-                  </div>
-                </div>
+          <div class="row mb-2">
+            <div class="col-6">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="1" id="fastbreak" name="fastbreak">
+                <label class="form-check-label" for="fastbreak">Fastbreak</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="1" id="second_chance" name="second_chance">
+                <label class="form-check-label" for="second_chance">Second Chance</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="1" id="points_off_turnover" name="points_off_turnover">
+                <label class="form-check-label" for="points_off_turnover">Points Off Turnover</label>
+              </div>
             </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-success" form="addPointsForm">Create Point</button>
-        </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-success" form="addPointsForm">Create Point</button>
       </div>
     </div>
   </div>
+</div>
 
   <!-- Update Points Modal -->
 <div class="modal fade" id="updatePointsModal" tabindex="-1" aria-labelledby="updatePointsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Update Point</h3>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+  <div class="modal-dialog modal-dialog-scrollable modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Update Point</h3>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/panel/points/update" method="post" id="updatePointsForm">
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Game Play ID</label>
+              <p id="update_display_game_play_id" class="form-control-plaintext text-muted"></p>
+              <input type="hidden" name="game_play_id" id="update_game_play_id" />
             </div>
-            <div class="modal-body">
-                <form action="/panel/points/update" method="post" id="updatePointsForm">
-                    <div class="row mb-2">
-                        <div class="col-6">
-                            <label>Game Play ID</label>
-                            <p id="update_display_game_play_id" class="form-control-plaintext text-muted"></p>
-                            <input type="hidden" name="game_play_id" id="update_game_play_id" />
-                        </div>
-                    </div>
-                    
-                    <div class="row mb-2">
-                        <div class="col-6">
-                            <label>Action</label>
-                            <select class="form-select" name="action" id="update_action" required>
-                                <option disabled selected>Select an Action</option>
-                                <option value="Missed Two Pointer">Missed Two Pointer</option>
-                                <option value="Two Pointer">Two Pointer</option>
-                                <option value="Missed Three Pointer">Missed Three Pointer</option>
-                                <option value="Three Pointer">Three Pointer</option>
-                                <option value="Free Throw In">Free Throw In</option>
-                                <option value="Missed Layup">Missed Layup</option>
-                                <option value="Layup Made">Layup Made</option>
-                                <option value="Dunk">Dunk</option>
-                            </select>
-                        </div>
-                        <div class="col-6">
-                            <label>Zone</label>
-                            <select class="form-select" name="zone" id="update_zone">
-                                <option disabled selected>Select a Zone</option>
-                                <option value="A">A</option>
-                                <option value="B">B</option>
-                                <option value="C">C</option>
-                                <option value="D">D</option>
-                                <option value="E">E</option>
-                                <option value="F">F</option>
-                                <option value="G">G</option>
-                                <option value="H">H</option>
-                                <option value="I">I</option>
-                                <option value="J">J</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="row mb-2">
-                        <div class="col-6">
-                            <label>Coordinate X</label>
-                            <input type="number" class="form-control" name="coord_x" id="update_coord_x" placeholder="Enter X" required />
-                        </div>
-                        <div class="col-6">
-                            <label>Coordinate Y</label>
-                            <input type="number" class="form-control" name="coord_y" id="update_coord_y" placeholder="Enter Y" required />
-                        </div>
-                    </div>
-
-                    <div class="row mb-2">
-                        <div class="col-6">
-                            <label>Points Team A</label>
-                            <input type="number" class="form-control" name="points_a" id="update_points_a" required />
-                        </div>
-                        <div class="col-6">
-                            <label>Points Team B</label>
-                            <input type="number" class="form-control" name="points_b" id="update_points_b" required />
-                        </div>
-                    </div>
-
-                    <div class="row mb-2">
-                        <div class="col-6">
-                            <div class="form-check mb-2">
-                                <input class="form-check-input" type="checkbox" value="1" id="update_fastbreak" name="fastbreak">
-                                <label class="form-check-label" for="update_fastbreak">Fastbreak</label>
-                            </div>
-                            <div class="form-check mb-2">
-                                <input class="form-check-input" type="checkbox" value="1" id="update_second_chance" name="second_chance">
-                                <label class="form-check-label" for="update_second_chance">Second Chance</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="1" id="update_points_off_turnover" name="points_off_turnover">
-                                <label class="form-check-label" for="update_points_off_turnover">Points Off Turnover</label>
-                            </div>
-                        </div>
-                    </div>
-                </form>
+          </div>
+          
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Action</label>
+              <select class="form-select" name="action" id="update_action" required>
+                <option disabled selected>Select an Action</option>
+                <option value="Missed Two Pointer">Missed Two Pointer</option>
+                <option value="Two Pointer">Two Pointer</option>
+                <option value="Missed Three Pointer">Missed Three Pointer</option>
+                <option value="Three Pointer">Three Pointer</option>
+                <option value="Free Throw In">Free Throw In</option>
+                <option value="Missed Layup">Missed Layup</option>
+                <option value="Layup Made">Layup Made</option>
+                <option value="Dunk">Dunk</option>
+              </select>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary" form="updatePointsForm">Update Point</button>
+            <div class="col-6">
+              <label>Zone</label>
+              <select class="form-select" name="zone" id="update_zone">
+                <option disabled selected>Select a Zone</option>
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+                <option value="D">D</option>
+                <option value="E">E</option>
+                <option value="F">F</option>
+                <option value="G">G</option>
+                <option value="H">H</option>
+                <option value="I">I</option>
+                <option value="J">J</option>
+              </select>
             </div>
-        </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Coordinate X</label>
+              <input type="number" class="form-control" name="coord_x" id="update_coord_x" placeholder="Enter X" required />
+            </div>
+            <div class="col-6">
+              <label>Coordinate Y</label>
+              <input type="number" class="form-control" name="coord_y" id="update_coord_y" placeholder="Enter Y" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <label>Points Team A</label>
+              <input type="number" class="form-control" name="points_a" id="update_points_a" required />
+            </div>
+            <div class="col-6">
+              <label>Points Team B</label>
+              <input type="number" class="form-control" name="points_b" id="update_points_b" required />
+            </div>
+          </div>
+
+          <div class="row mb-2">
+            <div class="col-6">
+              <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" value="1" id="update_fastbreak" name="fastbreak">
+                <label class="form-check-label" for="update_fastbreak">Fastbreak</label>
+              </div>
+              <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" value="1" id="update_second_chance" name="second_chance">
+                <label class="form-check-label" for="update_second_chance">Second Chance</label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="1" id="update_points_off_turnover" name="points_off_turnover">
+                <label class="form-check-label" for="update_points_off_turnover">Points Off Turnover</label>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary" form="updatePointsForm">Update Point</button>
+      </div>
     </div>
+  </div>
 </div>
 
 
   <!-- Delete Points Modal -->
 <div class="modal fade" id="deletePointsModal" tabindex="-1" aria-labelledby="deletePointsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Delete Point</h3>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form action="/panel/points/delete" method="post" id="deletePointsForm">
-                    <input type="hidden" class="form-control" name="primary_point_id" id="deletePoints_primary_point_id" />
-                </form>
-                <div class="mt-1 mb-1" id="deletePointsMessage"></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-danger" form="deletePointsForm">Delete Point</button>
-            </div>
-        </div>
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title">Delete Point</h3>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/panel/points/delete" method="post" id="deletePointsForm">
+          <input type="hidden" class="form-control" name="primary_point_id" id="deletePoints_primary_point_id" />
+        </form>
+        <div class="mt-1 mb-1" id="deletePointsMessage"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-danger" form="deletePointsForm">Delete Point</button>
+      </div>
     </div>
+  </div>
 </div>
 {% endblock %}
+
 {% block scripts %}
 <script>
 
-    const deletePointsModal = document.getElementById('deletePointsModal');
-    if (deletePointsModal) {
-        deletePointsModal.addEventListener('show.bs.modal', (event) => {
-            const deleteButton = event.relatedTarget; 
-            const gamePlayId = deleteButton.getAttribute('data-game-play-id'); 
+  const deletePointsModal = document.getElementById('deletePointsModal');
+  if (deletePointsModal) {
+    deletePointsModal.addEventListener('show.bs.modal', (event) => {
+      const deleteButton = event.relatedTarget; 
+      const gamePlayId = deleteButton.getAttribute('data-game-play-id'); 
 
-            const message = deletePointsModal.querySelector('#deletePointsMessage');
-            message.innerHTML = `The point with <strong>Game Play ID: ${gamePlayId}</strong> will be deleted. Are you sure?`;
+      const message = deletePointsModal.querySelector('#deletePointsMessage');
+      message.innerHTML = `The point with <strong>Game Play ID: ${gamePlayId}</strong> will be deleted. Are you sure?`;
 
-            const gamePlayIdInput = deletePointsModal.querySelector('#deletePoints_primary_point_id');
-            gamePlayIdInput.value = gamePlayId;
-        });
-    }
+      const gamePlayIdInput = deletePointsModal.querySelector('#deletePoints_primary_point_id');
+      gamePlayIdInput.value = gamePlayId;
+    });
+  }
 
-const updatePointsModal = document.getElementById('updatePointsModal');
-if (updatePointsModal) {
+  const updatePointsModal = document.getElementById('updatePointsModal');
+  if (updatePointsModal) {
     updatePointsModal.addEventListener('show.bs.modal', (event) => {
-        const updateButton = event.relatedTarget; 
-        const data = updateButton.dataset; 
+      const updateButton = event.relatedTarget; 
+      const data = updateButton.dataset; 
 
-        const gamePlayId = decodeURIComponent(data.game_play_id);
-        document.getElementById('update_game_play_id').value = gamePlayId;
-        document.getElementById('update_display_game_play_id').innerText = gamePlayId;
+      const gamePlayId = decodeURIComponent(data.game_play_id);
+      document.getElementById('update_game_play_id').value = gamePlayId;
+      document.getElementById('update_display_game_play_id').innerText = gamePlayId;
 
-        const action = decodeURIComponent(data.action);
-        document.getElementById('update_action').value = action;
+      const action = decodeURIComponent(data.action);
+      document.getElementById('update_action').value = action;
 
-        document.getElementById('update_points_a').value = decodeURIComponent(data.points_a || 0);
-        document.getElementById('update_points_b').value = decodeURIComponent(data.points_b || 0);
+      document.getElementById('update_points_a').value = decodeURIComponent(data.points_a || 0);
+      document.getElementById('update_points_b').value = decodeURIComponent(data.points_b || 0);
 
-        document.getElementById('update_zone').value = decodeURIComponent(data.zone || '');
-        document.getElementById('update_coord_x').value = decodeURIComponent(data.coord_x || 0);
-        document.getElementById('update_coord_y').value = decodeURIComponent(data.coord_y || 0);
+      document.getElementById('update_zone').value = decodeURIComponent(data.zone || '');
+      document.getElementById('update_coord_x').value = decodeURIComponent(data.coord_x || 0);
+      document.getElementById('update_coord_y').value = decodeURIComponent(data.coord_y || 0);
 
-        document.getElementById('update_fastbreak').checked = data.fastbreak === '1';
-        document.getElementById('update_second_chance').checked = data.second_chance === '1';
-        document.getElementById('update_points_off_turnover').checked = data.points_off_turnover === '1';
+      document.getElementById('update_fastbreak').checked = data.fastbreak === '1';
+      document.getElementById('update_second_chance').checked = data.second_chance === '1';
+      document.getElementById('update_points_off_turnover').checked = data.points_off_turnover === '1';
     });
-}
+  }
 
-    document.getElementById('addPoints_game_id').addEventListener('change', (event) => {
-        const selectedGameId = event.target.value;
-        fillGamePlayDropdownByGame(selectedGameId, 'addPoints_game_play_id');
-    });
+  document.getElementById('addPoints_game_id').addEventListener('change', (event) => {
+    const selectedGameId = event.target.value;
+    fillGamePlayDropdownByGame(selectedGameId, 'addPoints_game_play_id');
+  });
 
-    function fillGamePlayDropdownByGame(game_id, gamePlayElement, selectedGamePlayId = null) {
-        fetch(`/panel/get_plays_by_game/${game_id}`)
-            .then(response => response.json())
-            .then(data => {
-                const gamePlaySelect = document.getElementById(gamePlayElement);
-                gamePlaySelect.innerHTML = '<option disabled selected>Select a Game Play ID</option>';
+  function fillGamePlayDropdownByGame(game_id, gamePlayElement, selectedGamePlayId = null) {
+    fetch(`/panel/get_plays_by_game/${game_id}`)
+      .then(response => response.json())
+      .then(data => {
+        const gamePlaySelect = document.getElementById(gamePlayElement);
+        gamePlaySelect.innerHTML = '<option disabled selected>Select a Game Play ID</option>';
 
-                data.game_plays.forEach(play => {
-                    const option = document.createElement('option');
-                    option.value = play.game_play_id;
-                    option.textContent = play.game_play_id;
-                    if (play.game_play_id === selectedGamePlayId) option.selected = true;
-                    gamePlaySelect.appendChild(option);
-                });
+        data.game_plays.forEach(play => {
+          const option = document.createElement('option');
+          option.value = play.game_play_id;
+          option.textContent = play.game_play_id;
+          if (play.game_play_id === selectedGamePlayId) option.selected = true;
+          gamePlaySelect.appendChild(option);
+        });
 
-                gamePlaySelect.disabled = false;
-            })
-            .catch(error => {
-                console.error('Error fetching game play data:', error);
-            });
-    }
-  </script>
+        gamePlaySelect.disabled = false;
+      })
+      .catch(error => {
+        console.error('Error fetching game play data:', error);
+      });
+  }
+</script>
 {% endblock %}

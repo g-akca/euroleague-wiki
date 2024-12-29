@@ -25,26 +25,26 @@
     </li>
   
   {% if playeralltimedata %}
-  <li class="player-row-career">
+    <li class="player-row-career">
       <div class="season-code">Career</div>
       <div class="rest-of-stats">
-           <span>{{ playeralltimedata['total_games_played'] }}</span>
-          <span>{{ playeralltimedata['total_games_started'] }}</span>
-          <span>{{ playeralltimedata['points_per_game'] }}</span>
-          <span>{{ playeralltimedata['total_points'] }}</span>
-          <span>{{ playeralltimedata['rebounds_per_game'] }}</span>
-          <span>{{ playeralltimedata['total_rebounds'] }}</span>
-          <span>{{ playeralltimedata['assists_per_game'] }}</span>
-          <span>{{ playeralltimedata['total_assists'] }}</span>
-          <span>{{ playeralltimedata['total_steals'] }}</span>
-          <span>{{ playeralltimedata['steals_per_game'] }}</span>
-          <span>{{ playeralltimedata['blocks_per_game'] }}</span>
-          <span>{{ playeralltimedata['total_blocks'] }}</span>
+        <span>{{ playeralltimedata['total_games_played'] }}</span>
+        <span>{{ playeralltimedata['total_games_started'] }}</span>
+        <span>{{ playeralltimedata['points_per_game'] }}</span>
+        <span>{{ playeralltimedata['total_points'] }}</span>
+        <span>{{ playeralltimedata['rebounds_per_game'] }}</span>
+        <span>{{ playeralltimedata['total_rebounds'] }}</span>
+        <span>{{ playeralltimedata['assists_per_game'] }}</span>
+        <span>{{ playeralltimedata['total_assists'] }}</span>
+        <span>{{ playeralltimedata['total_steals'] }}</span>
+        <span>{{ playeralltimedata['steals_per_game'] }}</span>
+        <span>{{ playeralltimedata['blocks_per_game'] }}</span>
+        <span>{{ playeralltimedata['total_blocks'] }}</span>
       </div>
-  </li>
+    </li>
   {% endif %}
 
-    {% for player in all_seasons_data %}
+  {% for player in all_seasons_data %}
     <li class="player-row" id="season-{{ player['season'] }}" onclick="toggleDetails('{{ player['season'] }}')">
       <div class="season-code">{{ player['season'] }}</div>
       <div class="rest-of-stats">
@@ -65,8 +65,8 @@
 
     <li id="details-{{ player['season'] }}" class="season-details" style="display: none;">
       {% if specific_season_data[player['season']] %}
-      {% for seasonplayer in specific_season_data[player['season']] %}
-      <div class="additional-details">
+        {% for seasonplayer in specific_season_data[player['season']] %}
+          <div class="additional-details">
             <p>Team Played For: {{ seasonplayer['team_name'] }}</p>
             <p>Games Played: {{ seasonplayer['games_played'] }}</p>
             <p>Games Started: {{ seasonplayer['games_started'] }}</p>
@@ -113,8 +113,7 @@
             <p>Fouls Received Per Game: {{ seasonplayer['fouls_received_per_game'] }}</p>
             <p>Valuation Per Game: {{ seasonplayer['valuation_per_game'] }}</p>
             <p>Plus/Minus Per Game: {{ seasonplayer['plus_minus_per_game'] }}</p>
-        
-        </div>
+          </div>
         {% endfor %}
       {% else %}
         <div class="additional-details">
