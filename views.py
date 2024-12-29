@@ -1,5 +1,7 @@
-from flask import render_template, request
+from flask import render_template, request, jsonify
 from db import get_db_connection
+import os
+import json
 import random
 
 def home_page():
@@ -132,6 +134,18 @@ def player_details_page(player_id):
 
     return render_template("player_details.html", playeralltimedata=playeralltimedata, player_name=player_name, all_seasons_data=all_seasons_data, specific_season_data=specific_season_data)
 
+def get_team_logo(team_id):
+    logo_directory = os.path.join("static", "team_logos")
+    svg_path = os.path.join(logo_directory, f"{team_id}.svg")
+    png_path = os.path.join(logo_directory, f"{team_id}.png")
+
+    if os.path.exists(svg_path):
+        return jsonify({"logo_path": f"/static/team_logos/{team_id}.svg"})
+    elif os.path.exists(png_path):
+        return jsonify({"logo_path": f"/static/team_logos/{team_id}.png"})
+    else:
+        return jsonify({"logo_path": "/static/team_logos/default.png"})
+
 def teams_page():
     sort_by = request.args.get('sort_by', 'team_id asc')
     page_limit = 25
@@ -172,6 +186,7 @@ def teams_page():
     )
 
 def team_details_page(team_id, season_code=None):
+
     connection = get_db_connection()
     cursor = connection.cursor(dictionary=True)
 
@@ -180,23 +195,103 @@ def team_details_page(team_id, season_code=None):
         team_ids = cursor.fetchall()
         team_id = random.choice(team_ids)['team_id']
 
-    cursor.execute("SELECT * FROM euroleague_team_names WHERE team_id = %s", (team_id, ))
-    team_name = cursor.fetchone()
-
-    cursor.execute("SELECT * FROM euroleague_teams WHERE team_id = %s", (team_id, ))
+    cursor.execute(
+        """
+        SELECT *
+        FROM euroleague_teams AS teams
+        LEFT JOIN euroleague_team_names AS team_names ON teams.team_id = team_names.team_id
+        WHERE teams.team_id = %s
+        ORDER BY teams.season_code ASC;
+        """,(team_id, )
+    )
     team_seasons = cursor.fetchall()
+    default_team_details = {
+        "team_name": "Unknown Team",
+        "description": "No details available.",
+        "established_year": "N/A",
+        "stadium": "N/A",
+        "capacity": "N/A"
+    }
+    default_logo_path = "/static/team_logos/default.png"
 
-    if season_code:
-        cursor.execute("SELECT * FROM euroleague_teams WHERE team_id = %s AND season_code = %s", (team_id, season_code))
-        season_data = cursor.fetchone()
-    else:
-        cursor.execute("SELECT * FROM euroleague_teams WHERE team_id = %s AND season_code = (SELECT MAX(season_code) FROM euroleague_teams WHERE team_id = %s)", (team_id, team_id))
-        season_data = cursor.fetchone()
+    if not team_seasons:
+        return render_template(
+        "team_details.html",
+        team_id=team_id,
+        team_name="Team",
+        team_seasons=[],
+        season_data={},
+        roster=[],
+        logo_path=default_logo_path,
+        team_details=default_team_details
+    )
+
+    team_name = team_seasons[0].get('team_name', 'Team')
+
+    if not season_code:
+        season_code = team_seasons[-1].get('season_code')
+
+    season_data = next((season for season in team_seasons if season["season_code"] == season_code), {})
+    cursor.execute(
+            """ 
+            SELECT * 
+            FROM euroleague_players AS P
+            LEFT JOIN euroleague_player_names AS PN ON P.player_id = PN.player_id
+            WHERE team_id = %s AND season_code = %s;
+            """, (team_id, season_code))
+    roster = cursor.fetchall()
+
+    cursor.execute(
+        """
+        SELECT COUNT(game_id) AS games_won
+        FROM (
+            SELECT game_id 
+            FROM euroleague_header
+            WHERE season_code = %s AND team_id_a = %s AND score_a > score_b
+            UNION ALL
+            SELECT game_id
+            FROM euroleague_header
+            WHERE season_code = %s AND team_id_b = %s AND score_b > score_a
+        ) AS wins;
+        """, (season_code, team_id, season_code, team_id))
+    wins = cursor.fetchone()
 
     cursor.close()
     connection.close()
 
-    return render_template("team_details.html", team_name=team_name, team_seasons=team_seasons, season_data=season_data)
+    season_data.update(wins)
+    try:
+        season_data["games_played"] = int(float(season_data["games_played"])) if season_data["games_played"] is not None else None
+        season_data["minutes"] = int(float(season_data["minutes"])) if season_data["minutes"] is not None else None
+    except (ValueError, TypeError):
+        pass
+
+    logo_directory = os.path.join("static", "team_logos")
+    svg_path = os.path.join(logo_directory, f"{team_id}.svg")
+    png_path = os.path.join(logo_directory, f"{team_id}.png")
+
+    if os.path.exists(svg_path):
+        logo_path = f"/static/team_logos/{team_id}.svg"
+    elif os.path.exists(png_path):
+        logo_path = f"/static/team_logos/{team_id}.png"
+    else:
+        logo_path = default_logo_path
+
+    with open("./static/team_details.json", "r") as f:
+        team_details_json = json.load(f)
+
+    team_details = team_details_json.get(team_id, default_team_details)
+
+    return render_template(
+        "team_details.html",
+        team_id=team_id,
+        team_name=team_name,
+        team_seasons=team_seasons,
+        season_data=season_data,
+        roster=roster,
+        logo_path=logo_path,
+        team_details=team_details
+    )
 
 def matches_page():
     page_limit = 20

@@ -20,6 +20,7 @@ def create_app():
 
     # Category related
     app.add_url_rule("/teams", view_func=views.teams_page)
+    app.add_url_rule('/api/team_logo/<team_id>',view_func=views.get_team_logo, methods=['GET'])
     app.add_url_rule("/team/<string:team_id>/<string:season_code>", view_func=views.team_details_page)
     app.add_url_rule("/team/<string:team_id>", view_func=views.team_details_page)
     app.add_url_rule("/players", view_func=views.players_page)

@@ -13,13 +13,96 @@
     {% endfor %}
   {% endif %}
 {% endwith %}
-<section>
-  <h2>Welcome to Euroleague Wiki</h2>
+
+<!-- Hero Section -->
+<section class="bg-dark text-white text-center p-5">
+  <div class="container">
+    <h1 class="display-4 mb-3">Welcome to Euroleague Wiki</h1>
+    <p class="lead">
+      Discover the Euroleague, Europe’s premier basketball competition, with insights into teams, player profiles, and detailed game statistics.
+    </p>
+    <p class="fst-italic">Our platform provides detailed Euroleague data from the 2007 season to the 2024 season.</p>
+  </div>
+</section>
+
+<!-- Introduction Section -->
+<section class="bg-light">
+<section class="container py-5">
+  <h2 class="text-center mb-4">About the Euroleague</h2>
   <p>
-    The Euroleague is Europe's top-tier basketball competition, featuring the best teams from across the continent.
-    Follow the action, view game statistics, and relive the most exciting moments.
+    The Euroleague is Europe's top-tier professional basketball competition, founded in 1958. Over the decades, it has grown into one of the most prestigious basketball leagues globally, featuring elite clubs from across the continent. The league is renowned for its competitive spirit, showcasing intense rivalries and high-quality basketball that captivates fans worldwide.
   </p>
-  <a class="randombutton" href="{{ url_for('player_details_page', player_id='random') }}"> Show me a Random Player!</a>
-  <a class="randombutton" href="{{ url_for('team_details_page', team_id='random') }}">Show me a Random Team!</a>
+</section>
+<section class="bg-light py-5">
+  <div class="container">
+    <h2 class="text-center mb-4">What You Can Do</h2>
+    <div class="row row-cols-1 row-cols-md-4 g-4 text-center">
+      <!-- Teams -->
+      <div class="col">
+        <div class="card shadow h-100">
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">Explore Teams</h5>
+            <p class="card-text">
+              Discover detailed profiles of Euroleague teams, including their histories, general details, and seasons.
+            </p>
+            <a href="{{ url_for('teams_page') }}" class="btn btn-outline-primary mt-auto">View Teams</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Players -->
+      <div class="col">
+        <div class="card shadow h-100">
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">Player Profiles</h5>
+            <p class="card-text">
+              Get to know Euroleague players, explore their career stats, and learn more about their contributions to the game.
+            </p>
+            <a href="{{ url_for('players_page') }}" class="btn btn-outline-primary mt-auto">View Players</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Matches -->
+      <div class="col">
+        <div class="card shadow h-100">
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">Match Details</h5>
+            <p class="card-text">
+              Browse detailed match statistics, including team performances, scores, and quarter breakdowns.
+            </p>
+            <a href="{{ url_for('matches_page') }}" class="btn btn-outline-primary mt-auto">View Matches</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Seasons -->
+      <div class="col">
+        <div class="card shadow h-100">
+          <div class="card-body d-flex flex-column">
+            <h5 class="card-title">Season Insights</h5>
+            <p class="card-text">
+              Explore season statistics, team participation, and player contributions.
+            </p>
+            <a href="{{ url_for('seasons_page') }}" class="btn btn-outline-primary mt-auto">View Seasons</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="text-center py-5 bg-light text-dark">
+  <div class="container">
+    <h3>Not Sure Where to Start?</h3>
+    <p>
+      Discover the excitement of Euroleague by exploring a random team or player. It's the perfect way to dive in and uncover something new!
+    </p>
+    <div class="mt-3">
+      <a href="{{ url_for('player_details_page', player_id='random') }}" class="btn btn-lg btn-dark me-2">Show Me a Random Player</a>
+      <a href="{{ url_for('team_details_page', team_id='random') }}" class="btn btn-lg btn-dark">Show Me a Random Team</a>
+    </div>
+  </div>
+</section>
 </section>
 {% endblock %}

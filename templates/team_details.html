@@ -1,30 +1,104 @@
 {% extends "layout.html" %}
 
-{% block title %}{{ team_name['team_name'] }}{% endblock %}
+{% block title %}{{ team_name }}{% endblock %}
 
-{% block content %} <!-- Will change how this page looks in general -->
-<h1>{{ team_name['team_name'] }}</h1>
+{% block content %}
+<div class="container">
+    <!-- Team Header -->
+    <div class="text-center mb-5">
+        <h1 class="display-4">{{ team_name }}</h1>
+        <img src="{{ logo_path }}" alt="{{ team_name }} Logo" style="max-width: 200px; max-height: 200px;">
+    </div>
 
-<ul class="nav nav-tabs" role="tablist">
-{% for team in team_seasons %}
-  {% if team['season_code'] == season_data['season_code'] %}
-  <li class="nav-item" role="presentation">
-    <a href="{{ url_for('team_details_page', team_id=team_name['team_id'], season_code=team['season_code']) }}" class="nav-link active" role="tab">
-      Season {{ team['season_code'] }}
-    </a>
-  </li>
-  {% else %}
-  <li class="nav-item" role="presentation">
-    <a href="{{ url_for('team_details_page', team_id=team_name['team_id'], season_code=team['season_code']) }}" class="nav-link" role="tab">
-      Season {{ team['season_code'] }}
-    </a>
-  </li>
-  {% endif %}
-{% endfor %}
-</ul>
+    <div class="card shadow mb-4">
+      <div class="card-header bg-dark text-white">
+          <h4 class="card-title mb-0">{{ team_details.team_name }}</h4>
+      </div>
+      <div class="card-body">
+          <p>{{ team_details.description }}</p>
+          <ul class="list-group list-group-flush">
+              <li class="list-group-item"><strong>Established Year:</strong> {{ team_details.established_year or 'N/A' }}</li>
+              <li class="list-group-item"><strong>Stadium:</strong> {{ team_details.stadium or 'N/A' }}</li>
+              <li class="list-group-item"><strong>Capacity:</strong> {{ team_details.capacity or 'N/A' }}</li>
+          </ul>
+      </div>
+  </div>
 
-<p>Team ID: {{ team_name['team_id'] }}</p>
-<p>Season: {{ season_data['season_code'] }}</p>
-<p>Games Played: {{ season_data['games_played'] }}</p>
-<p>Total Assists: {{ season_data['assists'] }}</p>
+    <!-- Navigation Tabs -->
+    <ul class="nav nav-tabs mb-4 justify-content-center" role="tablist">
+        {% for team in team_seasons %}
+        <li class="nav-item">
+            <a href="{{ url_for('team_details_page', team_id=team_id, season_code=team['season_code']) }}" 
+               class="nav-link {% if team['season_code'] == season_data['season_code'] %}active{% endif %}" role="tab">
+                Season {{ team['season_code'] }}
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <div class="row">
+        <!-- Season Statistics -->
+        <div class="col-md-6">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="card-title mb-0">Season Statistics</h4>
+                </div>
+                <div class="card mb-4">
+                  <div class="card-body">
+                      <h4 class="card-title">Season Statistics</h4>
+                      <table class="table table-bordered table-sm">
+                          <tbody>
+                              <tr><th>Games Played</th><td>{{ season_data.get('games_played', 'N/A') }}</td></tr>
+                              <tr><th>Games Won</th><td>{{ season_data.get('games_won', 'N/A') }}</td></tr>
+                              <tr><th>Total Minutes</th><td>{{ season_data.get('minutes', 'N/A') }}</td></tr>
+                              <tr><th>Points</th><td>{{ season_data.get('points', 'N/A') }}</td></tr>
+                              <tr><th>Two Points Made</th><td>{{ season_data.get('two_points_made', 'N/A') }}</td></tr>
+                              <tr><th>Two Points Attempted</th><td>{{ season_data.get('two_points_attempted', 'N/A') }}</td></tr>
+                              <tr><th>Three Points Made</th><td>{{ season_data.get('three_points_made', 'N/A') }}</td></tr>
+                              <tr><th>Three Points Attempted</th><td>{{ season_data.get('three_points_attempted', 'N/A') }}</td></tr>
+                              <tr><th>Free Throws Made</th><td>{{ season_data.get('free_throws_made', 'N/A') }}</td></tr>
+                              <tr><th>Free Throws Attempted</th><td>{{ season_data.get('free_throws_attempted', 'N/A') }}</td></tr>
+                              <tr><th>Offensive Rebounds</th><td>{{ season_data.get('offensive_rebounds', 'N/A') }}</td></tr>
+                              <tr><th>Defensive Rebounds</th><td>{{ season_data.get('defensive_rebounds', 'N/A') }}</td></tr>
+                              <tr><th>Total Rebounds</th><td>{{ season_data.get('total_rebounds', 'N/A') }}</td></tr>
+                              <tr><th>Assists</th><td>{{ season_data.get('assists', 'N/A') }}</td></tr>
+                              <tr><th>Steals</th><td>{{ season_data.get('steals', 'N/A') }}</td></tr>
+                              <tr><th>Turnovers</th><td>{{ season_data.get('turnovers', 'N/A') }}</td></tr>
+                              <tr><th>Blocks Favour</th><td>{{ season_data.get('blocks_favour', 'N/A') }}</td></tr>
+                              <tr><th>Blocks Against</th><td>{{ season_data.get('blocks_against', 'N/A') }}</td></tr>
+                              <tr><th>Fouls Committed</th><td>{{ season_data.get('fouls_committed', 'N/A') }}</td></tr>
+                              <tr><th>Fouls Received</th><td>{{ season_data.get('fouls_received', 'N/A') }}</td></tr>
+                          </tbody>
+                      </table>
+                  </div>
+              </div>
+            </div>
+        </div>
+
+        <!-- Season Roster -->
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-secondary text-white">
+                    <h4 class="card-title mb-0">Season Roster</h4>
+                </div>
+                <div class="card-body">
+                    {% if roster %}
+                    <ul class="list-group list-group-flush">
+                        {% for player in roster %}
+                        <li class="list-group-item">
+                            <a href="{{ url_for('player_details_page', player_id=player['player_id'], season_code=season_data.get('season_code', 'N/A')) }}" 
+                               class="text-decoration-none">
+                                <i class="bi bi-person-circle"></i> {{ player['player_name'] }}
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p class="text-muted">No players found for this season.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
