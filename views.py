@@ -1,6 +1,7 @@
 from flask import render_template, request, jsonify
 from db import get_db_connection
 import os
+from pathlib import Path
 import json
 import random
 
@@ -277,7 +278,8 @@ def team_details_page(team_id, season_code=None):
     else:
         logo_path = default_logo_path
 
-    with open("./static/team_details.json", "r") as f:
+    json_file_path = Path("static") / "team_details.json"
+    with open(json_file_path, "r") as f:
         team_details_json = json.load(f)
 
     team_details = team_details_json.get(team_id, default_team_details)
