@@ -56,10 +56,17 @@
                   <div class="card-body">
                   {% endif %}
                     <h6 class="card-subtitle mb-2 text-body-secondary">
-                      <strong><a class="text-decoration-none text-primary" href="/player/{{ play['player_id'] }}">{{ play['player_name'] }}</a></strong> 
-                      {% if play['player_name'] != 'TECHNICAL' %} · Play: {{ play['player_total_plays'] }} {% endif %}
+                      {% if play['player_name'] == 'TECHNICAL' %}
+                      <strong>{{ play['player_name'] }}</strong>
+                      {% else %}
+                      <strong><a class="text-decoration-none text-primary" href="/player/{{ play['player_id'] }}">{{ play['player_name'] }}</a></strong> · Play: {{ play['player_total_plays'] }}
+                      {% endif %}
                     </h6>
+                    {% if play['play_type'] == 'JB' %}
+                    <p class="card-text">Jump Ball</p>
+                    {% else %}
                     <p class="card-text">{{ play['play_info'] }} {% if play['fastbreak'] == 1 %} · Fastbreak {% endif %} {% if play['second_chance'] == 1 %} · Second Chance {% endif %} {% if play['points_off_turnover'] == 1 %} · Points Off Turnover {% endif %}</p>
+                    {% endif %}
                   </div>
                 </div>
                 <div class="flex-grow-1 d-flex align-items-center">
@@ -99,26 +106,33 @@
                   <div class="card-body">
                   {% endif %}
                     <h6 class="card-subtitle mb-2 text-body-secondary">
-                      <strong><a class="text-decoration-none text-danger" href="/player/{{ play['player_id'] }}">{{ play['player_name'] }}</a></strong> 
-                      {% if play['player_name'] != 'TECHNICAL' %} · Play: {{ play['player_total_plays'] }} {% endif %}
+                      {% if play['player_name'] == 'TECHNICAL' %}
+                      <strong>{{ play['player_name'] }}</strong>
+                      {% else %}
+                      <strong><a class="text-decoration-none text-danger" href="/player/{{ play['player_id'] }}">{{ play['player_name'] }}</a></strong> · Play: {{ play['player_total_plays'] }}
+                      {% endif %}
                     </h6>
+                    {% if play['play_type'] == 'JB' %}
+                    <p class="card-text">Jump Ball</p>
+                    {% else %}
                     <p class="card-text">{{ play['play_info'] }} {% if play['fastbreak'] == 1 %} · Fastbreak {% endif %} {% if play['second_chance'] == 1 %} · Second Chance {% endif %} {% if play['points_off_turnover'] == 1 %} · Points Off Turnover {% endif %}</p>
+                    {% endif %}
                   </div>
                 </div>
               </div>
-            {% elif play['play_info'] == 'End Period' %}
+            {% elif play['play_type'] == 'EP' %}
               <div class="d-flex justify-content-center align-items-center mb-3">
                 <hr class="w-100 my-0">
                 <h3 class="mx-3"><span class="badge text-bg-warning shadow-lg">{{ play['minute'] }}:00<br/>END OF {{ play['quarter_detailed'] }}</span></h3>
                 <hr class="w-100 my-0">
               </div>
-            {% elif play['play_info'] == 'Begin Period' %}
+            {% elif play['play_type'] == 'BP' %}
               <div class="d-flex justify-content-center align-items-center mb-3">
                 <hr class="w-100 my-0">
                 <h3 class="mx-3"><span class="badge text-bg-warning shadow-lg">{{ play['minute'] }}:00<br/>START OF {{ play['quarter_detailed'] }}</span></h3>
                 <hr class="w-100 my-0">
               </div>
-            {% elif play['play_info'] == 'End Game' %}
+            {% elif play['play_type'] == 'EG' %}
               <div class="d-flex justify-content-center align-items-center mb-3">
                 <hr class="w-100 my-0">
                 <h3 class="mx-3"><span class="badge text-bg-warning shadow-lg">{{ play['minute'] }}:00<br/>END OF THE GAME</span></h3>
@@ -149,10 +163,17 @@
                   <div class="card-body">
                   {% endif %}
                     <h6 class="card-subtitle mb-2 text-body-secondary">
-                      <strong><a class="text-decoration-none text-primary" href="/player/{{ play['player_id'] }}">{{ play['player_name'] }}</a></strong> 
-                      {% if play['player_name'] != 'TECHNICAL' %} · Play: {{ play['player_total_plays'] }} {% endif %}
+                      {% if play['player_name'] == 'TECHNICAL' %}
+                      <strong>{{ play['player_name'] }}</strong>
+                      {% else %}
+                      <strong><a class="text-decoration-none text-primary" href="/player/{{ play['player_id'] }}">{{ play['player_name'] }}</a></strong> · Play: {{ play['player_total_plays'] }}
+                      {% endif %}
                     </h6>
+                    {% if play['play_type'] == 'JB' %}
+                    <p class="card-text">Jump Ball</p>
+                    {% else %}
                     <p class="card-text">{{ play['play_info'] }} {% if play['fastbreak'] == 1 %} · Fastbreak {% endif %} {% if play['second_chance'] == 1 %} · Second Chance {% endif %} {% if play['points_off_turnover'] == 1 %} · Points Off Turnover {% endif %}</p>
+                    {% endif %}
                   </div>
                 </div>
                 <div class="flex-grow-1 d-flex align-items-center">
@@ -192,26 +213,33 @@
                   <div class="card-body">
                   {% endif %}
                     <h6 class="card-subtitle mb-2 text-body-secondary">
-                      <strong><a class="text-decoration-none text-danger" href="/player/{{ play['player_id'] }}">{{ play['player_name'] }}</a></strong> 
-                      {% if play['player_name'] != 'TECHNICAL' %} · Play: {{ play['player_total_plays'] }} {% endif %}
+                      {% if play['player_name'] == 'TECHNICAL' %}
+                      <strong>{{ play['player_name'] }}</strong>
+                      {% else %}
+                      <strong><a class="text-decoration-none text-danger" href="/player/{{ play['player_id'] }}">{{ play['player_name'] }}</a></strong> · Play: {{ play['player_total_plays'] }}
+                      {% endif %}
                     </h6>
+                    {% if play['play_type'] == 'JB' %}
+                    <p class="card-text">Jump Ball</p>
+                    {% else %}
                     <p class="card-text">{{ play['play_info'] }} {% if play['fastbreak'] == 1 %} · Fastbreak {% endif %} {% if play['second_chance'] == 1 %} · Second Chance {% endif %} {% if play['points_off_turnover'] == 1 %} · Points Off Turnover {% endif %}</p>
+                    {% endif %}
                   </div>
                 </div>
               </div>
-            {% elif play['play_info'] == 'End Period' %}
+            {% elif play['play_type'] == 'EP' %}
               <div class="d-flex justify-content-center align-items-center mb-3">
                 <hr class="w-100 my-0">
                 <h3 class="mx-3"><span class="badge text-bg-warning shadow-lg">{{ play['minute'] }}:00<br/>END OF {{ play['quarter_detailed'] }}</span></h3>
                 <hr class="w-100 my-0">
               </div>
-            {% elif play['play_info'] == 'Begin Period' %}
+            {% elif play['play_type'] == 'BP' %}
               <div class="d-flex justify-content-center align-items-center mb-3">
                 <hr class="w-100 my-0">
                 <h3 class="mx-3"><span class="badge text-bg-warning shadow-lg">{{ play['minute'] }}:00<br/>START OF {{ play['quarter_detailed'] }}</span></h3>
                 <hr class="w-100 my-0">
               </div>
-            {% elif play['play_info'] == 'End Game' %}
+            {% elif play['play_type'] == 'EG' %}
               <div class="d-flex justify-content-center align-items-center mb-3">
                 <hr class="w-100 my-0">
                 <h3 class="mx-3"><span class="badge text-bg-warning shadow-lg">{{ play['minute'] }}:00<br/>END OF THE GAME</span></h3>
@@ -242,10 +270,17 @@
                   <div class="card-body">
                   {% endif %}
                     <h6 class="card-subtitle mb-2 text-body-secondary">
-                      <strong><a class="text-decoration-none text-primary" href="/player/{{ play['player_id'] }}">{{ play['player_name'] }}</a></strong> 
-                      {% if play['player_name'] != 'TECHNICAL' %} · Play: {{ play['player_total_plays'] }} {% endif %}
+                      {% if play['player_name'] == 'TECHNICAL' %}
+                      <strong>{{ play['player_name'] }}</strong>
+                      {% else %}
+                      <strong><a class="text-decoration-none text-primary" href="/player/{{ play['player_id'] }}">{{ play['player_name'] }}</a></strong> · Play: {{ play['player_total_plays'] }}
+                      {% endif %}
                     </h6>
+                    {% if play['play_type'] == 'JB' %}
+                    <p class="card-text">Jump Ball</p>
+                    {% else %}
                     <p class="card-text">{{ play['play_info'] }} {% if play['fastbreak'] == 1 %} · Fastbreak {% endif %} {% if play['second_chance'] == 1 %} · Second Chance {% endif %} {% if play['points_off_turnover'] == 1 %} · Points Off Turnover {% endif %}</p>
+                    {% endif %}
                   </div>
                 </div>
                 <div class="flex-grow-1 d-flex align-items-center">
@@ -285,26 +320,33 @@
                   <div class="card-body">
                   {% endif %}
                     <h6 class="card-subtitle mb-2 text-body-secondary">
-                      <strong><a class="text-decoration-none text-danger" href="/player/{{ play['player_id'] }}">{{ play['player_name'] }}</a></strong> 
-                      {% if play['player_name'] != 'TECHNICAL' %} · Play: {{ play['player_total_plays'] }} {% endif %}
+                      {% if play['player_name'] == 'TECHNICAL' %}
+                      <strong>{{ play['player_name'] }}</strong>
+                      {% else %}
+                      <strong><a class="text-decoration-none text-danger" href="/player/{{ play['player_id'] }}">{{ play['player_name'] }}</a></strong> · Play: {{ play['player_total_plays'] }}
+                      {% endif %}
                     </h6>
+                    {% if play['play_type'] == 'JB' %}
+                    <p class="card-text">Jump Ball</p>
+                    {% else %}
                     <p class="card-text">{{ play['play_info'] }} {% if play['fastbreak'] == 1 %} · Fastbreak {% endif %} {% if play['second_chance'] == 1 %} · Second Chance {% endif %} {% if play['points_off_turnover'] == 1 %} · Points Off Turnover {% endif %}</p>
+                    {% endif %}
                   </div>
                 </div>
               </div>
-            {% elif play['play_info'] == 'End Period' %}
+            {% elif play['play_type'] == 'EP' %}
               <div class="d-flex justify-content-center align-items-center mb-3">
                 <hr class="w-100 my-0">
                 <h3 class="mx-3"><span class="badge text-bg-warning shadow-lg">{{ play['minute'] }}:00<br/>END OF {{ play['quarter_detailed'] }}</span></h3>
                 <hr class="w-100 my-0">
               </div>
-            {% elif play['play_info'] == 'Begin Period' %}
+            {% elif play['play_type'] == 'BP' %}
               <div class="d-flex justify-content-center align-items-center mb-3">
                 <hr class="w-100 my-0">
                 <h3 class="mx-3"><span class="badge text-bg-warning shadow-lg">{{ play['minute'] }}:00<br/>START OF {{ play['quarter_detailed'] }}</span></h3>
                 <hr class="w-100 my-0">
               </div>
-            {% elif play['play_info'] == 'End Game' %}
+            {% elif play['play_type'] == 'EG' %}
               <div class="d-flex justify-content-center align-items-center mb-3">
                 <hr class="w-100 my-0">
                 <h3 class="mx-3"><span class="badge text-bg-warning shadow-lg">{{ play['minute'] }}:00<br/>END OF THE GAME</span></h3>
@@ -335,10 +377,17 @@
                   <div class="card-body">
                   {% endif %}
                     <h6 class="card-subtitle mb-2 text-body-secondary">
-                      <strong><a class="text-decoration-none text-primary" href="/player/{{ play['player_id'] }}">{{ play['player_name'] }}</a></strong> 
-                      {% if play['player_name'] != 'TECHNICAL' %} · Play: {{ play['player_total_plays'] }} {% endif %}
+                      {% if play['player_name'] == 'TECHNICAL' %}
+                      <strong>{{ play['player_name'] }}</strong>
+                      {% else %}
+                      <strong><a class="text-decoration-none text-primary" href="/player/{{ play['player_id'] }}">{{ play['player_name'] }}</a></strong> · Play: {{ play['player_total_plays'] }}
+                      {% endif %}
                     </h6>
+                    {% if play['play_type'] == 'JB' %}
+                    <p class="card-text">Jump Ball</p>
+                    {% else %}
                     <p class="card-text">{{ play['play_info'] }} {% if play['fastbreak'] == 1 %} · Fastbreak {% endif %} {% if play['second_chance'] == 1 %} · Second Chance {% endif %} {% if play['points_off_turnover'] == 1 %} · Points Off Turnover {% endif %}</p>
+                    {% endif %}
                   </div>
                 </div>
                 <div class="flex-grow-1 d-flex align-items-center">
@@ -378,26 +427,33 @@
                   <div class="card-body">
                   {% endif %}
                     <h6 class="card-subtitle mb-2 text-body-secondary">
-                      <strong><a class="text-decoration-none text-danger" href="/player/{{ play['player_id'] }}">{{ play['player_name'] }}</a></strong> 
-                      {% if play['player_name'] != 'TECHNICAL' %} · Play: {{ play['player_total_plays'] }} {% endif %}
+                      {% if play['player_name'] == 'TECHNICAL' %}
+                      <strong>{{ play['player_name'] }}</strong>
+                      {% else %}
+                      <strong><a class="text-decoration-none text-danger" href="/player/{{ play['player_id'] }}">{{ play['player_name'] }}</a></strong> · Play: {{ play['player_total_plays'] }}
+                      {% endif %}
                     </h6>
+                    {% if play['play_type'] == 'JB' %}
+                    <p class="card-text">Jump Ball</p>
+                    {% else %}
                     <p class="card-text">{{ play['play_info'] }} {% if play['fastbreak'] == 1 %} · Fastbreak {% endif %} {% if play['second_chance'] == 1 %} · Second Chance {% endif %} {% if play['points_off_turnover'] == 1 %} · Points Off Turnover {% endif %}</p>
+                    {% endif %}
                   </div>
                 </div>
               </div>
-            {% elif play['play_info'] == 'End Period' %}
+            {% elif play['play_type'] == 'EP' %}
               <div class="d-flex justify-content-center align-items-center mb-3">
                 <hr class="w-100 my-0">
                 <h3 class="mx-3"><span class="badge text-bg-warning shadow-lg">{{ play['minute'] }}:00<br/>END OF {{ play['quarter_detailed'] }}</span></h3>
                 <hr class="w-100 my-0">
               </div>
-            {% elif play['play_info'] == 'Begin Period' %}
+            {% elif play['play_type'] == 'BP' %}
               <div class="d-flex justify-content-center align-items-center mb-3">
                 <hr class="w-100 my-0">
                 <h3 class="mx-3"><span class="badge text-bg-warning shadow-lg">{{ play['minute'] }}:00<br/>START OF {{ play['quarter_detailed'] }}</span></h3>
                 <hr class="w-100 my-0">
               </div>
-            {% elif play['play_info'] == 'End Game' %}
+            {% elif play['play_type'] == 'EG' %}
               <div class="d-flex justify-content-center align-items-center mb-3">
                 <hr class="w-100 my-0">
                 <h3 class="mx-3"><span class="badge text-bg-warning shadow-lg">{{ play['minute'] }}:00<br/>END OF THE GAME</span></h3>
@@ -428,10 +484,17 @@
                   <div class="card-body">
                   {% endif %}
                     <h6 class="card-subtitle mb-2 text-body-secondary">
-                      <strong><a class="text-decoration-none text-primary" href="/player/{{ play['player_id'] }}">{{ play['player_name'] }}</a></strong> 
-                      {% if play['player_name'] != 'TECHNICAL' %} · Play: {{ play['player_total_plays'] }} {% endif %}
+                      {% if play['player_name'] == 'TECHNICAL' %}
+                      <strong>{{ play['player_name'] }}</strong>
+                      {% else %}
+                      <strong><a class="text-decoration-none text-primary" href="/player/{{ play['player_id'] }}">{{ play['player_name'] }}</a></strong> · Play: {{ play['player_total_plays'] }}
+                      {% endif %}
                     </h6>
+                    {% if play['play_type'] == 'JB' %}
+                    <p class="card-text">Jump Ball</p>
+                    {% else %}
                     <p class="card-text">{{ play['play_info'] }} {% if play['fastbreak'] == 1 %} · Fastbreak {% endif %} {% if play['second_chance'] == 1 %} · Second Chance {% endif %} {% if play['points_off_turnover'] == 1 %} · Points Off Turnover {% endif %}</p>
+                    {% endif %}
                   </div>
                 </div>
                 <div class="flex-grow-1 d-flex align-items-center">
@@ -439,7 +502,7 @@
                   {% if play['points'] and play['points'] > 0 %}
                     <div class="d-flex flex-column align-items-center justify-content-center">
                       <h3 class="mx-3"><span class="badge text-bg-secondary shadow">{{ play['minute'] }}:00</span></h3>
-                      <h1 class="mx-3"><span class="badge text-bg-primary shadow-lg">{{ play['points_a'] }} - {{ play['points_b'] }}</span></h1>
+                      <h1 class="mx-3"><span class="badge text-bg-primary shadow-lg">{{ play['points_a'] }} - {{ play['points_b'] }}</span></h3>
                     </div>
                   {% else %}
                     <h3 class="mx-3"><span class="badge text-bg-secondary shadow">{{ play['minute'] }}:00</span></h3>
@@ -456,7 +519,7 @@
                   {% if play['points'] and play['points'] > 0 %}
                     <div class="d-flex flex-column align-items-center justify-content-center">
                       <h3 class="mx-3"><span class="badge text-bg-secondary shadow">{{ play['minute'] }}:00</span></h3>
-                      <h1 class="mx-3"><span class="badge text-bg-danger shadow-lg">{{ play['points_a'] }} - {{ play['points_b'] }}</span></h1>
+                      <h1 class="mx-3"><span class="badge text-bg-danger shadow-lg">{{ play['points_a'] }} - {{ play['points_b'] }}</span></h3>
                     </div>
                   {% else %}
                     <h3 class="mx-3"><span class="badge text-bg-secondary shadow">{{ play['minute'] }}:00</span></h3>
@@ -471,26 +534,33 @@
                   <div class="card-body">
                   {% endif %}
                     <h6 class="card-subtitle mb-2 text-body-secondary">
-                      <strong><a class="text-decoration-none text-danger" href="/player/{{ play['player_id'] }}">{{ play['player_name'] }}</a></strong> 
-                      {% if play['player_name'] != 'TECHNICAL' %} · Play: {{ play['player_total_plays'] }} {% endif %}
+                      {% if play['player_name'] == 'TECHNICAL' %}
+                      <strong>{{ play['player_name'] }}</strong>
+                      {% else %}
+                      <strong><a class="text-decoration-none text-danger" href="/player/{{ play['player_id'] }}">{{ play['player_name'] }}</a></strong> · Play: {{ play['player_total_plays'] }}
+                      {% endif %}
                     </h6>
+                    {% if play['play_type'] == 'JB' %}
+                    <p class="card-text">Jump Ball</p>
+                    {% else %}
                     <p class="card-text">{{ play['play_info'] }} {% if play['fastbreak'] == 1 %} · Fastbreak {% endif %} {% if play['second_chance'] == 1 %} · Second Chance {% endif %} {% if play['points_off_turnover'] == 1 %} · Points Off Turnover {% endif %}</p>
+                    {% endif %}
                   </div>
                 </div>
               </div>
-            {% elif play['play_info'] == 'End Period' %}
+            {% elif play['play_type'] == 'EP' %}
               <div class="d-flex justify-content-center align-items-center mb-3">
                 <hr class="w-100 my-0">
                 <h3 class="mx-3"><span class="badge text-bg-warning shadow-lg">{{ play['minute'] }}:00<br/>END OF {{ play['quarter_detailed'] }}</span></h3>
                 <hr class="w-100 my-0">
               </div>
-            {% elif play['play_info'] == 'Begin Period' %}
+            {% elif play['play_type'] == 'BP' %}
               <div class="d-flex justify-content-center align-items-center mb-3">
                 <hr class="w-100 my-0">
                 <h3 class="mx-3"><span class="badge text-bg-warning shadow-lg">{{ play['minute'] }}:00<br/>START OF {{ play['quarter_detailed'] }}</span></h3>
                 <hr class="w-100 my-0">
               </div>
-            {% elif play['play_info'] == 'End Game' %}
+            {% elif play['play_type'] == 'EG' %}
               <div class="d-flex justify-content-center align-items-center mb-3">
                 <hr class="w-100 my-0">
                 <h3 class="mx-3"><span class="badge text-bg-warning shadow-lg">{{ play['minute'] }}:00<br/>END OF THE GAME</span></h3>
