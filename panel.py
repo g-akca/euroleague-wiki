@@ -207,11 +207,11 @@ def panel_users_update():
             else:
                 cursor.execute("UPDATE users SET username = %s, email = %s, role = %s, team_supported = %s WHERE user_id = %s", (username, email, role, team_supported, user_id))
 
-            connection.commit()
-            cursor.close()
-            connection.close()
-            flash("User updated successfully!", "success")
-            return redirect(url_for('panel_users_page'))
+        connection.commit()
+        cursor.close()
+        connection.close()
+        flash("User updated successfully!", "success")
+        return redirect(url_for('panel_users_page'))
 
 @admin_required
 def panel_users_delete():
